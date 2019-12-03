@@ -2,7 +2,7 @@ extern crate yaml_rust as yaml;
 
 use std::convert::TryFrom;
 use yaml::Yaml;
-use crate::DataSet;
+use crate::Dataset;
 
 #[derive(Debug)]
 pub enum Error {
@@ -10,11 +10,11 @@ pub enum Error {
     InvalidKey
 }
 
-impl<'a> TryFrom<&'a Yaml> for DataSet {
+impl<'a> TryFrom<&'a Yaml> for Dataset {
     type Error = Error;
 
-    fn try_from(ast: &'a Yaml) -> Result<DataSet, Error> {
-        let mut data_set = DataSet::default();
+    fn try_from(ast: &'a Yaml) -> Result<Dataset, Error> {
+        let mut data_set = Dataset::default();
         match ast {
             Yaml::Hash(map) => {
                 for (key, value) in map.iter() {
