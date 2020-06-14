@@ -1,8 +1,16 @@
 [package]
 name = "grdf"
-version = "0.1.0"
+version = "0.1.0-beta"
 authors = ["Timothée Haudebourg <author@haudebourg.net>"]
 edition = "2018"
+categories = ["data-structures"]
+keywords = ["grdf", "rdf", "semantic-web"]
+description = "Generalized RDF graphs and datasets"
+repository = "https://github.com/timothee-haudebourg/grdf"
+documentation = "https://docs.rs/grdf"
+license = "MIT/Apache-2.0"
+readme = "README.md"
 
 [dependencies]
-ordered-float = "*"
+ordered-float = "^1.0"
+iref = "^1.1"

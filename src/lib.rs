@@ -1,201 +1,409 @@
-#![feature(trait_alias)]
+//! The [Resource Description Framework (RDF)](https://en.wikipedia.org/wiki/Resource_Description_Framework)
+//! is a powerful method for modeling data and knowledge
+//! defined by the [World Wide Web Consorsium (W3C)](https://www.w3.org/).
+//! A RDF dataset consists in a collection of graphs connecting nodes, values
+//! and predicates. This crate provides traits and implementations of
+//! [Generalized RDF (gRDF)](https://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#section-generalized-rdf)
+//! where nodes, values and predicates have the same representation.
+//!
+//! Note that this crates requires the nightly compiler.
+//! It needs Generic Associated Typed (GAT) to work properly,
+//! which are [still being implemented](https://github.com/rust-lang/rust/issues/44265).
+//!
+//! ## Basic usage
+//!
+//! ### Exploring a dataset
+//!
+//! Each `Dataset` implementation provides many iterators to explore the data.
+//! One simple way is to iterate through the quad of the dataset:
+//!
+//! ```rust
+//! # use grdf::{Term, Dataset, Quad, HashDataset};
+//! # let dataset: HashDataset<Term> = HashDataset::new();
+//! for Quad(graph, subject, predicate, object) in dataset.quads() {
+//! 	// do something
+//! }
+//! ```
+//!
+//! Another way is to access each graph individually using `Dataset::graph`.
+//! For a given graph, it is then possible to iterate through the triples of the
+//! graph:
+//!
+//! ```rust
+//! # use grdf::{Term, Dataset, Graph, Triple, HashDataset};
+//! # let dataset: HashDataset<Term> = HashDataset::new();
+//! # let id = None;
+//! let graph = dataset.graph(id).unwrap();
+//!
+//! for Triple(subject, predicate, object) in graph.triples() {
+//! 	// do something
+//! }
+//! ```
+//!
+//! It is also possible to explore the graph logically, subject by subject,
+//! predicate by predicate, object by object:
+//!
+//! ```rust
+//! # use grdf::{Term, Graph, HashGraph};
+//! # let graph: HashGraph<Term> = HashGraph::new();
+//! // for each subject of the graph...
+//! for (subject, predicates) in graph.subjects() {
+//! 	// for each predicate it is subject...
+//! 	for (predicate, objects) in predicates {
+//! 		// for each triple (subject, predicate, object)...
+//! 		for object in objects {
+//! 			// do something
+//! 		}
+//! 	}
+//! }
+//! ```
+//!
+//! ### Inserting new data
+//!
+//! Insertion can be done on `MutableDataset` implementations using
+//! `MutableDataset::insert`:
+//!
+//! ```rust
+//! # use grdf::{Term, MutableDataset, Quad, HashDataset};
+//! # let graph = None;
+//! # let subject = Term::Blank(0);
+//! # let predicate = Term::Blank(1);
+//! # let object = Term::Blank(2);
+//! let mut dataset: HashDataset<Term> = HashDataset::new();
+//! dataset.insert(Quad(graph, subject, predicate, object));
+//! ```
+//!
+//! Again it is possible to access each graph of the dataset mutably:
+//!
+//! ```rust
+//! # use grdf::{Term, MutableDataset, MutableGraph, Triple, HashDataset};
+//! # let id = None;
+//! # let subject = Term::Blank(0);
+//! # let predicate = Term::Blank(1);
+//! # let object = Term::Blank(2);
+//! # let mut dataset: HashDataset<Term> = HashDataset::new();
+//! let mut graph = dataset.graph_mut(id).unwrap();
+//! graph.insert(Triple(subject, predicate, object));
+//! ```
+//!
+//! ### Custom node type
+//!
+//! The type used to represent RDF nodes (subjects, predicate and objects) is a
+//! parameter of the dataset. Anything can be used although this crate provide a
+//! default `Term` type that represents generic RDF nodes (blank nodes,
+//! IRI-named nodes and literal values).
 
-extern crate ordered_float;
+#![feature(generic_associated_types)]
 
-use std::fmt;
-use std::hash::Hash;
-use std::collections::{HashMap, HashSet};
-use ordered_float::NotNan;
+pub mod hash_dataset;
+mod term;
 
-pub trait Entity = Hash + Eq;
+pub use hash_dataset::{HashDataset, HashGraph};
+pub use term::*;
 
-pub struct Triplet<'a, T: 'a + Entity = Node, V: 'a = Literal> {
-    pub subject: &'a T,
-    pub prop: &'a T,
-    pub object: &'a Object<T, V>
+/// gRDF triple.
+pub struct Triple<T>(pub T, pub T, pub T);
+
+impl<T> Triple<T> {
+	pub fn subject(&self) -> &T { &self.0 }
+
+	pub fn predicate(&self) -> &T { &self.1 }
+
+	pub fn object(&self) -> &T { &self.2 }
+
+	pub fn into_parts(self) -> (T, T, T) { (self.0, self.1, self.2) }
 }
 
-#[derive(Hash, PartialEq, Eq)]
-pub enum Object<T: Entity = Node, V = Literal> {
-    Value(V),
-    Entity(T)
+/// Graph iterators.
+///
+/// This trait is needed because currently the Rust compiler has trouble
+/// correctly handling generic associated types.
+/// When `rustc` will be ready, all the types defined in this trait will be
+/// defined in the `Graph` trait. Until then we need it.
+pub trait Iter<'a, T: 'a> {
+	/// Triple iterators.
+	type Triples: Iterator<Item = Triple<&'a T>>;
+
+	/// Graph subjects iterator.
+	///
+	/// Each subject is given with its associated predicates (and objects).
+	type Subjects: Iterator<Item = (&'a T, Self::Predicates)>;
+
+	/// Subject predicates iterator.
+	///
+	/// Iterate through all the predicates associated to a given subject.
+	/// Each predicate is also given with the associated objects.
+	type Predicates: Iterator<Item = (&'a T, Self::Objects)>;
+
+	/// Objects iterator.
+	///
+	/// Iterate through a set of objects.
+	type Objects: Iterator<Item = &'a T>;
 }
 
-impl<T: Entity + fmt::Display, V: fmt::Display> fmt::Display for Object<T, V> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Object::Entity(e) => e.fmt(f),
-            Object::Value(v) => v.fmt(f)
-        }
-    }
+/// gRDF graph.
+///
+/// A graph is a collection of RDF triples.
+/// It also defines a set of iterator to easily explore the graph.
+pub trait Graph<T = crate::Term> {
+	/// Iterators.
+	type Iter<'a>: Iter<'a, T>;
+
+	// Iterate through all the triples defined in the graph.
+	fn triples<'a>(&'a self) -> <Self::Iter<'a> as Iter<'a, T>>::Triples
+	where
+		T: 'a;
+
+	/// Iterate through all the subjects of the graph.
+	fn subjects<'a>(&'a self) -> <Self::Iter<'a> as Iter<'a, T>>::Subjects
+	where
+		T: 'a;
+
+	/// Iterate through all the predicates associated to the given subject.
+	fn predicates<'a>(&'a self, subject: &T) -> <Self::Iter<'a> as Iter<'a, T>>::Predicates
+	where
+		T: 'a;
+
+	/// Iterate through all the objects associated to the given subject and
+	/// predicate.
+	fn objects<'a>(
+		&'a self,
+		subject: &T,
+		predicate: &T,
+	) -> <Self::Iter<'a> as Iter<'a, T>>::Objects
+	where
+		T: 'a;
+
+	/// Checks if the given triple is defined in the graph.
+	fn contains(&self, triple: Triple<&T>) -> bool;
 }
 
-// pub struct Binding<T: Entity = Node, V = Literal> {
-//     prop: T,
-//     object: Object<T, V>
-// }
+/// Sized gRDF graph that can be converted into iterators.
+///
+/// Defines a set of iterators the graph can be consumed into.
+pub trait SizedGraph<T = crate::Term>: Graph<T> + Sized {
+	/// Consuming triples iterator.
+	type IntoTriples: Iterator<Item = Triple<T>>;
 
-pub struct Graph<T: Entity = Node, V = Literal> {
-    table: HashMap<T, HashMap<T, HashSet<Object<T, V>>>>,
+	/// Consuming subjects iterator.
+	type IntoSubjects: Iterator<Item = (T, Self::IntoPredicates)>;
 
-    /// empty hash set used to produce empty iterators.
-    dummy_object_set: HashSet<Object<T, V>>
+	/// Consuming predicates iterator.
+	type IntoPredicates: Iterator<Item = (T, Self::IntoObjects)>;
+
+	/// Consuming objects iterator.
+	type IntoObjects: Iterator<Item = T>;
+
+	/// Consumes the graph and returns an iterator over its triples.
+	fn into_triples(self) -> Self::IntoTriples;
+
+	/// Consumes the graph and returns an iterator over its subjects.
+	fn into_subjects(self) -> Self::IntoSubjects;
+
+	/// Consumes the graph and returns an iterator over the predicates of the
+	/// given subject.
+	fn into_predicates(self, subject: &T) -> Self::IntoPredicates;
+
+	/// Consumes the graph and returns an iterator over the objects of the given
+	/// subject and predicate.
+	fn into_objects(self, subject: &T, predicate: &T) -> Self::IntoObjects;
 }
 
-impl<T: Entity, V: Hash + Eq> Default for Graph<T, V> {
-    fn default() -> Graph<T, V> {
-        Graph {
-            table: HashMap::new(),
-            dummy_object_set: HashSet::new()
-        }
-    }
+/// Mutable gRDF graph.
+pub trait MutableGraph<T = crate::Term>: Graph<T> {
+	/// Insert the given triple into the graph.
+	fn insert(&mut self, triple: Triple<T>);
+
+	/// Absorb the given other graph.
+	///
+	/// Adds all the triples of `other` in the graph.
+	fn absorb<G: SizedGraph<T>>(&mut self, other: G);
 }
 
-impl<T: Entity, V: Hash + Eq> Graph<T, V> {
-    pub fn subjects(&self) -> impl Iterator<Item = &T> {
-        self.table.keys()
-    }
+/// gRDF quad.
+pub struct Quad<T>(pub Option<T>, pub T, pub T, pub T);
 
-    pub fn get(&self, subject: &T, predicate: &T) -> Option<&Object<T, V>> {
-        self.get_all(subject, predicate).next()
-    }
+impl<T> Quad<T> {
+	pub fn graph(&self) -> Option<&T> { self.0.as_ref() }
 
-    pub fn get_all(&self, subject: &T, predicate: &T) -> impl Iterator<Item = &Object<T, V>> {
-        if let Some(subject_table) = self.table.get(subject) {
-            if let Some(objects) = subject_table.get(predicate) {
-                objects.iter()
-            } else {
-                self.dummy_object_set.iter()
-            }
-        } else {
-            self.dummy_object_set.iter()
-        }
-    }
+	pub fn subject(&self) -> &T { &self.1 }
 
-    pub fn add(&mut self, subject: T, predicate: T, object: Object<T, V>) {
-        match self.table.get_mut(&subject) {
-            Some(bindings) => {
-                match bindings.get_mut(&predicate) {
-                    Some(objects) => {
-                        objects.insert(object);
-                    },
-                    None => {
-                        let mut objects = HashSet::new();
-                        objects.insert(object);
-                        bindings.insert(predicate, objects);
-                    }
-                }
-            },
-            None => {
-                let mut bindings = HashMap::new();
-                let mut objects = HashSet::new();
-                objects.insert(object);
-                bindings.insert(predicate, objects);
-                self.table.insert(subject, bindings);
-            }
-        }
-    }
+	pub fn predicate(&self) -> &T { &self.2 }
+
+	pub fn object(&self) -> &T { &self.3 }
+
+	pub fn into_parts(self) -> (Option<T>, T, T, T) { (self.0, self.1, self.2, self.3) }
 }
 
-pub struct Dataset<T: Entity = Node, V = Literal> {
-    default: Graph<T, V>,
-    nammed: HashMap<T, Graph<T, V>>
+/// gRDF dataset.
+///
+/// A dataset is a collection of graphs.
+/// It is made of a default graph and a collection of named graphs.
+///
+/// A dataset can also be seen as a collection of [`Quad`]s.
+pub trait Dataset<T = crate::Term> {
+	/// Type of graphs in the dataset.
+	type Graph: Graph<T>;
+
+	/// Graph iterator.
+	///
+	/// Each graph is associated to its name (if any).
+	type Graphs<'a>: Iterator<Item = (Option<&'a T>, &'a Self::Graph)>;
+
+	/// Quads iterator.
+	type Quads<'a>: Iterator<Item = Quad<&'a T>>;
+
+	/// Get the graph with the given name.
+	/// Input `None` to get the default graph.
+	///
+	/// Note to implementors: the default graph should always exists.
+	fn graph(&self, id: Option<&T>) -> Option<&Self::Graph>;
+
+	/// Get the default graph of the dataset.
+	///
+	/// This is the same as `graph(None)`.
+	///
+	/// Note to implementors: the default graph should always exists.
+	fn default_graph(&self) -> &Self::Graph { self.graph(None).unwrap() }
+
+	/// Returns an iterator over the graphs of the dataset.
+	fn graphs<'a>(&'a self) -> Self::Graphs<'a>;
+
+	/// Returns an iterator over the quads of the dataset.
+	fn quads<'a>(&'a self) -> Self::Quads<'a>;
+
+	/// Iterate through all the subjects of the given graph.
+	fn subjects<'a>(
+		&'a self,
+		id: Option<&T>,
+	) -> Option<<<Self::Graph as Graph<T>>::Iter<'a> as Iter<'a, T>>::Subjects> {
+		match self.graph(id) {
+			Some(graph) => Some(graph.subjects()),
+			None => None,
+		}
+	}
+
+	/// Iterate through all the predicates of the given subject of the given
+	/// graph.
+	fn predicates<'a>(
+		&'a self,
+		id: Option<&T>,
+		subject: &T,
+	) -> Option<<<Self::Graph as Graph<T>>::Iter<'a> as Iter<'a, T>>::Predicates> {
+		match self.graph(id) {
+			Some(graph) => Some(graph.predicates(subject)),
+			None => None,
+		}
+	}
+
+	/// Iterate through all the objects of the given subect and predicate of the
+	/// given graph.
+	fn objects<'a>(
+		&'a self,
+		id: Option<&T>,
+		subject: &T,
+		predicate: &T,
+	) -> Option<<<Self::Graph as Graph<T>>::Iter<'a> as Iter<'a, T>>::Objects> {
+		match self.graph(id) {
+			Some(graph) => Some(graph.objects(subject, predicate)),
+			None => None,
+		}
+	}
 }
 
-impl<T: Entity, V: Hash + Eq> Dataset<T, V> {
-    pub fn default_graph(&self) -> &Graph<T, V> {
-        &self.default
-    }
+/// Sized gRDF dataset that can be converted into iterators.
+pub trait SizedDataset<T = crate::Term>: Dataset<T> + Sized
+where
+	Self::Graph: SizedGraph<T>,
+{
+	/// Consuming graphs iterator.
+	type IntoGraphs: Iterator<Item = (Option<T>, Self::Graph)>;
 
-    pub fn nammed_graph(&self, name: &T) -> Option<&Graph<T, V>> {
-        self.nammed.get(name)
-    }
+	/// Consuming quads iterator.
+	type IntoQuads: Iterator<Item = Quad<T>>;
 
-    pub fn add(&mut self, graph_name: Option<T>, subject: T, predicate: T, object: Object<T, V>) {
-        match graph_name {
-            Some(name) => {
-                match self.nammed.get_mut(&name) {
-                    Some(g) => g.add(subject, predicate, object),
-                    None => {
-                        let mut g = Graph::default();
-                        g.add(subject, predicate, object);
-                        self.nammed.insert(name, g);
-                    }
-                }
-            },
-            None => {
-                self.default.add(subject, predicate, object)
-            }
-        }
-    }
+	/// Consumes the dataset and returns the given graph.
+	fn into_graph(self, id: Option<&T>) -> Option<Self::Graph>;
+
+	/// Consumes the dataset and returns the default graph.
+	fn into_default_graph(self) -> Self::Graph { self.into_graph(None).unwrap() }
+
+	/// Consumes the dataset and returns an iterator over its graphs.
+	fn into_graphs(self) -> Self::IntoGraphs;
+
+	/// Consumes the dataset and returns an iterator over its quads.
+	fn into_quads(self) -> Self::IntoQuads;
+
+	/// Consumes the dataset and returns an iterator over the subjects of the
+	/// given graph.
+	fn subjects(self, id: Option<&T>) -> Option<<Self::Graph as SizedGraph<T>>::IntoSubjects> {
+		match self.into_graph(id) {
+			Some(graph) => Some(graph.into_subjects()),
+			None => None,
+		}
+	}
+
+	/// Consumes the dataset and returns an iterator over the predicates of the
+	/// given subject of the given graph.
+	fn predicates(
+		self,
+		id: Option<&T>,
+		subject: &T,
+	) -> Option<<Self::Graph as SizedGraph<T>>::IntoPredicates> {
+		match self.into_graph(id) {
+			Some(graph) => Some(graph.into_predicates(subject)),
+			None => None,
+		}
+	}
+
+	/// Consumes the dataset and returns an iterator over the objects of the
+	/// given subject and predicate of the given graph.
+	fn objects(
+		self,
+		id: Option<&T>,
+		subject: &T,
+		predicate: &T,
+	) -> Option<<Self::Graph as SizedGraph<T>>::IntoObjects> {
+		match self.into_graph(id) {
+			Some(graph) => Some(graph.into_objects(subject, predicate)),
+			None => None,
+		}
+	}
 }
 
-impl<T: Entity, V: Hash + Eq> Default for Dataset<T, V> {
-    fn default() -> Dataset<T, V> {
-        Dataset {
-            default: Graph::default(),
-            nammed: HashMap::new()
-        }
-    }
-}
+/// Mutable dataset.
+pub trait MutableDataset<T = crate::Term>: Dataset<T> {
+	/// Iterator over mutable graphs.
+	type GraphsMut<'a>: Iterator<Item = (Option<&'a T>, &'a mut Self::Graph)>;
 
-#[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Debug)]
-pub enum Node {
-    Anonymous(usize),
-    Nammed(String)
-}
+	/// Get the given graph mutabily.
+	///
+	/// Use the input `None` to get the default graph.
+	///
+	/// Note to implementors: the default graph should always exists.
+	fn graph_mut(&mut self, id: Option<&T>) -> Option<&mut Self::Graph>;
 
-impl fmt::Display for Node {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Node::Anonymous(id) => write!(f, "_:{}", id),
-            Node::Nammed(id) => id.fmt(f)
-        }
-    }
-}
+	/// Get the default graph mutabily.
+	///
+	/// Note to implementors: the default graph should always exists.
+	fn default_graph_mut(&mut self) -> &mut Self::Graph { self.graph_mut(None).unwrap() }
 
-/**
- * RDF literals.
- */
-#[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Debug)]
-pub enum Literal {
-    String(String, Option<Tag>),
-    Int(i64),
-    Float(NotNan<f64>),
-    Bool(bool)
-}
+	/// Returns an iterator over the (mutable) graphs of the dataset.
+	fn graphs_mut<'a>(&'a mut self) -> Self::GraphsMut<'a>;
 
-impl fmt::Display for Literal {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Literal::String(str, Some(tag)) => write!(f, "\"{}\"{}", str, tag),
-            Literal::String(str, None) => write!(f, "\"{}\"", str),
-            Literal::Int(i) => i.fmt(f),
-            Literal::Float(d) => d.fmt(f),
-            Literal::Bool(true) => write!(f, "true"),
-            Literal::Bool(false) => write!(f, "false")
-        }
-    }
-}
+	/// Insert a graph in the dataset with the given name.
+	///
+	/// If a graph with the given name already exists,
+	/// it is replaced and the previous graph definition is returned.
+	fn insert_graph(&mut self, id: T, graph: Self::Graph) -> Option<Self::Graph>;
 
-#[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Debug)]
-pub enum Tag {
-    /**
-     * Language tag.
-     */
-    Lang(String),
+	/// Insert a quad in the dataset.
+	fn insert(&mut self, quad: Quad<T>);
 
-    /**
-     * IRI tag.
-     */
-    Iri(String)
-}
-
-impl fmt::Display for Tag {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Tag::Lang(lang) => write!(f, "@{}", lang),
-            Tag::Iri(iri) => write!(f, "^^<{}>", iri)
-        }
-    }
+	/// Absorb the given other dataset.
+	///
+	/// Adds all the quads of `other` in the dataset.
+	fn absorb<D: SizedDataset<T>>(&mut self, other: D)
+	where
+		D::Graph: SizedGraph<T>;
 }
