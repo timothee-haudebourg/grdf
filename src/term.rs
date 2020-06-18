@@ -36,7 +36,7 @@ impl fmt::Display for Term {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		match self {
 			Term::Blank(id) => write!(f, "_:{}", id),
-			Term::Iri(iri) => iri.fmt(f),
+			Term::Iri(iri) => write!(f, "<{}>", iri),
 			Term::Value(lit) => lit.fmt(f),
 		}
 	}
