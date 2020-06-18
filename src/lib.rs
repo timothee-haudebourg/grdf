@@ -94,6 +94,7 @@
 //! IRI-named nodes and literal values).
 
 #![feature(generic_associated_types)]
+use std::fmt;
 
 pub mod hash_dataset;
 mod term;
@@ -112,6 +113,12 @@ impl<T> Triple<T> {
 	pub fn object(&self) -> &T { &self.2 }
 
 	pub fn into_parts(self) -> (T, T, T) { (self.0, self.1, self.2) }
+}
+
+impl<T: fmt::Display> fmt::Display for Triple<T> {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		write!(f, "{} {} {}", self.0, self.1, self.2)
+	}
 }
 
 /// Graph iterators.
@@ -233,6 +240,15 @@ impl<T> Quad<T> {
 	pub fn object(&self) -> &T { &self.3 }
 
 	pub fn into_parts(self) -> (Option<T>, T, T, T) { (self.0, self.1, self.2, self.3) }
+}
+
+impl<T: fmt::Display> fmt::Display for Quad<T> {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match self.graph() {
+			Some(graph) => write!(f, "{} {} {} {}", self.1, self.2, self.3, graph),
+			None => write!(f, "{} {} {}", self.1, self.2, self.3)
+		}
+	}
 }
 
 /// gRDF dataset.
