@@ -154,7 +154,7 @@ pub trait Iter<'a, T: 'a> {
 /// It also defines a set of iterator to easily explore the graph.
 pub trait Graph<T = crate::Term> {
 	/// Iterators.
-	type Iter<'a>: Iter<'a, T>;
+	type Iter<'a>: Iter<'a, T> where T: 'a;
 
 	// Iterate through all the triples defined in the graph.
 	fn triples<'a>(&'a self) -> <Self::Iter<'a> as Iter<'a, T>>::Triples

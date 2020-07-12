@@ -47,7 +47,7 @@ impl<'a, T: 'a + Hash + Eq> crate::Iter<'a, T> for Iterators {
 }
 
 impl<T: Hash + Eq> crate::Graph<T> for HashGraph<T> {
-	type Iter<'a> = Iterators;
+	type Iter<'a> where T: 'a = Iterators;
 
 	fn triples<'a>(&'a self) -> Iter<'a, T>
 	where
