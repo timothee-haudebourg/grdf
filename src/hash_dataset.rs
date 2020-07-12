@@ -37,17 +37,11 @@ impl<T: Hash + Eq> Default for HashGraph<T> {
 	}
 }
 
-pub struct Iterators {}
-
-impl<'a, T: 'a + Hash + Eq> crate::Iter<'a, T> for Iterators {
-	type Objects = Objects<'a, T>;
-	type Predicates = Predicates<'a, T>;
-	type Subjects = Subjects<'a, T>;
-	type Triples = Iter<'a, T>;
-}
-
 impl<T: Hash + Eq> crate::Graph<T> for HashGraph<T> {
-	type Iter<'a> where T: 'a = Iterators;
+	type Objects<'a> where T: 'a = Objects<'a, T>;
+	type Predicates<'a> where T: 'a = Predicates<'a, T>;
+	type Subjects<'a> where T: 'a = Subjects<'a, T>;
+	type Triples<'a> where T: 'a = Iter<'a, T>;
 
 	fn triples<'a>(&'a self) -> Iter<'a, T>
 	where

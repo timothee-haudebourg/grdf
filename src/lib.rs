@@ -121,53 +121,42 @@ impl<T: fmt::Display> fmt::Display for Triple<T> {
 	}
 }
 
-/// Graph iterators.
-///
-/// This trait is needed because currently the Rust compiler has trouble
-/// correctly handling generic associated types.
-/// When `rustc` will be ready, all the types defined in this trait will be
-/// defined in the `Graph` trait. Until then we need it.
-pub trait Iter<'a, T: 'a> {
-	/// Triple iterators.
-	type Triples: Iterator<Item = Triple<&'a T>>;
-
-	/// Graph subjects iterator.
-	///
-	/// Each subject is given with its associated predicates (and objects).
-	type Subjects: Iterator<Item = (&'a T, Self::Predicates)>;
-
-	/// Subject predicates iterator.
-	///
-	/// Iterate through all the predicates associated to a given subject.
-	/// Each predicate is also given with the associated objects.
-	type Predicates: Iterator<Item = (&'a T, Self::Objects)>;
-
-	/// Objects iterator.
-	///
-	/// Iterate through a set of objects.
-	type Objects: Iterator<Item = &'a T>;
-}
-
 /// gRDF graph.
 ///
 /// A graph is a collection of RDF triples.
 /// It also defines a set of iterator to easily explore the graph.
 pub trait Graph<T = crate::Term> {
-	/// Iterators.
-	type Iter<'a>: Iter<'a, T> where T: 'a;
+	/// Triple iterators.
+	type Triples<'a>: Iterator<Item = Triple<&'a T>> where T: 'a;
+
+	/// Graph subjects iterator.
+	///
+	/// Each subject is given with its associated predicates (and objects).
+	type Subjects<'a>: Iterator<Item = (&'a T, Self::Predicates<'a>)> where T: 'a;
+
+	/// Subject predicates iterator.
+	///
+	/// Iterate through all the predicates associated to a given subject.
+	/// Each predicate is also given with the associated objects.
+	type Predicates<'a>: Iterator<Item = (&'a T, Self::Objects<'a>)> where T: 'a;
+
+	/// Objects iterator.
+	///
+	/// Iterate through a set of objects.
+	type Objects<'a>: Iterator<Item = &'a T> where T: 'a;
 
 	// Iterate through all the triples defined in the graph.
-	fn triples<'a>(&'a self) -> <Self::Iter<'a> as Iter<'a, T>>::Triples
+	fn triples<'a>(&'a self) -> Self::Triples<'a>
 	where
 		T: 'a;
 
 	/// Iterate through all the subjects of the graph.
-	fn subjects<'a>(&'a self) -> <Self::Iter<'a> as Iter<'a, T>>::Subjects
+	fn subjects<'a>(&'a self) -> Self::Subjects<'a>
 	where
 		T: 'a;
 
 	/// Iterate through all the predicates associated to the given subject.
-	fn predicates<'a>(&'a self, subject: &T) -> <Self::Iter<'a> as Iter<'a, T>>::Predicates
+	fn predicates<'a>(&'a self, subject: &T) -> Self::Predicates<'a>
 	where
 		T: 'a;
 
@@ -177,7 +166,7 @@ pub trait Graph<T = crate::Term> {
 		&'a self,
 		subject: &T,
 		predicate: &T,
-	) -> <Self::Iter<'a> as Iter<'a, T>>::Objects
+	) -> Self::Objects<'a>
 	where
 		T: 'a;
 
@@ -292,7 +281,7 @@ pub trait Dataset<T = crate::Term> {
 	fn subjects<'a>(
 		&'a self,
 		id: Option<&T>,
-	) -> Option<<<Self::Graph as Graph<T>>::Iter<'a> as Iter<'a, T>>::Subjects> {
+	) -> Option<<Self::Graph as Graph<T>>::Subjects<'a>> where Self::Graph: 'a, T: 'a {
 		match self.graph(id) {
 			Some(graph) => Some(graph.subjects()),
 			None => None,
@@ -305,7 +294,7 @@ pub trait Dataset<T = crate::Term> {
 		&'a self,
 		id: Option<&T>,
 		subject: &T,
-	) -> Option<<<Self::Graph as Graph<T>>::Iter<'a> as Iter<'a, T>>::Predicates> {
+	) -> Option<<Self::Graph as Graph<T>>::Predicates<'a>> where Self::Graph: 'a, T: 'a {
 		match self.graph(id) {
 			Some(graph) => Some(graph.predicates(subject)),
 			None => None,
@@ -319,7 +308,7 @@ pub trait Dataset<T = crate::Term> {
 		id: Option<&T>,
 		subject: &T,
 		predicate: &T,
-	) -> Option<<<Self::Graph as Graph<T>>::Iter<'a> as Iter<'a, T>>::Objects> {
+	) -> Option<<Self::Graph as Graph<T>>::Objects<'a>> where Self::Graph: 'a, T: 'a {
 		match self.graph(id) {
 			Some(graph) => Some(graph.objects(subject, predicate)),
 			None => None,
