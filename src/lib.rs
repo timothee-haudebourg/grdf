@@ -253,10 +253,10 @@ pub trait Dataset<T = crate::Term> {
 	/// Graph iterator.
 	///
 	/// Each graph is associated to its name (if any).
-	type Graphs<'a>: Iterator<Item = (Option<&'a T>, &'a Self::Graph)>;
+	type Graphs<'a>: Iterator<Item = (Option<&'a T>, &'a Self::Graph)> where T: 'a, Self::Graph: 'a;
 
 	/// Quads iterator.
-	type Quads<'a>: Iterator<Item = Quad<&'a T>>;
+	type Quads<'a>: Iterator<Item = Quad<&'a T>> where T: 'a;
 
 	/// Get the graph with the given name.
 	/// Input `None` to get the default graph.
@@ -379,7 +379,7 @@ where
 /// Mutable dataset.
 pub trait MutableDataset<T = crate::Term>: Dataset<T> {
 	/// Iterator over mutable graphs.
-	type GraphsMut<'a>: Iterator<Item = (Option<&'a T>, &'a mut Self::Graph)>;
+	type GraphsMut<'a>: Iterator<Item = (Option<&'a T>, &'a mut Self::Graph)> where T: 'a, Self::Graph: 'a;
 
 	/// Get the given graph mutabily.
 	///
