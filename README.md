@@ -18,6 +18,9 @@ Note that this crates requires the nightly compiler.
 It needs Generic Associated Typed (GAT) to work properly,
 which are [still being implemented](https://github.com/rust-lang/rust/issues/44265).
 
+I've also written the [turtle-syntax](https://crates.io/crates/turtle-syntax) crate,
+which I personally use to parse Turtle files.
+
  ## Basic usage
 
  ### Exploring a dataset
