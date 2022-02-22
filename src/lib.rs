@@ -1,6 +1,6 @@
 //! The [Resource Description Framework (RDF)](https://en.wikipedia.org/wiki/Resource_Description_Framework)
 //! is a powerful method for modeling data and knowledge
-//! defined by the [World Wide Web Consorsium (W3C)](https://www.w3.org/).
+//! defined by the [World Wide Web Consortium (W3C)](https://www.w3.org/).
 //! A RDF dataset consists in a collection of graphs connecting nodes, values
 //! and predicates. This crate provides traits and implementations of
 //! [Generalized RDF (gRDF)](https://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#section-generalized-rdf)
@@ -20,8 +20,8 @@
 //! ```rust
 //! # use grdf::{Term, Dataset, Quad, HashDataset};
 //! # let dataset: HashDataset<Term> = HashDataset::new();
-//! for Quad(graph, subject, predicate, object) in dataset.quads() {
-//! 	// do something
+//! for Quad(subject, predicate, object, graph) in dataset.quads() {
+//!   // do something
 //! }
 //! ```
 //!
@@ -36,7 +36,7 @@
 //! let graph = dataset.graph(id).unwrap();
 //!
 //! for Triple(subject, predicate, object) in graph.triples() {
-//! 	// do something
+//!   // do something
 //! }
 //! ```
 //!
@@ -48,13 +48,13 @@
 //! # let graph: HashGraph<Term> = HashGraph::new();
 //! // for each subject of the graph...
 //! for (subject, predicates) in graph.subjects() {
-//! 	// for each predicate it is subject...
-//! 	for (predicate, objects) in predicates {
-//! 		// for each triple (subject, predicate, object)...
-//! 		for object in objects {
-//! 			// do something
-//! 		}
-//! 	}
+//!   // for each predicate it is subject...
+//!   for (predicate, objects) in predicates {
+//!     // for each triple (subject, predicate, object)...
+//!     for object in objects {
+//!       // do something
+//!     }
+//!   }
 //! }
 //! ```
 //!
@@ -70,7 +70,7 @@
 //! # let predicate = Term::Blank(1);
 //! # let object = Term::Blank(2);
 //! let mut dataset: HashDataset<Term> = HashDataset::new();
-//! dataset.insert(Quad(graph, subject, predicate, object));
+//! dataset.insert(Quad(subject, predicate, object, graph));
 //! ```
 //!
 //! Again it is possible to access each graph of the dataset mutably:
@@ -92,58 +92,50 @@
 //! parameter of the dataset. Anything can be used although this crate provide a
 //! default `Term` type that represents generic RDF nodes (blank nodes,
 //! IRI-named nodes and literal values).
-
 #![feature(generic_associated_types)]
-use std::fmt;
+pub use rdf_types::{Quad, Triple};
 
+pub mod btree_dataset;
 pub mod hash_dataset;
-mod term;
 
+pub use btree_dataset::{BTreeDataset, BTreeGraph};
 pub use hash_dataset::{HashDataset, HashGraph};
-pub use term::*;
-
-/// gRDF triple.
-pub struct Triple<T>(pub T, pub T, pub T);
-
-impl<T> Triple<T> {
-	pub fn subject(&self) -> &T { &self.0 }
-
-	pub fn predicate(&self) -> &T { &self.1 }
-
-	pub fn object(&self) -> &T { &self.2 }
-
-	pub fn into_parts(self) -> (T, T, T) { (self.0, self.1, self.2) }
-}
-
-impl<T: fmt::Display> fmt::Display for Triple<T> {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		write!(f, "{} {} {}", self.0, self.1, self.2)
-	}
-}
 
 /// gRDF graph.
 ///
 /// A graph is a collection of RDF triples.
 /// It also defines a set of iterator to easily explore the graph.
-pub trait Graph<T = crate::Term> {
+pub trait Graph<T = rdf_types::Term> {
 	/// Triple iterators.
-	type Triples<'a>: Iterator<Item = Triple<&'a T>> where T: 'a;
+	type Triples<'a>: Iterator<Item = Triple<&'a T, &'a T, &'a T>>
+	where
+		Self: 'a,
+		T: 'a;
 
 	/// Graph subjects iterator.
 	///
 	/// Each subject is given with its associated predicates (and objects).
-	type Subjects<'a>: Iterator<Item = (&'a T, Self::Predicates<'a>)> where T: 'a;
+	type Subjects<'a>: Iterator<Item = (&'a T, Self::Predicates<'a>)>
+	where
+		Self: 'a,
+		T: 'a;
 
 	/// Subject predicates iterator.
 	///
 	/// Iterate through all the predicates associated to a given subject.
 	/// Each predicate is also given with the associated objects.
-	type Predicates<'a>: Iterator<Item = (&'a T, Self::Objects<'a>)> where T: 'a;
+	type Predicates<'a>: Iterator<Item = (&'a T, Self::Objects<'a>)>
+	where
+		Self: 'a,
+		T: 'a;
 
 	/// Objects iterator.
 	///
 	/// Iterate through a set of objects.
-	type Objects<'a>: Iterator<Item = &'a T> where T: 'a;
+	type Objects<'a>: Iterator<Item = &'a T>
+	where
+		Self: 'a,
+		T: 'a;
 
 	// Iterate through all the triples defined in the graph.
 	fn triples<'a>(&'a self) -> Self::Triples<'a>
@@ -162,24 +154,20 @@ pub trait Graph<T = crate::Term> {
 
 	/// Iterate through all the objects associated to the given subject and
 	/// predicate.
-	fn objects<'a>(
-		&'a self,
-		subject: &T,
-		predicate: &T,
-	) -> Self::Objects<'a>
+	fn objects<'a>(&'a self, subject: &T, predicate: &T) -> Self::Objects<'a>
 	where
 		T: 'a;
 
 	/// Checks if the given triple is defined in the graph.
-	fn contains(&self, triple: Triple<&T>) -> bool;
+	fn contains(&self, triple: Triple<&T, &T, &T>) -> bool;
 }
 
 /// Sized gRDF graph that can be converted into iterators.
 ///
 /// Defines a set of iterators the graph can be consumed into.
-pub trait SizedGraph<T = crate::Term>: Graph<T> + Sized {
+pub trait SizedGraph<T = rdf_types::Term>: Graph<T> + Sized {
 	/// Consuming triples iterator.
-	type IntoTriples: Iterator<Item = Triple<T>>;
+	type IntoTriples: Iterator<Item = Triple<T, T, T>>;
 
 	/// Consuming subjects iterator.
 	type IntoSubjects: Iterator<Item = (T, Self::IntoPredicates)>;
@@ -206,38 +194,14 @@ pub trait SizedGraph<T = crate::Term>: Graph<T> + Sized {
 }
 
 /// Mutable gRDF graph.
-pub trait MutableGraph<T = crate::Term>: Graph<T> {
+pub trait MutableGraph<T = rdf_types::Term>: Graph<T> {
 	/// Insert the given triple into the graph.
-	fn insert(&mut self, triple: Triple<T>);
+	fn insert(&mut self, triple: Triple<T, T, T>);
 
 	/// Absorb the given other graph.
 	///
 	/// Adds all the triples of `other` in the graph.
 	fn absorb<G: SizedGraph<T>>(&mut self, other: G);
-}
-
-/// gRDF quad.
-pub struct Quad<T>(pub Option<T>, pub T, pub T, pub T);
-
-impl<T> Quad<T> {
-	pub fn graph(&self) -> Option<&T> { self.0.as_ref() }
-
-	pub fn subject(&self) -> &T { &self.1 }
-
-	pub fn predicate(&self) -> &T { &self.2 }
-
-	pub fn object(&self) -> &T { &self.3 }
-
-	pub fn into_parts(self) -> (Option<T>, T, T, T) { (self.0, self.1, self.2, self.3) }
-}
-
-impl<T: fmt::Display> fmt::Display for Quad<T> {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		match self.graph() {
-			Some(graph) => write!(f, "{} {} {} {}", self.1, self.2, self.3, graph),
-			None => write!(f, "{} {} {}", self.1, self.2, self.3)
-		}
-	}
 }
 
 /// gRDF dataset.
@@ -246,17 +210,23 @@ impl<T: fmt::Display> fmt::Display for Quad<T> {
 /// It is made of a default graph and a collection of named graphs.
 ///
 /// A dataset can also be seen as a collection of [`Quad`]s.
-pub trait Dataset<T = crate::Term> {
+pub trait Dataset<T = rdf_types::Term> {
 	/// Type of graphs in the dataset.
 	type Graph: Graph<T>;
 
 	/// Graph iterator.
 	///
 	/// Each graph is associated to its name (if any).
-	type Graphs<'a>: Iterator<Item = (Option<&'a T>, &'a Self::Graph)>;
+	type Graphs<'a>: Iterator<Item = (Option<&'a T>, &'a Self::Graph)>
+	where
+		Self: 'a,
+		T: 'a;
 
 	/// Quads iterator.
-	type Quads<'a>: Iterator<Item = Quad<&'a T>>;
+	type Quads<'a>: Iterator<Item = Quad<&'a T, &'a T, &'a T, &'a T>>
+	where
+		Self: 'a,
+		T: 'a;
 
 	/// Get the graph with the given name.
 	/// Input `None` to get the default graph.
@@ -269,23 +239,23 @@ pub trait Dataset<T = crate::Term> {
 	/// This is the same as `graph(None)`.
 	///
 	/// Note to implementors: the default graph should always exists.
-	fn default_graph(&self) -> &Self::Graph { self.graph(None).unwrap() }
+	fn default_graph(&self) -> &Self::Graph {
+		self.graph(None).unwrap()
+	}
 
 	/// Returns an iterator over the graphs of the dataset.
-	fn graphs<'a>(&'a self) -> Self::Graphs<'a>;
+	fn graphs(&self) -> Self::Graphs<'_>;
 
 	/// Returns an iterator over the quads of the dataset.
-	fn quads<'a>(&'a self) -> Self::Quads<'a>;
+	fn quads(&self) -> Self::Quads<'_>;
 
 	/// Iterate through all the subjects of the given graph.
-	fn subjects<'a>(
-		&'a self,
-		id: Option<&T>,
-	) -> Option<<Self::Graph as Graph<T>>::Subjects<'a>> where Self::Graph: 'a, T: 'a {
-		match self.graph(id) {
-			Some(graph) => Some(graph.subjects()),
-			None => None,
-		}
+	fn subjects<'a>(&'a self, id: Option<&T>) -> Option<<Self::Graph as Graph<T>>::Subjects<'a>>
+	where
+		Self::Graph: 'a,
+		T: 'a,
+	{
+		self.graph(id).map(|graph| graph.subjects())
 	}
 
 	/// Iterate through all the predicates of the given subject of the given
@@ -294,11 +264,12 @@ pub trait Dataset<T = crate::Term> {
 		&'a self,
 		id: Option<&T>,
 		subject: &T,
-	) -> Option<<Self::Graph as Graph<T>>::Predicates<'a>> where Self::Graph: 'a, T: 'a {
-		match self.graph(id) {
-			Some(graph) => Some(graph.predicates(subject)),
-			None => None,
-		}
+	) -> Option<<Self::Graph as Graph<T>>::Predicates<'a>>
+	where
+		Self::Graph: 'a,
+		T: 'a,
+	{
+		self.graph(id).map(|graph| graph.predicates(subject))
 	}
 
 	/// Iterate through all the objects of the given subect and predicate of the
@@ -308,16 +279,18 @@ pub trait Dataset<T = crate::Term> {
 		id: Option<&T>,
 		subject: &T,
 		predicate: &T,
-	) -> Option<<Self::Graph as Graph<T>>::Objects<'a>> where Self::Graph: 'a, T: 'a {
-		match self.graph(id) {
-			Some(graph) => Some(graph.objects(subject, predicate)),
-			None => None,
-		}
+	) -> Option<<Self::Graph as Graph<T>>::Objects<'a>>
+	where
+		Self::Graph: 'a,
+		T: 'a,
+	{
+		self.graph(id)
+			.map(|graph| graph.objects(subject, predicate))
 	}
 }
 
 /// Sized gRDF dataset that can be converted into iterators.
-pub trait SizedDataset<T = crate::Term>: Dataset<T> + Sized
+pub trait SizedDataset<T = rdf_types::Term>: Dataset<T> + Sized
 where
 	Self::Graph: SizedGraph<T>,
 {
@@ -325,13 +298,15 @@ where
 	type IntoGraphs: Iterator<Item = (Option<T>, Self::Graph)>;
 
 	/// Consuming quads iterator.
-	type IntoQuads: Iterator<Item = Quad<T>>;
+	type IntoQuads: Iterator<Item = Quad<T, T, T, T>>;
 
 	/// Consumes the dataset and returns the given graph.
 	fn into_graph(self, id: Option<&T>) -> Option<Self::Graph>;
 
 	/// Consumes the dataset and returns the default graph.
-	fn into_default_graph(self) -> Self::Graph { self.into_graph(None).unwrap() }
+	fn into_default_graph(self) -> Self::Graph {
+		self.into_graph(None).unwrap()
+	}
 
 	/// Consumes the dataset and returns an iterator over its graphs.
 	fn into_graphs(self) -> Self::IntoGraphs;
@@ -342,10 +317,7 @@ where
 	/// Consumes the dataset and returns an iterator over the subjects of the
 	/// given graph.
 	fn subjects(self, id: Option<&T>) -> Option<<Self::Graph as SizedGraph<T>>::IntoSubjects> {
-		match self.into_graph(id) {
-			Some(graph) => Some(graph.into_subjects()),
-			None => None,
-		}
+		self.into_graph(id).map(|graph| graph.into_subjects())
 	}
 
 	/// Consumes the dataset and returns an iterator over the predicates of the
@@ -355,10 +327,8 @@ where
 		id: Option<&T>,
 		subject: &T,
 	) -> Option<<Self::Graph as SizedGraph<T>>::IntoPredicates> {
-		match self.into_graph(id) {
-			Some(graph) => Some(graph.into_predicates(subject)),
-			None => None,
-		}
+		self.into_graph(id)
+			.map(|graph| graph.into_predicates(subject))
 	}
 
 	/// Consumes the dataset and returns an iterator over the objects of the
@@ -369,17 +339,18 @@ where
 		subject: &T,
 		predicate: &T,
 	) -> Option<<Self::Graph as SizedGraph<T>>::IntoObjects> {
-		match self.into_graph(id) {
-			Some(graph) => Some(graph.into_objects(subject, predicate)),
-			None => None,
-		}
+		self.into_graph(id)
+			.map(|graph| graph.into_objects(subject, predicate))
 	}
 }
 
 /// Mutable dataset.
-pub trait MutableDataset<T = crate::Term>: Dataset<T> {
+pub trait MutableDataset<T = rdf_types::Term>: Dataset<T> {
 	/// Iterator over mutable graphs.
-	type GraphsMut<'a>: Iterator<Item = (Option<&'a T>, &'a mut Self::Graph)>;
+	type GraphsMut<'a>: Iterator<Item = (Option<&'a T>, &'a mut Self::Graph)>
+	where
+		Self: 'a,
+		T: 'a;
 
 	/// Get the given graph mutabily.
 	///
@@ -391,10 +362,12 @@ pub trait MutableDataset<T = crate::Term>: Dataset<T> {
 	/// Get the default graph mutabily.
 	///
 	/// Note to implementors: the default graph should always exists.
-	fn default_graph_mut(&mut self) -> &mut Self::Graph { self.graph_mut(None).unwrap() }
+	fn default_graph_mut(&mut self) -> &mut Self::Graph {
+		self.graph_mut(None).unwrap()
+	}
 
 	/// Returns an iterator over the (mutable) graphs of the dataset.
-	fn graphs_mut<'a>(&'a mut self) -> Self::GraphsMut<'a>;
+	fn graphs_mut(&mut self) -> Self::GraphsMut<'_>;
 
 	/// Insert a graph in the dataset with the given name.
 	///
@@ -403,7 +376,7 @@ pub trait MutableDataset<T = crate::Term>: Dataset<T> {
 	fn insert_graph(&mut self, id: T, graph: Self::Graph) -> Option<Self::Graph>;
 
 	/// Insert a quad in the dataset.
-	fn insert(&mut self, quad: Quad<T>);
+	fn insert(&mut self, quad: Quad<T, T, T, T>);
 
 	/// Absorb the given other dataset.
 	///
