@@ -1,6 +1,6 @@
 [package]
 name = "grdf"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Timothée Haudebourg <author@haudebourg.net>"]
 edition = "2018"
 categories = ["data-structures"]
@@ -14,4 +14,4 @@ readme = "README.md"
 [dependencies]
 ordered-float = "^1.0"
 iref = "^1.1"
-rdf-types = "0.1"
+rdf-types = "0.2"
