@@ -452,10 +452,18 @@ pub struct HashDataset<T: Hash + Eq> {
 	named: HashMap<T, HashGraph<T>>,
 }
 
-impl<T: 'static + Hash + Eq> crate::Dataset<T> for HashDataset<T> {
+impl<T: Hash + Eq> crate::Dataset<T> for HashDataset<T> {
 	type Graph = HashGraph<T>;
-	type Graphs<'a> = Graphs<'a, T>;
-	type Quads<'a> = Quads<'a, T>;
+	type Graphs<'a>
+	where
+		Self: 'a,
+		T: 'a,
+	= Graphs<'a, T>;
+	type Quads<'a>
+	where
+		Self: 'a,
+		T: 'a,
+	= Quads<'a, T>;
 
 	fn graph(&self, id: Option<&T>) -> Option<&HashGraph<T>> {
 		match id {
@@ -549,7 +557,7 @@ impl<'a, T: Hash + Eq> Iterator for Quads<'a, T> {
 	}
 }
 
-impl<T: 'static + Clone + Hash + Eq> crate::SizedDataset<T> for HashDataset<T> {
+impl<T: Clone + Hash + Eq> crate::SizedDataset<T> for HashDataset<T> {
 	type IntoGraphs = IntoGraphs<T>;
 	type IntoQuads = IntoQuads<T>;
 
@@ -635,8 +643,12 @@ impl<T: Hash + Eq> HashDataset<T> {
 	}
 }
 
-impl<T: 'static + Hash + Eq> crate::MutableDataset<T> for HashDataset<T> {
-	type GraphsMut<'a> = GraphsMut<'a, T>;
+impl<T: Hash + Eq> crate::MutableDataset<T> for HashDataset<T> {
+	type GraphsMut<'a>
+	where
+		Self: 'a,
+		T: 'a,
+	= GraphsMut<'a, T>;
 
 	fn graph_mut(&mut self, id: Option<&T>) -> Option<&mut Self::Graph> {
 		match id {
@@ -691,5 +703,18 @@ impl<T: Hash + Eq> Default for HashDataset<T> {
 			default: HashGraph::default(),
 			named: HashMap::new(),
 		}
+	}
+}
+
+impl<T: Hash + Eq> std::iter::FromIterator<Quad<T, T, T, T>> for HashDataset<T> {
+	fn from_iter<I: IntoIterator<Item = Quad<T, T, T, T>>>(iter: I) -> Self {
+		use crate::MutableDataset;
+		let mut ds = Self::new();
+
+		for quad in iter {
+			ds.insert(quad);
+		}
+
+		ds
 	}
 }

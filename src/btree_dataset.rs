@@ -451,10 +451,18 @@ pub struct BTreeDataset<T: Ord> {
 	named: BTreeMap<T, BTreeGraph<T>>,
 }
 
-impl<T: 'static + Ord> crate::Dataset<T> for BTreeDataset<T> {
+impl<T: Ord> crate::Dataset<T> for BTreeDataset<T> {
 	type Graph = BTreeGraph<T>;
-	type Graphs<'a> = Graphs<'a, T>;
-	type Quads<'a> = Quads<'a, T>;
+	type Graphs<'a>
+	where
+		Self: 'a,
+		T: 'a,
+	= Graphs<'a, T>;
+	type Quads<'a>
+	where
+		Self: 'a,
+		T: 'a,
+	= Quads<'a, T>;
 
 	fn graph(&self, id: Option<&T>) -> Option<&BTreeGraph<T>> {
 		match id {
@@ -548,7 +556,7 @@ impl<'a, T: Ord> Iterator for Quads<'a, T> {
 	}
 }
 
-impl<T: 'static + Clone + Ord> crate::SizedDataset<T> for BTreeDataset<T> {
+impl<T: Clone + Ord> crate::SizedDataset<T> for BTreeDataset<T> {
 	type IntoGraphs = IntoGraphs<T>;
 	type IntoQuads = IntoQuads<T>;
 
@@ -634,8 +642,12 @@ impl<T: Ord> BTreeDataset<T> {
 	}
 }
 
-impl<T: 'static + Ord> crate::MutableDataset<T> for BTreeDataset<T> {
-	type GraphsMut<'a> = GraphsMut<'a, T>;
+impl<T: Ord> crate::MutableDataset<T> for BTreeDataset<T> {
+	type GraphsMut<'a>
+	where
+		Self: 'a,
+		T: 'a,
+	= GraphsMut<'a, T>;
 
 	fn graph_mut(&mut self, id: Option<&T>) -> Option<&mut Self::Graph> {
 		match id {
@@ -690,5 +702,18 @@ impl<T: Ord> Default for BTreeDataset<T> {
 			default: BTreeGraph::default(),
 			named: BTreeMap::new(),
 		}
+	}
+}
+
+impl<T: Ord> std::iter::FromIterator<Quad<T, T, T, T>> for BTreeDataset<T> {
+	fn from_iter<I: IntoIterator<Item = Quad<T, T, T, T>>>(iter: I) -> Self {
+		use crate::MutableDataset;
+		let mut ds = Self::new();
+
+		for quad in iter {
+			ds.insert(quad);
+		}
+
+		ds
 	}
 }
