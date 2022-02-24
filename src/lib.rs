@@ -18,7 +18,8 @@
 //! One simple way is to iterate through the quad of the dataset:
 //!
 //! ```rust
-//! # use grdf::{Term, Dataset, Quad, HashDataset};
+//! # use rdf_types::{Term, Quad};
+//! # use grdf::{Dataset, HashDataset};
 //! # let dataset: HashDataset<Term> = HashDataset::new();
 //! for Quad(subject, predicate, object, graph) in dataset.quads() {
 //!   // do something
@@ -30,7 +31,8 @@
 //! graph:
 //!
 //! ```rust
-//! # use grdf::{Term, Dataset, Graph, Triple, HashDataset};
+//! # use rdf_types::{Term, Triple};
+//! # use grdf::{Dataset, Graph, HashDataset};
 //! # let dataset: HashDataset<Term> = HashDataset::new();
 //! # let id = None;
 //! let graph = dataset.graph(id).unwrap();
@@ -44,7 +46,8 @@
 //! predicate by predicate, object by object:
 //!
 //! ```rust
-//! # use grdf::{Term, Graph, HashGraph};
+//! # use rdf_types::Term;
+//! # use grdf::{Graph, HashGraph};
 //! # let graph: HashGraph<Term> = HashGraph::new();
 //! // for each subject of the graph...
 //! for (subject, predicates) in graph.subjects() {
@@ -64,11 +67,12 @@
 //! `MutableDataset::insert`:
 //!
 //! ```rust
-//! # use grdf::{Term, MutableDataset, Quad, HashDataset};
+//! # use rdf_types::{Term, Quad, BlankIdBuf};
+//! # use grdf::{MutableDataset, HashDataset};
 //! # let graph = None;
-//! # let subject = Term::Blank(0);
-//! # let predicate = Term::Blank(1);
-//! # let object = Term::Blank(2);
+//! # let subject = Term::Blank(BlankIdBuf::from_u8(0));
+//! # let predicate = Term::Blank(BlankIdBuf::from_u8(1));
+//! # let object = Term::Blank(BlankIdBuf::from_u8(2));
 //! let mut dataset: HashDataset<Term> = HashDataset::new();
 //! dataset.insert(Quad(subject, predicate, object, graph));
 //! ```
@@ -76,11 +80,12 @@
 //! Again it is possible to access each graph of the dataset mutably:
 //!
 //! ```rust
-//! # use grdf::{Term, MutableDataset, MutableGraph, Triple, HashDataset};
+//! # use rdf_types::{Term, Triple, BlankIdBuf};
+//! # use grdf::{MutableDataset, MutableGraph, HashDataset};
 //! # let id = None;
-//! # let subject = Term::Blank(0);
-//! # let predicate = Term::Blank(1);
-//! # let object = Term::Blank(2);
+//! # let subject = Term::Blank(BlankIdBuf::from_u8(0));
+//! # let predicate = Term::Blank(BlankIdBuf::from_u8(1));
+//! # let object = Term::Blank(BlankIdBuf::from_u8(2));
 //! # let mut dataset: HashDataset<Term> = HashDataset::new();
 //! let mut graph = dataset.graph_mut(id).unwrap();
 //! graph.insert(Triple(subject, predicate, object));
@@ -97,6 +102,7 @@ pub use rdf_types::{Quad, Triple};
 
 pub mod btree_dataset;
 pub mod hash_dataset;
+pub mod utils;
 
 pub use btree_dataset::{BTreeDataset, BTreeGraph};
 pub use hash_dataset::{HashDataset, HashGraph};
@@ -352,14 +358,14 @@ pub trait MutableDataset<T = rdf_types::Term>: Dataset<T> {
 		Self: 'a,
 		T: 'a;
 
-	/// Get the given graph mutabily.
+	/// Get the given graph mutably.
 	///
 	/// Use the input `None` to get the default graph.
 	///
 	/// Note to implementors: the default graph should always exists.
 	fn graph_mut(&mut self, id: Option<&T>) -> Option<&mut Self::Graph>;
 
-	/// Get the default graph mutabily.
+	/// Get the default graph mutably.
 	///
 	/// Note to implementors: the default graph should always exists.
 	fn default_graph_mut(&mut self) -> &mut Self::Graph {
