@@ -467,7 +467,7 @@ impl HashDataset {
 	/// There is an isomorphism if there exists a blank node identifier bijection
 	/// between `self` and `other`.
 	/// This is equivalent to `self.find_blank_id_bijection(other).is_some()`.
-	pub fn isomorphic_to(&self, other: &Self) -> bool {
+	pub fn is_isomorphic_to(&self, other: &Self) -> bool {
 		self.find_blank_id_bijection(other).is_some()
 	}
 
