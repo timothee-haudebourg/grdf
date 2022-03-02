@@ -1,3 +1,3 @@
-mod substitution;
+mod isomorphism;
 
-pub use substitution::*;
+pub use isomorphism::*;

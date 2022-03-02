@@ -1,8 +1,10 @@
 //! Dataset implementation based on `BTreeMap` and `BTreeSet`.
-use crate::{Quad, Triple};
+use crate::{utils::BlankIdBijection, Quad, Triple};
+use rdf_types::BlankIdBuf;
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Graph implementation based on `BTreeMap` and `BTreeSet`.
+#[derive(Debug)]
 pub struct BTreeGraph<T: Ord = rdf_types::Term> {
 	table: BTreeMap<T, BTreeMap<T, BTreeSet<T>>>,
 }
@@ -446,9 +448,93 @@ impl<T: Clone + Ord> Iterator for IntoIter<T> {
 	}
 }
 
-pub struct BTreeDataset<T: Ord> {
+#[derive(Debug)]
+pub struct BTreeDataset<T: Ord = rdf_types::Term> {
 	default: BTreeGraph<T>,
 	named: BTreeMap<T, BTreeGraph<T>>,
+}
+
+impl<T: Ord> BTreeDataset<T> {
+	pub fn new() -> Self {
+		Self::default()
+	}
+}
+
+impl BTreeDataset {
+	/// Checks that there is an isomorphism between this dataset and `other`.
+	///
+	/// There is an isomorphism if there exists a blank node identifier bijection
+	/// between `self` and `other`.
+	/// This is equivalent to `self.find_blank_id_bijection(other).is_some()`.
+	pub fn isomorphic_to(&self, other: &Self) -> bool {
+		self.find_blank_id_bijection(other).is_some()
+	}
+
+	/// Finds a blank node identifier bijection between `self` to `other`.
+	/// If such bijection exists,
+	/// there is an isomorphism between `self` and `other`.
+	pub fn find_blank_id_bijection<'a, 'b>(
+		&'a self,
+		other: &'b Self,
+	) -> Option<BlankIdBijection<'a, 'b>> {
+		use crate::Dataset;
+
+		fn has_no_blank(
+			Quad(s, p, o, g): &Quad<
+				&rdf_types::Term,
+				&rdf_types::Term,
+				&rdf_types::Term,
+				&rdf_types::Term,
+			>,
+		) -> bool {
+			!s.is_blank()
+				&& !p.is_blank() && !o.is_blank()
+				&& !g.map(rdf_types::Term::is_blank).unwrap_or(false)
+		}
+
+		let a_non_blank: BTreeSet<_> = self.quads().filter(has_no_blank).collect();
+		let b_non_blank: BTreeSet<_> = other.quads().filter(has_no_blank).collect();
+
+		if a_non_blank == b_non_blank {
+			crate::utils::find_blank_id_bijection(self, other)
+		} else {
+			None
+		}
+	}
+
+	/// Substitutes the blank node identifiers in the dataset.
+	pub fn substitute_blank_ids(self, f: impl Clone + Fn(BlankIdBuf) -> BlankIdBuf) -> Self {
+		use crate::{MutableDataset, SizedDataset};
+		let mut result = Self::new();
+
+		fn substitute_term(
+			term: rdf_types::Term,
+			f: impl Fn(BlankIdBuf) -> BlankIdBuf,
+		) -> rdf_types::Term {
+			match term {
+				rdf_types::Term::Blank(id) => rdf_types::Term::Blank(f(id)),
+				other => other,
+			}
+		}
+
+		fn substitute_quad(
+			Quad(s, p, o, g): rdf_types::GrdfQuad,
+			f: impl Clone + Fn(BlankIdBuf) -> BlankIdBuf,
+		) -> rdf_types::GrdfQuad {
+			Quad(
+				substitute_term(s, f.clone()),
+				substitute_term(p, f.clone()),
+				substitute_term(o, f.clone()),
+				g.map(|g| substitute_term(g, f)),
+			)
+		}
+
+		for quad in self.into_quads() {
+			result.insert(substitute_quad(quad, f.clone()))
+		}
+
+		result
+	}
 }
 
 impl<T: Ord> crate::Dataset<T> for BTreeDataset<T> {
@@ -633,12 +719,6 @@ impl<T: Clone + Ord> Iterator for IntoQuads<T> {
 				},
 			}
 		}
-	}
-}
-
-impl<T: Ord> BTreeDataset<T> {
-	pub fn new() -> Self {
-		Self::default()
 	}
 }
 

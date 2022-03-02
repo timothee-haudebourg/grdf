@@ -1,0 +1,20 @@
+use grdf::{HashDataset, MutableDataset};
+use rdf_types::{BlankIdBuf, Quad, Term};
+use static_iref::iri;
+use std::collections::HashMap;
+
+fn test(a: HashDataset, b: HashDataset) {
+	match a.find_blank_id_bijection(&b) {
+		Some(bijection) => {
+			let substitution: HashMap<_, _> = bijection
+				.forward
+				.into_iter()
+				.map(|(a, b)| (a.to_owned(), b))
+				.collect();
+			let c =
+				a.substitute_blank_ids(|id| (*substitution.get(id.as_ref()).unwrap()).to_owned());
+			assert_eq!(c, b)
+		}
+		None => panic!("no substitution found"),
+	}
+}
