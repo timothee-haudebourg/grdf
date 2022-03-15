@@ -63,7 +63,10 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		}
 	}
 
-	pub fn absorb<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(&mut self, other: G) {
+	pub fn absorb<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(
+		&mut self,
+		other: G,
+	) {
 		let subjects = other.into_subjects();
 
 		for (subject, predicates) in subjects {

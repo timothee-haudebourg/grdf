@@ -62,7 +62,10 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 		}
 	}
 
-	pub fn absorb<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(&mut self, other: G) {
+	pub fn absorb<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(
+		&mut self,
+		other: G,
+	) {
 		let subjects = other.into_subjects();
 
 		for (subject, predicates) in subjects {
@@ -275,9 +278,7 @@ impl<'a, S, P, O> std::iter::IntoIterator for &'a BTreeGraph<S, P, O> {
 	}
 }
 
-impl<S: Clone + Ord, P: Clone + Ord, O: Ord> crate::SizedGraph
-	for BTreeGraph<S, P, O>
-{
+impl<S: Clone + Ord, P: Clone + Ord, O: Ord> crate::SizedGraph for BTreeGraph<S, P, O> {
 	type IntoObjects = IntoObjects<O>;
 	type IntoPredicates = IntoPredicates<P, O>;
 	type IntoSubjects = IntoSubjects<S, P, O>;
@@ -300,9 +301,7 @@ impl<S: Clone + Ord, P: Clone + Ord, O: Ord> crate::SizedGraph
 	}
 }
 
-impl<S: Clone + Ord, P: Clone + Ord, O: Ord> std::iter::IntoIterator
-	for BTreeGraph<S, P, O>
-{
+impl<S: Clone + Ord, P: Clone + Ord, O: Ord> std::iter::IntoIterator for BTreeGraph<S, P, O> {
 	type IntoIter = IntoIter<S, P, O>;
 	type Item = Triple<S, P, O>;
 
@@ -758,9 +757,7 @@ where
 	}
 }
 
-impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::Dataset
-	for BTreeDataset<S, P, O, G>
-{
+impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::Dataset for BTreeDataset<S, P, O, G> {
 	type Subject = S;
 	type Predicate = P;
 	type Object = O;
@@ -864,8 +861,8 @@ impl<'a, S, P, O, G> Iterator for Quads<'a, S, P, O, G> {
 	}
 }
 
-impl<S: Clone + Ord, P: Clone + Ord, O: Ord, G: Clone + Ord>
-	crate::SizedDataset for BTreeDataset<S, P, O, G>
+impl<S: Clone + Ord, P: Clone + Ord, O: Ord, G: Clone + Ord> crate::SizedDataset
+	for BTreeDataset<S, P, O, G>
 {
 	type IntoGraphs = IntoGraphs<S, P, O, G>;
 	type IntoQuads = IntoQuads<S, P, O, G>;
@@ -935,9 +932,7 @@ impl<S: Clone, P: Clone, O, G: Clone> Iterator for IntoQuads<S, P, O, G> {
 	}
 }
 
-impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::MutableDataset
-	for BTreeDataset<S, P, O, G>
-{
+impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::MutableDataset for BTreeDataset<S, P, O, G> {
 	type GraphsMut<'a>
 	where
 		Self: 'a,
@@ -973,8 +968,8 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::MutableDataset
 	}
 }
 
-impl<S: Ord, P: Ord, O: Ord, G: Ord>
-	std::iter::FromIterator<Quad<S, P, O, G>> for BTreeDataset<S, P, O, G>
+impl<S: Ord, P: Ord, O: Ord, G: Ord> std::iter::FromIterator<Quad<S, P, O, G>>
+	for BTreeDataset<S, P, O, G>
 {
 	fn from_iter<I: IntoIterator<Item = Quad<S, P, O, G>>>(iter: I) -> Self {
 		let mut ds = Self::new();
