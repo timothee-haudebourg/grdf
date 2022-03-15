@@ -103,6 +103,8 @@ pub use rdf_types::{Quad, Triple};
 pub mod btree_dataset;
 pub mod hash_dataset;
 pub mod utils;
+
+#[cfg(feature = "loc")]
 pub mod loc;
 
 pub use btree_dataset::{BTreeDataset, BTreeGraph};
