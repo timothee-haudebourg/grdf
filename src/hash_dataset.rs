@@ -38,10 +38,63 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 
 		HashGraph { table: subject_map }
 	}
+
+	pub fn insert(&mut self, triple: Triple<S, P, O>) {
+		let (subject, predicate, object) = triple.into_parts();
+
+		match self.table.get_mut(&subject) {
+			Some(bindings) => match bindings.get_mut(&predicate) {
+				Some(objects) => {
+					objects.insert(object);
+				}
+				None => {
+					let mut objects = HashSet::new();
+					objects.insert(object);
+					bindings.insert(predicate, objects);
+				}
+			},
+			None => {
+				let mut bindings = HashMap::new();
+				let mut objects = HashSet::new();
+				objects.insert(object);
+				bindings.insert(predicate, objects);
+				self.table.insert(subject, bindings);
+			}
+		}
+	}
+
+	pub fn absorb<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(&mut self, other: G) {
+		let subjects = other.into_subjects();
+
+		for (subject, predicates) in subjects {
+			match self.table.get_mut(&subject) {
+				Some(bindings) => {
+					for (predicate, objects) in predicates {
+						match bindings.get_mut(&predicate) {
+							Some(other_objects) => {
+								other_objects.extend(objects);
+							}
+							None => {
+								bindings.insert(predicate, objects.collect());
+							}
+						}
+					}
+				}
+				None => {
+					let mut bindings = HashMap::new();
+					for (predicate, objects) in predicates {
+						bindings.insert(predicate, objects.collect());
+					}
+
+					self.table.insert(subject, bindings);
+				}
+			}
+		}
+	}
 }
 
 impl<S, P, O> HashGraph<S, P, O> {
-	fn triples(&self) -> Iter<S, P, O> {
+	pub fn triples(&self) -> Iter<S, P, O> {
 		Iter {
 			subjects: self.subjects(),
 			subject: None,
@@ -51,13 +104,13 @@ impl<S, P, O> HashGraph<S, P, O> {
 		}
 	}
 
-	fn subjects(&self) -> Subjects<S, P, O> {
+	pub fn subjects(&self) -> Subjects<S, P, O> {
 		Subjects {
 			it: self.table.iter(),
 		}
 	}
 
-	fn predicates(&self, subject: &S) -> Predicates<P, O>
+	pub fn predicates(&self, subject: &S) -> Predicates<P, O>
 	where
 		S: Eq + Hash,
 	{
@@ -69,7 +122,7 @@ impl<S, P, O> HashGraph<S, P, O> {
 		}
 	}
 
-	fn objects(&self, subject: &S, predicate: &P) -> Objects<O>
+	pub fn objects(&self, subject: &S, predicate: &P) -> Objects<O>
 	where
 		S: Eq + Hash,
 		P: Eq + Hash,
@@ -85,7 +138,7 @@ impl<S, P, O> HashGraph<S, P, O> {
 		}
 	}
 
-	fn contains(&self, Triple(subject, predicate, object): Triple<&S, &P, &O>) -> bool
+	pub fn contains(&self, Triple(subject, predicate, object): Triple<&S, &P, &O>) -> bool
 	where
 		S: Eq + Hash,
 		P: Eq + Hash,
@@ -100,7 +153,7 @@ impl<S, P, O> HashGraph<S, P, O> {
 		}
 	}
 
-	fn into_triples(self) -> IntoIter<S, P, O> {
+	pub fn into_triples(self) -> IntoIter<S, P, O> {
 		IntoIter {
 			subjects: self.into_subjects(),
 			subject: None,
@@ -110,13 +163,13 @@ impl<S, P, O> HashGraph<S, P, O> {
 		}
 	}
 
-	fn into_subjects(self) -> IntoSubjects<S, P, O> {
+	pub fn into_subjects(self) -> IntoSubjects<S, P, O> {
 		IntoSubjects {
 			it: self.table.into_iter(),
 		}
 	}
 
-	fn into_predicates(mut self, subject: &S) -> IntoPredicates<P, O>
+	pub fn into_predicates(mut self, subject: &S) -> IntoPredicates<P, O>
 	where
 		S: Eq + Hash,
 	{
@@ -128,7 +181,7 @@ impl<S, P, O> HashGraph<S, P, O> {
 		}
 	}
 
-	fn into_objects(mut self, subject: &S, predicate: &P) -> IntoObjects<O>
+	pub fn into_objects(mut self, subject: &S, predicate: &P) -> IntoObjects<O>
 	where
 		S: Eq + Hash,
 		P: Eq + Hash,
@@ -261,56 +314,11 @@ impl<S: Clone + Eq + Hash, P: Clone + Eq + Hash, O: Eq + Hash> std::iter::IntoIt
 
 impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> crate::MutableGraph for HashGraph<S, P, O> {
 	fn insert(&mut self, triple: Triple<S, P, O>) {
-		let (subject, predicate, object) = triple.into_parts();
-
-		match self.table.get_mut(&subject) {
-			Some(bindings) => match bindings.get_mut(&predicate) {
-				Some(objects) => {
-					objects.insert(object);
-				}
-				None => {
-					let mut objects = HashSet::new();
-					objects.insert(object);
-					bindings.insert(predicate, objects);
-				}
-			},
-			None => {
-				let mut bindings = HashMap::new();
-				let mut objects = HashSet::new();
-				objects.insert(object);
-				bindings.insert(predicate, objects);
-				self.table.insert(subject, bindings);
-			}
-		}
+		self.insert(triple)
 	}
 
 	fn absorb<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(&mut self, other: G) {
-		let subjects = other.into_subjects();
-
-		for (subject, predicates) in subjects {
-			match self.table.get_mut(&subject) {
-				Some(bindings) => {
-					for (predicate, objects) in predicates {
-						match bindings.get_mut(&predicate) {
-							Some(other_objects) => {
-								other_objects.extend(objects);
-							}
-							None => {
-								bindings.insert(predicate, objects.collect());
-							}
-						}
-					}
-				}
-				None => {
-					let mut bindings = HashMap::new();
-					for (predicate, objects) in predicates {
-						bindings.insert(predicate, objects.collect());
-					}
-
-					self.table.insert(subject, bindings);
-				}
-			}
-		}
+		self.absorb(other)
 	}
 }
 
@@ -565,7 +573,7 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 		}
 	}
 
-	fn graph_mut(&mut self, id: Option<&G>) -> Option<&mut HashGraph<S, P, O>>
+	pub fn graph_mut(&mut self, id: Option<&G>) -> Option<&mut HashGraph<S, P, O>>
 	where
 		G: Eq + Hash,
 	{
@@ -575,21 +583,21 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 		}
 	}
 
-	fn graphs_mut(&mut self) -> GraphsMut<S, P, O, G> {
+	pub fn graphs_mut(&mut self) -> GraphsMut<S, P, O, G> {
 		GraphsMut {
 			default: Some(&mut self.default),
 			it: self.named.iter_mut(),
 		}
 	}
 
-	fn insert_graph(&mut self, id: G, graph: HashGraph<S, P, O>) -> Option<HashGraph<S, P, O>>
+	pub fn insert_graph(&mut self, id: G, graph: HashGraph<S, P, O>) -> Option<HashGraph<S, P, O>>
 	where
 		G: Eq + Hash,
 	{
 		self.named.insert(id, graph)
 	}
 
-	fn into_graph(mut self, id: Option<&G>) -> Option<HashGraph<S, P, O>>
+	pub fn into_graph(mut self, id: Option<&G>) -> Option<HashGraph<S, P, O>>
 	where
 		G: Eq + Hash,
 	{
@@ -599,14 +607,14 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 		}
 	}
 
-	fn into_graphs(self) -> IntoGraphs<S, P, O, G> {
+	pub fn into_graphs(self) -> IntoGraphs<S, P, O, G> {
 		IntoGraphs {
 			default: Some(self.default),
 			it: self.named.into_iter(),
 		}
 	}
 
-	fn into_quads(self) -> IntoQuads<S, P, O, G> {
+	pub fn into_quads(self) -> IntoQuads<S, P, O, G> {
 		IntoQuads {
 			graphs: self.into_graphs(),
 			graph: None,
@@ -616,8 +624,7 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 }
 
 impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O, G> {
-	fn insert(&mut self, quad: Quad<S, P, O, G>) {
-		use crate::MutableGraph;
+	pub fn insert(&mut self, quad: Quad<S, P, O, G>) {
 		let (subject, predicate, object, graph_name) = quad.into_parts();
 		match self.graph_mut(graph_name.as_ref()) {
 			Some(g) => g.insert(Triple(subject, predicate, object)),
@@ -629,13 +636,12 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O
 		}
 	}
 
-	fn absorb<D: crate::SizedDataset<Subject = S, Predicate = P, Object = O, GraphLabel = G>>(
+	pub fn absorb<D: crate::SizedDataset<Subject = S, Predicate = P, Object = O, GraphLabel = G>>(
 		&mut self,
 		other: D,
 	) where
 		D::Graph: crate::SizedGraph,
 	{
-		use crate::MutableGraph;
 		for (id, graph) in other.into_graphs() {
 			match self.graph_mut(id.as_ref()) {
 				Some(g) => g.absorb(graph),

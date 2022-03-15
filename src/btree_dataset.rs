@@ -1,7 +1,7 @@
 //! Dataset implementation based on `BTreeMap` and `BTreeSet`.
 use crate::{utils::BTreeBijection, Quad, Triple};
 use derivative::Derivative;
-use rdf_types::AsTerm;
+use rdf_types::{AsTerm, IntoTerm};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Graph implementation based on `BTreeMap` and `BTreeSet`.
@@ -37,10 +37,63 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 
 		BTreeGraph { table: subject_map }
 	}
+
+	pub fn insert(&mut self, triple: Triple<S, P, O>) {
+		let (subject, predicate, object) = triple.into_parts();
+
+		match self.table.get_mut(&subject) {
+			Some(bindings) => match bindings.get_mut(&predicate) {
+				Some(objects) => {
+					objects.insert(object);
+				}
+				None => {
+					let mut objects = BTreeSet::new();
+					objects.insert(object);
+					bindings.insert(predicate, objects);
+				}
+			},
+			None => {
+				let mut bindings = BTreeMap::new();
+				let mut objects = BTreeSet::new();
+				objects.insert(object);
+				bindings.insert(predicate, objects);
+				self.table.insert(subject, bindings);
+			}
+		}
+	}
+
+	pub fn absorb<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(&mut self, other: G) {
+		let subjects = other.into_subjects();
+
+		for (subject, predicates) in subjects {
+			match self.table.get_mut(&subject) {
+				Some(bindings) => {
+					for (predicate, objects) in predicates {
+						match bindings.get_mut(&predicate) {
+							Some(other_objects) => {
+								other_objects.extend(objects);
+							}
+							None => {
+								bindings.insert(predicate, objects.collect());
+							}
+						}
+					}
+				}
+				None => {
+					let mut bindings = BTreeMap::new();
+					for (predicate, objects) in predicates {
+						bindings.insert(predicate, objects.collect());
+					}
+
+					self.table.insert(subject, bindings);
+				}
+			}
+		}
+	}
 }
 
 impl<S, P, O> BTreeGraph<S, P, O> {
-	fn triples(&self) -> Iter<S, P, O> {
+	pub fn triples(&self) -> Iter<S, P, O> {
 		Iter {
 			subjects: self.subjects(),
 			subject: None,
@@ -50,13 +103,13 @@ impl<S, P, O> BTreeGraph<S, P, O> {
 		}
 	}
 
-	fn subjects(&self) -> Subjects<S, P, O> {
+	pub fn subjects(&self) -> Subjects<S, P, O> {
 		Subjects {
 			it: self.table.iter(),
 		}
 	}
 
-	fn predicates(&self, subject: &S) -> Predicates<P, O>
+	pub fn predicates(&self, subject: &S) -> Predicates<P, O>
 	where
 		S: Ord,
 	{
@@ -68,7 +121,7 @@ impl<S, P, O> BTreeGraph<S, P, O> {
 		}
 	}
 
-	fn objects(&self, subject: &S, predicate: &P) -> Objects<O>
+	pub fn objects(&self, subject: &S, predicate: &P) -> Objects<O>
 	where
 		S: Ord,
 		P: Ord,
@@ -84,7 +137,7 @@ impl<S, P, O> BTreeGraph<S, P, O> {
 		}
 	}
 
-	fn contains(&self, Triple(subject, predicate, object): Triple<&S, &P, &O>) -> bool
+	pub fn contains(&self, Triple(subject, predicate, object): Triple<&S, &P, &O>) -> bool
 	where
 		S: Ord,
 		P: Ord,
@@ -99,7 +152,7 @@ impl<S, P, O> BTreeGraph<S, P, O> {
 		}
 	}
 
-	fn into_triples(self) -> IntoIter<S, P, O> {
+	pub fn into_triples(self) -> IntoIter<S, P, O> {
 		IntoIter {
 			subjects: self.into_subjects(),
 			subject: None,
@@ -109,13 +162,13 @@ impl<S, P, O> BTreeGraph<S, P, O> {
 		}
 	}
 
-	fn into_subjects(self) -> IntoSubjects<S, P, O> {
+	pub fn into_subjects(self) -> IntoSubjects<S, P, O> {
 		IntoSubjects {
 			it: self.table.into_iter(),
 		}
 	}
 
-	fn into_predicates(mut self, subject: &S) -> IntoPredicates<P, O>
+	pub fn into_predicates(mut self, subject: &S) -> IntoPredicates<P, O>
 	where
 		S: Ord,
 	{
@@ -127,7 +180,7 @@ impl<S, P, O> BTreeGraph<S, P, O> {
 		}
 	}
 
-	fn into_objects(mut self, subject: &S, predicate: &P) -> IntoObjects<O>
+	pub fn into_objects(mut self, subject: &S, predicate: &P) -> IntoObjects<O>
 	where
 		S: Ord,
 		P: Ord,
@@ -222,7 +275,9 @@ impl<'a, S, P, O> std::iter::IntoIterator for &'a BTreeGraph<S, P, O> {
 	}
 }
 
-impl<S: Clone + Ord, P: Clone + Ord, O: Ord> crate::SizedGraph for BTreeGraph<S, P, O> {
+impl<S: Clone + Ord, P: Clone + Ord, O: Ord> crate::SizedGraph
+	for BTreeGraph<S, P, O>
+{
 	type IntoObjects = IntoObjects<O>;
 	type IntoPredicates = IntoPredicates<P, O>;
 	type IntoSubjects = IntoSubjects<S, P, O>;
@@ -245,7 +300,9 @@ impl<S: Clone + Ord, P: Clone + Ord, O: Ord> crate::SizedGraph for BTreeGraph<S,
 	}
 }
 
-impl<S: Clone + Ord, P: Clone + Ord, O: Ord> std::iter::IntoIterator for BTreeGraph<S, P, O> {
+impl<S: Clone + Ord, P: Clone + Ord, O: Ord> std::iter::IntoIterator
+	for BTreeGraph<S, P, O>
+{
 	type IntoIter = IntoIter<S, P, O>;
 	type Item = Triple<S, P, O>;
 
@@ -256,56 +313,11 @@ impl<S: Clone + Ord, P: Clone + Ord, O: Ord> std::iter::IntoIterator for BTreeGr
 
 impl<S: Ord, P: Ord, O: Ord> crate::MutableGraph for BTreeGraph<S, P, O> {
 	fn insert(&mut self, triple: Triple<S, P, O>) {
-		let (subject, predicate, object) = triple.into_parts();
-
-		match self.table.get_mut(&subject) {
-			Some(bindings) => match bindings.get_mut(&predicate) {
-				Some(objects) => {
-					objects.insert(object);
-				}
-				None => {
-					let mut objects = BTreeSet::new();
-					objects.insert(object);
-					bindings.insert(predicate, objects);
-				}
-			},
-			None => {
-				let mut bindings = BTreeMap::new();
-				let mut objects = BTreeSet::new();
-				objects.insert(object);
-				bindings.insert(predicate, objects);
-				self.table.insert(subject, bindings);
-			}
-		}
+		self.insert(triple)
 	}
 
 	fn absorb<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(&mut self, other: G) {
-		let subjects = other.into_subjects();
-
-		for (subject, predicates) in subjects {
-			match self.table.get_mut(&subject) {
-				Some(bindings) => {
-					for (predicate, objects) in predicates {
-						match bindings.get_mut(&predicate) {
-							Some(other_objects) => {
-								other_objects.extend(objects);
-							}
-							None => {
-								bindings.insert(predicate, objects.collect());
-							}
-						}
-					}
-				}
-				None => {
-					let mut bindings = BTreeMap::new();
-					for (predicate, objects) in predicates {
-						bindings.insert(predicate, objects.collect());
-					}
-
-					self.table.insert(subject, bindings);
-				}
-			}
-		}
+		self.absorb(other)
 	}
 }
 
@@ -559,6 +571,137 @@ impl<S, P, O, G> BTreeDataset<S, P, O, G> {
 			triples: None,
 		}
 	}
+
+	pub fn graph_mut(&mut self, id: Option<&G>) -> Option<&mut BTreeGraph<S, P, O>>
+	where
+		G: Ord,
+	{
+		match id {
+			Some(id) => self.named.get_mut(id),
+			None => Some(&mut self.default),
+		}
+	}
+
+	pub fn graphs_mut(&mut self) -> GraphsMut<S, P, O, G> {
+		GraphsMut {
+			default: Some(&mut self.default),
+			it: self.named.iter_mut(),
+		}
+	}
+
+	pub fn insert_graph(&mut self, id: G, graph: BTreeGraph<S, P, O>) -> Option<BTreeGraph<S, P, O>>
+	where
+		G: Ord,
+	{
+		self.named.insert(id, graph)
+	}
+
+	pub fn into_graph(mut self, id: Option<&G>) -> Option<BTreeGraph<S, P, O>>
+	where
+		G: Ord,
+	{
+		match id {
+			Some(id) => self.named.remove(id),
+			None => Some(self.default),
+		}
+	}
+
+	pub fn into_graphs(self) -> IntoGraphs<S, P, O, G> {
+		IntoGraphs {
+			default: Some(self.default),
+			it: self.named.into_iter(),
+		}
+	}
+
+	pub fn into_quads(self) -> IntoQuads<S, P, O, G> {
+		IntoQuads {
+			graphs: self.into_graphs(),
+			graph: None,
+			triples: None,
+		}
+	}
+}
+
+impl<S: Ord, P: Ord, O: Ord, G: Ord> BTreeDataset<S, P, O, G> {
+	pub fn insert(&mut self, quad: Quad<S, P, O, G>) {
+		let (subject, predicate, object, graph_name) = quad.into_parts();
+		match self.graph_mut(graph_name.as_ref()) {
+			Some(g) => g.insert(Triple(subject, predicate, object)),
+			None => {
+				let mut g = BTreeGraph::new();
+				g.insert(Triple(subject, predicate, object));
+				self.insert_graph(graph_name.unwrap(), g);
+			}
+		}
+	}
+
+	pub fn absorb<D: crate::SizedDataset<Subject = S, Predicate = P, Object = O, GraphLabel = G>>(
+		&mut self,
+		other: D,
+	) where
+		D::Graph: crate::SizedGraph,
+	{
+		for (id, graph) in other.into_graphs() {
+			match self.graph_mut(id.as_ref()) {
+				Some(g) => g.absorb(graph),
+				None => {
+					self.insert_graph(id.unwrap(), BTreeGraph::from_graph(graph));
+				}
+			}
+		}
+	}
+
+	/// Substitutes the blank node identifiers in the dataset.
+	pub fn substitute_blank_ids(self, f: impl Clone + Fn(S::BlankId) -> S::BlankId) -> Self
+	where
+		S: Clone + IntoTerm + From<rdf_types::Term<S::Iri, S::BlankId, S::Literal>>,
+		P: Clone
+			+ IntoTerm<BlankId = S::BlankId>
+			+ From<rdf_types::Term<P::Iri, P::BlankId, P::Literal>>,
+		O: IntoTerm<BlankId = S::BlankId> + From<rdf_types::Term<O::Iri, O::BlankId, O::Literal>>,
+		G: Clone
+			+ IntoTerm<BlankId = S::BlankId>
+			+ From<rdf_types::Term<G::Iri, G::BlankId, G::Literal>>,
+	{
+		let mut result = Self::new();
+
+		fn substitute_term<T: IntoTerm + From<rdf_types::Term<T::Iri, T::BlankId, T::Literal>>>(
+			term: T,
+			f: impl Clone + Fn(T::BlankId) -> T::BlankId,
+		) -> T {
+			match term.into_term() {
+				rdf_types::Term::Blank(id) => rdf_types::Term::Blank(f(id)).into(),
+				other => other.into(),
+			}
+		}
+
+		fn substitute_quad<S, P, O, G>(
+			Quad(s, p, o, g): Quad<S, P, O, G>,
+			f: impl Clone + Fn(S::BlankId) -> S::BlankId,
+		) -> Quad<S, P, O, G>
+		where
+			S: IntoTerm + From<rdf_types::Term<S::Iri, S::BlankId, S::Literal>>,
+			P: IntoTerm<BlankId = S::BlankId>
+				+ From<rdf_types::Term<P::Iri, P::BlankId, P::Literal>>,
+			O: IntoTerm<BlankId = S::BlankId>
+				+ From<rdf_types::Term<O::Iri, O::BlankId, O::Literal>>,
+			G: IntoTerm<BlankId = S::BlankId>
+				+ From<rdf_types::Term<G::Iri, G::BlankId, G::Literal>>,
+		{
+			Quad(
+				substitute_term(s, f.clone()),
+				substitute_term(p, f.clone()),
+				substitute_term(o, f.clone()),
+				g.map(|g| substitute_term(g, f)),
+			)
+		}
+
+		for quad in self.into_quads() {
+			result.insert(substitute_quad(quad, f.clone()))
+		}
+
+		result
+	}
 }
 
 impl<S: Ord, P: Ord, O: Ord, G: Ord> BTreeDataset<S, P, O, G>
@@ -615,7 +758,9 @@ where
 	}
 }
 
-impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::Dataset for BTreeDataset<S, P, O, G> {
+impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::Dataset
+	for BTreeDataset<S, P, O, G>
+{
 	type Subject = S;
 	type Predicate = P;
 	type Object = O;
@@ -639,25 +784,15 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::Dataset for BTreeDataset<S, P, O, G>
 	= Quads<'a, S, P, O, G>;
 
 	fn graph(&self, id: Option<&G>) -> Option<&BTreeGraph<S, P, O>> {
-		match id {
-			Some(id) => self.named.get(id),
-			None => Some(&self.default),
-		}
+		self.graph(id)
 	}
 
 	fn graphs(&self) -> Graphs<'_, S, P, O, G> {
-		Graphs {
-			default: Some(&self.default),
-			it: self.named.iter(),
-		}
+		self.graphs()
 	}
 
 	fn quads(&self) -> Quads<'_, S, P, O, G> {
-		Quads {
-			graphs: self.graphs(),
-			graph: None,
-			triples: None,
-		}
+		self.quads()
 	}
 }
 
@@ -729,32 +864,22 @@ impl<'a, S, P, O, G> Iterator for Quads<'a, S, P, O, G> {
 	}
 }
 
-impl<S: Clone + Ord, P: Clone + Ord, O: Ord, G: Clone + Ord> crate::SizedDataset
-	for BTreeDataset<S, P, O, G>
+impl<S: Clone + Ord, P: Clone + Ord, O: Ord, G: Clone + Ord>
+	crate::SizedDataset for BTreeDataset<S, P, O, G>
 {
 	type IntoGraphs = IntoGraphs<S, P, O, G>;
 	type IntoQuads = IntoQuads<S, P, O, G>;
 
-	fn into_graph(mut self, id: Option<&G>) -> Option<Self::Graph> {
-		match id {
-			Some(id) => self.named.remove(id),
-			None => Some(self.default),
-		}
+	fn into_graph(self, id: Option<&G>) -> Option<Self::Graph> {
+		self.into_graph(id)
 	}
 
 	fn into_graphs(self) -> Self::IntoGraphs {
-		IntoGraphs {
-			default: Some(self.default),
-			it: self.named.into_iter(),
-		}
+		self.into_graphs()
 	}
 
 	fn into_quads(self) -> Self::IntoQuads {
-		IntoQuads {
-			graphs: self.into_graphs(),
-			graph: None,
-			triples: None,
-		}
+		self.into_quads()
 	}
 }
 
@@ -778,7 +903,7 @@ impl<S, P, O, G> Iterator for IntoGraphs<S, P, O, G> {
 	}
 }
 
-pub struct IntoQuads<S: Clone = rdf_types::Term, P: Clone = S, O = S, G: Clone = S> {
+pub struct IntoQuads<S = rdf_types::Term, P = S, O = S, G = S> {
 	graphs: IntoGraphs<S, P, O, G>,
 	graph: Option<G>,
 	triples: Option<IntoIter<S, P, O>>,
@@ -810,7 +935,9 @@ impl<S: Clone, P: Clone, O, G: Clone> Iterator for IntoQuads<S, P, O, G> {
 	}
 }
 
-impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::MutableDataset for BTreeDataset<S, P, O, G> {
+impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::MutableDataset
+	for BTreeDataset<S, P, O, G>
+{
 	type GraphsMut<'a>
 	where
 		Self: 'a,
@@ -821,17 +948,11 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::MutableDataset for BTreeDataset<S, P
 	= GraphsMut<'a, S, P, O, G>;
 
 	fn graph_mut(&mut self, id: Option<&G>) -> Option<&mut Self::Graph> {
-		match id {
-			Some(id) => self.named.get_mut(id),
-			None => Some(&mut self.default),
-		}
+		self.graph_mut(id)
 	}
 
 	fn graphs_mut(&mut self) -> Self::GraphsMut<'_> {
-		GraphsMut {
-			default: Some(&mut self.default),
-			it: self.named.iter_mut(),
-		}
+		self.graphs_mut()
 	}
 
 	fn insert_graph(&mut self, id: G, graph: Self::Graph) -> Option<Self::Graph> {
@@ -839,16 +960,7 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::MutableDataset for BTreeDataset<S, P
 	}
 
 	fn insert(&mut self, quad: Quad<S, P, O, G>) {
-		use crate::MutableGraph;
-		let (subject, predicate, object, graph_name) = quad.into_parts();
-		match self.graph_mut(graph_name.as_ref()) {
-			Some(g) => g.insert(Triple(subject, predicate, object)),
-			None => {
-				let mut g = BTreeGraph::new();
-				g.insert(Triple(subject, predicate, object));
-				self.insert_graph(graph_name.unwrap(), g);
-			}
-		}
+		self.insert(quad)
 	}
 
 	fn absorb<D: crate::SizedDataset<Subject = S, Predicate = P, Object = O, GraphLabel = G>>(
@@ -857,23 +969,14 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::MutableDataset for BTreeDataset<S, P
 	) where
 		D::Graph: crate::SizedGraph,
 	{
-		use crate::MutableGraph;
-		for (id, graph) in other.into_graphs() {
-			match self.graph_mut(id.as_ref()) {
-				Some(g) => g.absorb(graph),
-				None => {
-					self.insert_graph(id.unwrap(), BTreeGraph::from_graph(graph));
-				}
-			}
-		}
+		self.absorb(other)
 	}
 }
 
-impl<S: Ord, P: Ord, O: Ord, G: Ord> std::iter::FromIterator<Quad<S, P, O, G>>
-	for BTreeDataset<S, P, O, G>
+impl<S: Ord, P: Ord, O: Ord, G: Ord>
+	std::iter::FromIterator<Quad<S, P, O, G>> for BTreeDataset<S, P, O, G>
 {
 	fn from_iter<I: IntoIterator<Item = Quad<S, P, O, G>>>(iter: I) -> Self {
-		use crate::MutableDataset;
 		let mut ds = Self::new();
 
 		for quad in iter {

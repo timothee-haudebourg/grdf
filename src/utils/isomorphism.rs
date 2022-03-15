@@ -22,7 +22,7 @@ where
 
 #[cfg(test)]
 mod tests {
-	use crate::{HashDataset, MutableDataset};
+	use crate::HashDataset;
 	use rdf_types::{BlankId, BlankIdBuf, Quad, Term};
 	use static_iref::iri;
 

@@ -15,6 +15,7 @@ readme = "README.md"
 iref = "2.1.1"
 rdf-types = "0.3.2"
 derivative = "2.2.0"
+locspan = { version = "0.3.0" }
 
 [dev-dependencies]
 static-iref = "1.0.0"
