@@ -5,6 +5,12 @@ use locspan::{Loc, Location};
 use rdf_types::loc::LocQuad;
 use std::hash::Hash;
 
+/// Located [`Quad`](rdf_types::Quad) where each component if borrowed.
+pub type LocQuadRef<'s, 'p, 'o, 'g, 'f, S, P, O, G, F> = Loc<
+	rdf_types::Quad<Loc<&'s S, &'f F>, Loc<&'p P, &'f F>, Loc<&'o O, &'f F>, Loc<&'g G, &'f F>>,
+	&'f F,
+>;
+
 /// Quad of [`Location`]s.
 pub type Locations<F> = rdf_types::Quad<Location<F>, Location<F>, Location<F>, Location<F>>;
 
@@ -54,7 +60,7 @@ impl<O, F> Object<O, F> {
 		s: &'s S,
 		p: &'p P,
 		g: Option<&'g G>,
-	) -> Loc<rdf_types::Quad<Loc<&'s S, &F>, Loc<&'p P, &F>, Loc<&O, &F>, Loc<&'g G, &F>>, &F> {
+	) -> LocQuadRef<'s, 'p, '_, 'g, '_, S, P, O, G, F> {
 		Loc(
 			rdf_types::Quad(
 				Loc(s, self.locations.subject().borrow()),
