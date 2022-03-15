@@ -1,4 +1,4 @@
-use grdf::{HashDataset, MutableDataset};
+use grdf::HashDataset;
 use rdf_types::{BlankIdBuf, Quad, Term};
 use static_iref::iri;
 

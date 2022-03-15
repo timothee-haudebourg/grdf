@@ -1,6 +1,6 @@
 //! This file is auto generated using the
 //! `tests/utils/generate-iso-test.rb` script.
-use grdf::{HashDataset, MutableDataset};
+use grdf::HashDataset;
 use rdf_types::{BlankIdBuf, Quad, Term};
 use static_iref::iri;
 use std::collections::HashMap;
