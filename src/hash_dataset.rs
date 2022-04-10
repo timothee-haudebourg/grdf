@@ -3,10 +3,11 @@ use crate::{utils::HashBijection, Quad, Triple};
 use derivative::Derivative;
 use rdf_types::{AsTerm, IntoTerm};
 use std::collections::{HashMap, HashSet};
+use std::fmt;
 use std::hash::Hash;
 
 /// Graph implementation based on `HashMap` and `HashSet`.
-#[derive(Debug, Derivative)]
+#[derive(Derivative)]
 #[derivative(PartialEq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash"))]
 #[derivative(Eq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash"))]
 #[derivative(Default(bound = ""))]
@@ -325,6 +326,22 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> crate::MutableGraph for HashGraph
 	}
 }
 
+impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug> fmt::Debug for HashGraph<S, P, O> {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		write!(f, "{{")?;
+
+		for (i, rdf_types::Triple(s, p, o)) in self.triples().enumerate() {
+			if i > 0 {
+				write!(f, ",")?;
+			}
+
+			write!(f, " {:?} {:?} {:?}", s, p, o)?;
+		}
+
+		write!(f, "  }}")
+	}
+}
+
 pub struct Subjects<'a, S, P, O> {
 	it: std::collections::hash_map::Iter<'a, S, HashMap<P, HashSet<O>>>,
 }
@@ -557,7 +574,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> std::iter::Extend<Triple<S, P, O>
 	}
 }
 
-#[derive(Debug, Derivative)]
+#[derive(Derivative)]
 #[derivative(PartialEq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash"))]
 #[derivative(Eq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash"))]
 #[derivative(Default(bound = ""))]
@@ -817,6 +834,27 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> crate::Dataset
 
 	fn quads(&self) -> Quads<'_, S, P, O, G> {
 		self.quads()
+	}
+}
+
+impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug, G: fmt::Debug> fmt::Debug
+	for HashDataset<S, P, O, G>
+{
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		write!(f, "{{")?;
+
+		for (i, rdf_types::Quad(s, p, o, g)) in self.quads().enumerate() {
+			if i > 0 {
+				write!(f, ",")?;
+			}
+
+			match g {
+				Some(g) => write!(f, " {:?} {:?} {:?} {:?}", s, p, o, g)?,
+				None => write!(f, " {:?} {:?} {:?}", s, p, o)?,
+			}
+		}
+
+		write!(f, "  }}")
 	}
 }
 

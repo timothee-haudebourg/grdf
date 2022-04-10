@@ -3,10 +3,11 @@ use crate::{utils::BTreeBijection, Quad, Triple};
 use derivative::Derivative;
 use rdf_types::{AsTerm, IntoTerm};
 use std::collections::{BTreeMap, BTreeSet};
+use std::fmt;
 use std::hash::Hash;
 
 /// Graph implementation based on `BTreeMap` and `BTreeSet`.
-#[derive(Debug, Derivative)]
+#[derive(Derivative)]
 #[derivative(PartialEq(bound = "S: Ord, P: Ord, O: Ord"))]
 #[derivative(Eq(bound = "S: Ord, P: Ord, O: Ord"))]
 #[derivative(PartialOrd(bound = "S: Ord, P: Ord, O: Ord"))]
@@ -21,6 +22,22 @@ impl<S, P, O> BTreeGraph<S, P, O> {
 	/// Create a new empty `BTreeGraph`.
 	pub fn new() -> Self {
 		Self::default()
+	}
+}
+
+impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug> fmt::Debug for BTreeGraph<S, P, O> {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		write!(f, "{{")?;
+
+		for (i, rdf_types::Triple(s, p, o)) in self.triples().enumerate() {
+			if i > 0 {
+				write!(f, ",")?;
+			}
+
+			write!(f, " {:?} {:?} {:?}", s, p, o)?;
+		}
+
+		write!(f, "  }}")
 	}
 }
 
@@ -552,7 +569,7 @@ impl<S: Ord, P: Ord, O: Ord> std::iter::Extend<Triple<S, P, O>> for BTreeGraph<S
 	}
 }
 
-#[derive(Debug, Derivative)]
+#[derive(Derivative)]
 #[derivative(PartialEq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
 #[derivative(Eq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
 #[derivative(PartialOrd(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
@@ -813,6 +830,27 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::Dataset for BTreeDataset<S, P, O, G>
 
 	fn quads(&self) -> Quads<'_, S, P, O, G> {
 		self.quads()
+	}
+}
+
+impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug, G: fmt::Debug> fmt::Debug
+	for BTreeDataset<S, P, O, G>
+{
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		write!(f, "{{")?;
+
+		for (i, rdf_types::Quad(s, p, o, g)) in self.quads().enumerate() {
+			if i > 0 {
+				write!(f, ",")?;
+			}
+
+			match g {
+				Some(g) => write!(f, " {:?} {:?} {:?} {:?}", s, p, o, g)?,
+				None => write!(f, " {:?} {:?} {:?}", s, p, o)?,
+			}
+		}
+
+		write!(f, "  }}")
 	}
 }
 
