@@ -537,6 +537,26 @@ impl<S: Clone, P: Clone, O> Iterator for IntoIter<S, P, O> {
 	}
 }
 
+impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> std::iter::FromIterator<Triple<S, P, O>>
+	for HashGraph<S, P, O>
+{
+	fn from_iter<I: IntoIterator<Item = Triple<S, P, O>>>(iter: I) -> Self {
+		let mut ds = Self::new();
+		ds.extend(iter);
+		ds
+	}
+}
+
+impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> std::iter::Extend<Triple<S, P, O>>
+	for HashGraph<S, P, O>
+{
+	fn extend<I: IntoIterator<Item = Triple<S, P, O>>>(&mut self, iter: I) {
+		for quad in iter {
+			self.insert(quad);
+		}
+	}
+}
+
 #[derive(Debug, Derivative)]
 #[derivative(PartialEq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash"))]
 #[derivative(Eq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash"))]
@@ -982,11 +1002,17 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash>
 {
 	fn from_iter<I: IntoIterator<Item = Quad<S, P, O, G>>>(iter: I) -> Self {
 		let mut ds = Self::new();
-
-		for quad in iter {
-			ds.insert(quad);
-		}
-
+		ds.extend(iter);
 		ds
+	}
+}
+
+impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> std::iter::Extend<Quad<S, P, O, G>>
+	for HashDataset<S, P, O, G>
+{
+	fn extend<I: IntoIterator<Item = Quad<S, P, O, G>>>(&mut self, iter: I) {
+		for quad in iter {
+			self.insert(quad);
+		}
 	}
 }

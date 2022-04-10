@@ -536,6 +536,22 @@ impl<S: Clone, P: Clone, O> Iterator for IntoIter<S, P, O> {
 	}
 }
 
+impl<S: Ord, P: Ord, O: Ord> std::iter::FromIterator<Triple<S, P, O>> for BTreeGraph<S, P, O> {
+	fn from_iter<I: IntoIterator<Item = Triple<S, P, O>>>(iter: I) -> Self {
+		let mut ds = Self::new();
+		ds.extend(iter);
+		ds
+	}
+}
+
+impl<S: Ord, P: Ord, O: Ord> std::iter::Extend<Triple<S, P, O>> for BTreeGraph<S, P, O> {
+	fn extend<I: IntoIterator<Item = Triple<S, P, O>>>(&mut self, iter: I) {
+		for triple in iter {
+			self.insert(triple);
+		}
+	}
+}
+
 #[derive(Debug, Derivative)]
 #[derivative(PartialEq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
 #[derivative(Eq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
@@ -980,11 +996,17 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> std::iter::FromIterator<Quad<S, P, O, G>>
 {
 	fn from_iter<I: IntoIterator<Item = Quad<S, P, O, G>>>(iter: I) -> Self {
 		let mut ds = Self::new();
-
-		for quad in iter {
-			ds.insert(quad);
-		}
-
+		ds.extend(iter);
 		ds
+	}
+}
+
+impl<S: Ord, P: Ord, O: Ord, G: Ord> std::iter::Extend<Quad<S, P, O, G>>
+	for BTreeDataset<S, P, O, G>
+{
+	fn extend<I: IntoIterator<Item = Quad<S, P, O, G>>>(&mut self, iter: I) {
+		for quad in iter {
+			self.insert(quad);
+		}
 	}
 }
