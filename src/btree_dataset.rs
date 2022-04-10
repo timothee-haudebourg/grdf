@@ -3,11 +3,15 @@ use crate::{utils::BTreeBijection, Quad, Triple};
 use derivative::Derivative;
 use rdf_types::{AsTerm, IntoTerm};
 use std::collections::{BTreeMap, BTreeSet};
+use std::hash::Hash;
 
 /// Graph implementation based on `BTreeMap` and `BTreeSet`.
 #[derive(Debug, Derivative)]
 #[derivative(PartialEq(bound = "S: Ord, P: Ord, O: Ord"))]
 #[derivative(Eq(bound = "S: Ord, P: Ord, O: Ord"))]
+#[derivative(PartialOrd(bound = "S: Ord, P: Ord, O: Ord"))]
+#[derivative(Ord(bound = "S: Ord, P: Ord, O: Ord"))]
+#[derivative(Hash(bound = "S: Ord + Hash, P: Ord + Hash, O: Ord + Hash"))]
 #[derivative(Default(bound = ""))]
 pub struct BTreeGraph<S = rdf_types::Term, P = S, O = S> {
 	table: BTreeMap<S, BTreeMap<P, BTreeSet<O>>>,
@@ -535,6 +539,9 @@ impl<S: Clone, P: Clone, O> Iterator for IntoIter<S, P, O> {
 #[derive(Debug, Derivative)]
 #[derivative(PartialEq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
 #[derivative(Eq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
+#[derivative(PartialOrd(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
+#[derivative(Ord(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
+#[derivative(Hash(bound = "S: Ord + Hash, P: Ord + Hash, O: Ord + Hash, G: Ord + Hash"))]
 #[derivative(Default(bound = ""))]
 pub struct BTreeDataset<S = rdf_types::Term, P = S, O = S, G = S> {
 	default: BTreeGraph<S, P, O>,
