@@ -207,31 +207,23 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> crate::Graph for HashGraph<S, P, 
 	type Predicate = P;
 	type Object = O;
 
-	type Objects<'a>
-	where
+	type Objects<'a> = Objects<'a, O> where
 		Self: 'a,
-		O: 'a,
-	= Objects<'a, O>;
-	type Predicates<'a>
-	where
+		O: 'a;
+	type Predicates<'a> = Predicates<'a, P, O> where
 		Self: 'a,
 		P: 'a,
-		O: 'a,
-	= Predicates<'a, P, O>;
-	type Subjects<'a>
-	where
+		O: 'a;
+	type Subjects<'a> = Subjects<'a, S, P, O> where
 		Self: 'a,
 		S: 'a,
 		P: 'a,
-		O: 'a,
-	= Subjects<'a, S, P, O>;
-	type Triples<'a>
-	where
+		O: 'a;
+	type Triples<'a> = Iter<'a, S, P, O> where
 		Self: 'a,
 		S: 'a,
 		P: 'a,
-		O: 'a,
-	= Iter<'a, S, P, O>;
+		O: 'a;
 
 	fn triples<'a>(&'a self) -> Iter<'a, S, P, O>
 	where
@@ -808,21 +800,17 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> crate::Dataset
 	type GraphLabel = G;
 
 	type Graph = HashGraph<S, P, O>;
-	type Graphs<'a>
-	where
+	type Graphs<'a> = Graphs<'a, S, P, O, G> where
 		Self: 'a,
 		S: 'a,
 		P: 'a,
 		O: 'a,
-		G: 'a,
-	= Graphs<'a, S, P, O, G>;
-	type Quads<'a>
-	where
+		G: 'a;
+	type Quads<'a> = Quads<'a, S, P, O, G> where
 		Self: 'a,
 		S: 'a,
 		P: 'a,
-		O: 'a,
-	= Quads<'a, S, P, O, G>;
+		O: 'a;
 
 	fn graph(&self, id: Option<&G>) -> Option<&HashGraph<S, P, O>> {
 		self.graph(id)
@@ -1000,14 +988,12 @@ impl<S: Clone, P: Clone, O, G: Clone> Iterator for IntoQuads<S, P, O, G> {
 impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> crate::MutableDataset
 	for HashDataset<S, P, O, G>
 {
-	type GraphsMut<'a>
-	where
+	type GraphsMut<'a> = GraphsMut<'a, S, P, O, G> where
 		Self: 'a,
 		S: 'a,
 		P: 'a,
 		O: 'a,
-		G: 'a,
-	= GraphsMut<'a, S, P, O, G>;
+		G: 'a;
 
 	fn graph_mut(&mut self, id: Option<&G>) -> Option<&mut Self::Graph> {
 		self.graph_mut(id)

@@ -226,31 +226,23 @@ impl<S: Ord, P: Ord, O: Ord> crate::Graph for BTreeGraph<S, P, O> {
 	type Predicate = P;
 	type Object = O;
 
-	type Objects<'a>
-	where
+	type Objects<'a> = Objects<'a, O> where
 		Self: 'a,
-		O: 'a,
-	= Objects<'a, O>;
-	type Predicates<'a>
-	where
+		O: 'a;
+	type Predicates<'a> = Predicates<'a, P, O> where
 		Self: 'a,
 		P: 'a,
-		O: 'a,
-	= Predicates<'a, P, O>;
-	type Subjects<'a>
-	where
+		O: 'a;
+	type Subjects<'a> = Subjects<'a, S, P, O> where
 		Self: 'a,
 		S: 'a,
 		P: 'a,
-		O: 'a,
-	= Subjects<'a, S, P, O>;
-	type Triples<'a>
-	where
+		O: 'a;
+	type Triples<'a> = Iter<'a, S, P, O> where
 		Self: 'a,
 		S: 'a,
 		P: 'a,
-		O: 'a,
-	= Iter<'a, S, P, O>;
+		O: 'a;
 
 	fn triples<'a>(&'a self) -> Iter<'a, S, P, O>
 	where
@@ -805,20 +797,18 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::Dataset for BTreeDataset<S, P, O, G>
 
 	type Graph = BTreeGraph<S, P, O>;
 	type Graphs<'a>
-	where
-		Self: 'a,
-		S: 'a,
-		P: 'a,
-		O: 'a,
-		G: 'a,
-	= Graphs<'a, S, P, O, G>;
+	= Graphs<'a, S, P, O, G> where
+	Self: 'a,
+	S: 'a,
+	P: 'a,
+	O: 'a,
+	G: 'a,;
 	type Quads<'a>
-	where
-		Self: 'a,
-		S: 'a,
-		P: 'a,
-		O: 'a,
-	= Quads<'a, S, P, O, G>;
+	= Quads<'a, S, P, O, G> where
+	Self: 'a,
+	S: 'a,
+	P: 'a,
+	O: 'a,;
 
 	fn graph(&self, id: Option<&G>) -> Option<&BTreeGraph<S, P, O>> {
 		self.graph(id)
@@ -995,13 +985,12 @@ impl<S: Clone, P: Clone, O, G: Clone> Iterator for IntoQuads<S, P, O, G> {
 
 impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::MutableDataset for BTreeDataset<S, P, O, G> {
 	type GraphsMut<'a>
-	where
-		Self: 'a,
-		S: 'a,
-		P: 'a,
-		O: 'a,
-		G: 'a,
-	= GraphsMut<'a, S, P, O, G>;
+	= GraphsMut<'a, S, P, O, G> where
+	Self: 'a,
+	S: 'a,
+	P: 'a,
+	O: 'a,
+	G: 'a,;
 
 	fn graph_mut(&mut self, id: Option<&G>) -> Option<&mut Self::Graph> {
 		self.graph_mut(id)
