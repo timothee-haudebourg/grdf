@@ -1,6 +1,6 @@
 [package]
 name = "grdf"
-version = "0.8.0"
+version = "0.9.0"
 authors = ["Timothée Haudebourg <author@haudebourg.net>"]
 edition = "2018"
 categories = ["data-structures"]
@@ -13,13 +13,13 @@ readme = "README.md"
 
 [features]
 default = []
-loc = [ "locspan", "rdf-types/loc" ]
+meta = [ "locspan", "rdf-types/meta" ]
 
 [dependencies]
 iref = "2.1.1"
-rdf-types = "0.6.1"
+rdf-types = "0.7"
 derivative = "2.2.0"
-locspan = { version = "0.5.2", optional = true }
+locspan = { version = "0.7.2", optional = true }
 
 [dev-dependencies]
 static-iref = "1.0.0"

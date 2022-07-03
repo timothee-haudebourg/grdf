@@ -104,8 +104,8 @@ pub mod btree_dataset;
 pub mod hash_dataset;
 pub mod utils;
 
-#[cfg(feature = "loc")]
-pub mod loc;
+#[cfg(feature = "meta")]
+pub mod meta;
 
 pub use btree_dataset::{BTreeDataset, BTreeGraph};
 pub use hash_dataset::{HashDataset, HashGraph};
