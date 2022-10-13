@@ -13,8 +13,7 @@ fn test(a: HashDataset, b: HashDataset) {
 				.into_iter()
 				.map(|(a, b)| (a.to_owned(), b))
 				.collect();
-			let c =
-				a.substitute_blank_ids(|id| (*substitution.get(id.as_ref()).unwrap()).to_owned());
+			let c = a.substitute_blank_ids(|id| (*substitution.get(&id).unwrap()).to_owned());
 			assert_eq!(c, b)
 		}
 		None => panic!("no substitution found"),
