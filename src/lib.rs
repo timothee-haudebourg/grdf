@@ -97,7 +97,6 @@
 //! parameter of the dataset. Anything can be used although this crate provide a
 //! default `Term` type that represents generic RDF nodes (blank nodes,
 //! IRI-named nodes and literal values).
-#![feature(generic_associated_types)]
 pub use rdf_types::{Quad, Triple};
 
 pub mod btree_dataset;
