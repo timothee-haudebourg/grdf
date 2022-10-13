@@ -7,18 +7,12 @@ use std::hash::Hash;
 
 /// [`Quad`](rdf_types::Quad) with metadata where each component if borrowed.
 pub type MetaQuadRef<'s, 'p, 'o, 'g, 'm, S, P, O, G, M> = Meta<
-	rdf_types::Quad<
-		Meta<&'s S, &'m M>,
-		Meta<&'p P, &'m M>,
-		Meta<&'o O, &'m M>,
-		Meta<&'g G, &'m M>,
-	>,
+	rdf_types::Quad<Meta<&'s S, &'m M>, Meta<&'p P, &'m M>, Meta<&'o O, &'m M>, Meta<&'g G, &'m M>>,
 	&'m M,
 >;
 
 /// Quad of metadata.
-pub type QuadMetadata<M> =
-	rdf_types::Quad<M, M, M, M>;
+pub type QuadMetadata<M> = rdf_types::Quad<M, M, M, M>;
 
 /// Quad object with location information for the entire quad.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -46,7 +40,10 @@ impl<O, M> Object<O, M> {
 		>,
 	) -> rdf_types::Quad<S, P, Self, G> {
 		let (metadata, g) = match g {
-			Some(Meta(g, g_meta)) => (QuadMetadata::new(s_meta, p_meta, o_meta, Some(g_meta)), Some(g)),
+			Some(Meta(g, g_meta)) => (
+				QuadMetadata::new(s_meta, p_meta, o_meta, Some(g_meta)),
+				Some(g),
+			),
 			None => (QuadMetadata::new(s_meta, p_meta, o_meta, None), None),
 		};
 
@@ -176,8 +173,8 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord, M: Ord> std::iter::Extend<MetaQuad<S, P, O,
 	}
 }
 
-impl<S: Ord, P: Ord, O: Ord, G: Ord, M: Ord>
-	std::iter::FromIterator<MetaQuad<S, P, O, G, M>> for BTreeDataset<S, P, O, G, M>
+impl<S: Ord, P: Ord, O: Ord, G: Ord, M: Ord> std::iter::FromIterator<MetaQuad<S, P, O, G, M>>
+	for BTreeDataset<S, P, O, G, M>
 {
 	fn from_iter<I: IntoIterator<Item = MetaQuad<S, P, O, G, M>>>(iter: I) -> Self {
 		let mut dataset = Self::new();
