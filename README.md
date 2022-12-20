@@ -13,9 +13,8 @@ and predicates. This crate provides traits and implementations of
 [Generalized RDF (gRDF)](https://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#section-generalized-rdf)
 where nodes, values and predicates have the same representation.
 
-Note that this crates requires the nightly compiler.
-It needs Generic Associated Typed (GAT) to work properly,
-which are [still being implemented](https://github.com/rust-lang/rust/issues/44265).
+Note that this crates requires rust compiler version 1.65 or later.
+It needs Generic Associated Typed (GAT) to work properly.
 
 ### Basic usage
 
