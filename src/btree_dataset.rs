@@ -333,6 +333,8 @@ impl<S: Ord, P: Ord, O: Ord> crate::MutableGraph for BTreeGraph<S, P, O> {
 	}
 }
 
+#[derive(Derivative)]
+#[derivative(Clone(bound = ""))]
 pub struct Subjects<'a, S, P, O> {
 	it: std::collections::btree_map::Iter<'a, S, BTreeMap<P, BTreeSet<O>>>,
 }
@@ -371,6 +373,8 @@ impl<S, P, O> Iterator for IntoSubjects<S, P, O> {
 	}
 }
 
+#[derive(Derivative)]
+#[derivative(Clone(bound = ""))]
 pub struct Predicates<'a, P, O> {
 	it: Option<std::collections::btree_map::Iter<'a, P, BTreeSet<O>>>,
 }
@@ -415,6 +419,8 @@ impl<P, O> Iterator for IntoPredicates<P, O> {
 	}
 }
 
+#[derive(Derivative)]
+#[derivative(Clone(bound = ""))]
 pub struct Objects<'a, O> {
 	it: Option<std::collections::btree_set::Iter<'a, O>>,
 }
@@ -445,6 +451,8 @@ impl<O> Iterator for IntoObjects<O> {
 	}
 }
 
+#[derive(Derivative)]
+#[derivative(Clone(bound = ""))]
 pub struct Iter<'a, S, P, O> {
 	subjects: Subjects<'a, S, P, O>,
 	subject: Option<&'a S>,
@@ -844,6 +852,8 @@ impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug, G: fmt::Debug> fmt::Debug
 	}
 }
 
+#[derive(Derivative)]
+#[derivative(Clone(bound = ""))]
 pub struct Graphs<'a, S, P, O, G> {
 	default: Option<&'a BTreeGraph<S, P, O>>,
 	it: std::collections::btree_map::Iter<'a, G, BTreeGraph<S, P, O>>,
@@ -882,6 +892,8 @@ impl<'a, S, P, O, G> Iterator for GraphsMut<'a, S, P, O, G> {
 	}
 }
 
+#[derive(Derivative)]
+#[derivative(Clone(bound = ""))]
 pub struct Quads<'a, S, P, O, G> {
 	graphs: Graphs<'a, S, P, O, G>,
 	graph: Option<&'a G>,
