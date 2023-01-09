@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.1] - 2023-01-09
+
+### Build
+
+- [b5f5bd9] Upgrade rust version in CI.
+
+### Changed
+
+- [63532e1] Change `loc_insert` return type.
+
 ## [0.15.0] - 2023-01-09
 
 ### Added
@@ -28,6 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [d7a7a31] Impl `Clone` for iterators.
 
+## [0.14.0] - 2022-10-20
+
+### Build
+
+- [515c0df] Upgrade dependencies.
+
 ## [0.13.0] - 2022-10-20
 
 ### Added
@@ -39,6 +55,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [a6497c6] Add CI.
 - [b685d77] Add `Ord` & `Hash` impl for `BTreeDataset`.
 - [aa121f0] Add `FromIterator` and `Extend` impls.
+
+### Build
+
+- [f56e8cd] Upgrade `locpsan` to version 0.7
+- [c149b42] Upgrade `rdf-types` to 0.8, move to 0.10
+- [9781837] Upgrade `rdf-types` to 0.9
+- [c80ad6b] Upgrade dependencies.
+- [28ebabb] Upgrade dependencies.
 
 ### Changed
 
