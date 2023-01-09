@@ -19,9 +19,9 @@
 //!
 //! ```rust
 //! # use rdf_types::{Term, Quad};
-//! # use grdf::{Dataset, HashDataset};
+//! # use grdf::HashDataset;
 //! # let dataset: HashDataset<Term> = HashDataset::new();
-//! for Quad(subject, predicate, object, graph) in dataset.quads() {
+//! for Quad(subject, predicate, object, graph) in dataset {
 //!   // do something
 //! }
 //! ```
@@ -32,12 +32,12 @@
 //!
 //! ```rust
 //! # use rdf_types::{Term, Triple};
-//! # use grdf::{Dataset, Graph, HashDataset};
+//! # use grdf::HashDataset;
 //! # let dataset: HashDataset<Term> = HashDataset::new();
 //! # let id = None;
 //! let graph = dataset.graph(id).unwrap();
 //!
-//! for Triple(subject, predicate, object) in graph.triples() {
+//! for Triple(subject, predicate, object) in graph {
 //!   // do something
 //! }
 //! ```
@@ -47,7 +47,7 @@
 //!
 //! ```rust
 //! # use rdf_types::Term;
-//! # use grdf::{Graph, HashGraph};
+//! # use grdf::HashGraph;
 //! # let graph: HashGraph<Term> = HashGraph::new();
 //! // for each subject of the graph...
 //! for (subject, predicates) in graph.subjects() {
@@ -68,7 +68,7 @@
 //!
 //! ```rust
 //! # use rdf_types::{Term, Quad, BlankIdBuf};
-//! # use grdf::{MutableDataset, HashDataset};
+//! # use grdf::HashDataset;
 //! # let graph = None;
 //! # let subject = Term::Blank(BlankIdBuf::from_u8(0));
 //! # let predicate = Term::Blank(BlankIdBuf::from_u8(1));
@@ -91,16 +91,17 @@
 //! graph.insert(Triple(subject, predicate, object));
 //! ```
 //!
-//! ### Custom node type
+//! ### Custom RDF types
 //!
-//! The type used to represent RDF nodes (subjects, predicate and objects) is a
-//! parameter of the dataset. Anything can be used although this crate provide a
-//! default `Term` type that represents generic RDF nodes (blank nodes,
+//! The types used to represent RDF subjects, predicate and objects are
+//! parameters of the dataset. Anything can be used although they default to the
+//! `rdf_types::Term` type that represents generic RDF nodes (blank nodes,
 //! IRI-named nodes and literal values).
 pub use rdf_types::{Quad, Triple};
 
 pub mod btree_dataset;
 pub mod hash_dataset;
+pub mod macros;
 pub mod utils;
 
 #[cfg(feature = "meta")]
@@ -122,20 +123,14 @@ pub trait Graph {
 	type Triples<'a>: Iterator<
 		Item = Triple<&'a Self::Subject, &'a Self::Predicate, &'a Self::Object>,
 	> where
-		Self: 'a,
-		Self::Subject: 'a,
-		Self::Predicate: 'a,
-		Self::Object: 'a;
+		Self: 'a;
 
 	/// Graph subjects iterator.
 	///
 	/// Each subject is given with its associated predicates (and objects).
 	type Subjects<'a>: Iterator<Item = (&'a Self::Subject, Self::Predicates<'a>)>
 	where
-		Self: 'a,
-		Self::Subject: 'a,
-		Self::Predicate: 'a,
-		Self::Object: 'a;
+		Self: 'a;
 
 	/// Subject predicates iterator.
 	///
@@ -143,50 +138,66 @@ pub trait Graph {
 	/// Each predicate is also given with the associated objects.
 	type Predicates<'a>: Iterator<Item = (&'a Self::Predicate, Self::Objects<'a>)>
 	where
-		Self: 'a,
-		Self::Predicate: 'a,
-		Self::Object: 'a;
+		Self: 'a;
 
 	/// Objects iterator.
 	///
 	/// Iterate through a set of objects.
 	type Objects<'a>: Iterator<Item = &'a Self::Object>
 	where
+		Self: 'a;
+
+	type PatternMatching<'a, 'p>: Iterator<
+		Item = Triple<&'a Self::Subject, &'a Self::Predicate, &'a Self::Object>,
+	> where
 		Self: 'a,
-		Self::Object: 'a;
+		Self::Subject: 'p,
+		Self::Predicate: 'p,
+		Self::Object: 'p;
+
+	/// Returns the number of triples in the graph.
+	fn len(&self) -> usize;
+
+	/// Checks if the graph is empty.
+	fn is_empty(&self) -> bool {
+		self.len() == 0
+	}
 
 	// Iterate through all the triples defined in the graph.
-	fn triples<'a>(&'a self) -> Self::Triples<'a>
-	where
-		Self::Subject: 'a,
-		Self::Predicate: 'a,
-		Self::Object: 'a;
+	fn triples(&self) -> Self::Triples<'_>;
 
 	/// Iterate through all the subjects of the graph.
-	fn subjects<'a>(&'a self) -> Self::Subjects<'a>
-	where
-		Self::Subject: 'a,
-		Self::Predicate: 'a,
-		Self::Object: 'a;
+	fn subjects(&self) -> Self::Subjects<'_>;
 
 	/// Iterate through all the predicates associated to the given subject.
-	fn predicates<'a>(&'a self, subject: &Self::Subject) -> Self::Predicates<'a>
-	where
-		Self::Predicate: 'a,
-		Self::Object: 'a;
+	fn predicates(&self, subject: &Self::Subject) -> Self::Predicates<'_>;
 
 	/// Iterate through all the objects associated to the given subject and
 	/// predicate.
-	fn objects<'a>(
-		&'a self,
-		subject: &Self::Subject,
-		predicate: &Self::Predicate,
-	) -> Self::Objects<'a>
-	where
-		Self::Object: 'a;
+	fn objects(&self, subject: &Self::Subject, predicate: &Self::Predicate) -> Self::Objects<'_>;
 
 	/// Checks if the given triple is defined in the graph.
 	fn contains(&self, triple: Triple<&Self::Subject, &Self::Predicate, &Self::Object>) -> bool;
+
+	/// Returns an iterator over all the triples matching the given pattern.
+	#[allow(clippy::type_complexity)]
+	fn pattern_matching<'p>(
+		&self,
+		pattern: Triple<
+			Option<&'p Self::Subject>,
+			Option<&'p Self::Predicate>,
+			Option<&'p Self::Object>,
+		>,
+	) -> Self::PatternMatching<'_, 'p>;
+
+	/// Returns any triple matching the given pattern.
+	#[allow(clippy::type_complexity)]
+	fn any_match(
+		&self,
+		pattern: Triple<Option<&Self::Subject>, Option<&Self::Predicate>, Option<&Self::Object>>,
+	) -> Option<Triple<&Self::Subject, &Self::Predicate, &Self::Object>> {
+		self.pattern_matching(pattern).next()
+	}
 }
 
 /// Sized gRDF graph that can be converted into iterators.
@@ -240,6 +251,15 @@ pub trait MutableGraph: Graph {
 			<Self as Graph>::Predicate,
 			<Self as Graph>::Object,
 		>,
+	) -> bool;
+
+	fn remove(
+		&mut self,
+		triple: Triple<
+			&<Self as Graph>::Subject,
+			&<Self as Graph>::Predicate,
+			&<Self as Graph>::Object,
+		>,
 	);
 
 	/// Absorb the given other graph.
@@ -277,31 +297,30 @@ pub trait Dataset {
 	/// Each graph is associated to its name (if any).
 	type Graphs<'a>: Iterator<Item = (Option<&'a Self::GraphLabel>, &'a Self::Graph)>
 	where
-		Self: 'a,
-		Self::GraphLabel: 'a,
-		Self::Graph: 'a;
+		Self: 'a;
 
 	/// Quads iterator.
 	type Quads<'a>: Iterator<
 		Item = Quad<&'a Self::Subject, &'a Self::Predicate, &'a Self::Object, &'a Self::GraphLabel>,
 	> where
+		Self: 'a;
+
+	type PatternMatching<'a, 'p>: Iterator<
+		Item = Quad<&'a Self::Subject, &'a Self::Predicate, &'a Self::Object, &'a Self::GraphLabel>,
+	> where
 		Self: 'a,
-		Self::Subject: 'a,
-		Self::Predicate: 'a,
-		Self::Object: 'a,
-		Self::GraphLabel: 'a;
+		Self::Subject: 'p,
+		Self::Predicate: 'p,
+		Self::Object: 'p,
+		Self::GraphLabel: 'p;
 
 	/// Get the graph with the given name.
 	/// Input `None` to get the default graph.
-	///
-	/// Note to implementors: the default graph should always exists.
 	fn graph(&self, id: Option<&Self::GraphLabel>) -> Option<&Self::Graph>;
 
 	/// Get the default graph of the dataset.
 	///
 	/// This is the same as `graph(None)`.
-	///
-	/// Note to implementors: the default graph should always exists.
 	fn default_graph(&self) -> &Self::Graph {
 		self.graph(None).unwrap()
 	}
@@ -311,6 +330,28 @@ pub trait Dataset {
 
 	/// Returns an iterator over the quads of the dataset.
 	fn quads(&self) -> Self::Quads<'_>;
+
+	/// Returns the number of quads in the dataset.
+	fn len(&self) -> usize {
+		let mut len = 0;
+
+		for (_, g) in self.graphs() {
+			len += g.len()
+		}
+
+		len
+	}
+
+	/// Checks is the dataset is empty.
+	fn is_empty(&self) -> bool {
+		for (_, g) in self.graphs() {
+			if !g.is_empty() {
+				return false;
+			}
+		}
+
+		true
+	}
 
 	/// Iterate through all the subjects of the given graph.
 	fn subjects<'a>(
@@ -356,6 +397,42 @@ pub trait Dataset {
 		self.graph(id)
 			.map(|graph| graph.objects(subject, predicate))
 	}
+
+	/// Checks if the given quad is defined in the dataset.
+	#[allow(clippy::type_complexity)]
+	fn contains(
+		&self,
+		Quad(s, p, o, g): Quad<&Self::Subject, &Self::Predicate, &Self::Object, &Self::GraphLabel>,
+	) -> bool {
+		match self.graph(g) {
+			Some(g) => g.contains(Triple(s, p, o)),
+			None => false,
+		}
+	}
+
+	#[allow(clippy::type_complexity)]
+	fn pattern_matching<'p>(
+		&mut self,
+		pattern: Quad<
+			Option<&'p Self::Subject>,
+			Option<&'p Self::Predicate>,
+			Option<&'p Self::Object>,
+			Option<&'p Self::GraphLabel>,
+		>,
+	) -> Self::PatternMatching<'_, 'p>;
+
+	#[allow(clippy::type_complexity)]
+	fn first_match(
+		&mut self,
+		pattern: Quad<
+			Option<&Self::Subject>,
+			Option<&Self::Predicate>,
+			Option<&Self::Object>,
+			Option<&Self::GraphLabel>,
+		>,
+	) -> Option<Quad<&Self::Subject, &Self::Predicate, &Self::Object, &Self::GraphLabel>> {
+		self.pattern_matching(pattern).next()
+	}
 }
 
 /// Sized gRDF dataset that can be converted into iterators.
@@ -387,7 +464,7 @@ where
 
 	/// Consumes the dataset and returns an iterator over the subjects of the
 	/// given graph.
-	fn subjects(
+	fn into_subjects(
 		self,
 		id: Option<&Self::GraphLabel>,
 	) -> Option<<Self::Graph as SizedGraph>::IntoSubjects> {
@@ -396,7 +473,7 @@ where
 
 	/// Consumes the dataset and returns an iterator over the predicates of the
 	/// given subject of the given graph.
-	fn predicates(
+	fn into_predicates(
 		self,
 		id: Option<&Self::GraphLabel>,
 		subject: &Self::Subject,
@@ -407,7 +484,7 @@ where
 
 	/// Consumes the dataset and returns an iterator over the objects of the
 	/// given subject and predicate of the given graph.
-	fn objects(
+	fn into_objects(
 		self,
 		id: Option<&Self::GraphLabel>,
 		subject: &Self::Subject,
@@ -423,9 +500,13 @@ pub trait MutableDataset: Dataset {
 	/// Iterator over mutable graphs.
 	type GraphsMut<'a>: Iterator<Item = (Option<&'a Self::GraphLabel>, &'a mut Self::Graph)>
 	where
-		Self: 'a,
-		Self::GraphLabel: 'a,
-		Self::Graph: 'a;
+		Self: 'a;
+
+	// type Drain<'a>: 'a + Iterator<Item = Quad<Self::Subject, Self::Predicate, Self::Object, Self::Graph>> where Self: 'a;
+
+	// type DrainFilter<'a, F>: 'a + Iterator<Item = Quad<Self::Subject, Self::Predicate, Self::Object, Self::Graph>> where Self: 'a;
+
+	// type DrainPatternMatching<'a>: 'a + Iterator<Item = Quad<Self::Subject, Self::Predicate, Self::Object, Self::Graph>> where Self: 'a;
 
 	/// Get the given graph mutably.
 	///
@@ -454,7 +535,22 @@ pub trait MutableDataset: Dataset {
 	fn insert(
 		&mut self,
 		quad: Quad<Self::Subject, Self::Predicate, Self::Object, Self::GraphLabel>,
+	) -> bool;
+
+	/// Remove a quad from the dataset.
+	fn remove(
+		&mut self,
+		quad: Quad<&Self::Subject, &Self::Predicate, &Self::Object, &Self::GraphLabel>,
 	);
+
+	// fn drain(&mut self) -> Self::Drain<'_>;
+
+	// fn drain_filter<F>(&mut self, pred: F) -> Self::DrainFilter<'_, F>;
+
+	// fn drain_pattern_matching(
+	// 	&mut self,
+	// 	pattern: Quad<Option<&Self::Subject>, Option<&Self::Predicate>, Option<&Self::Object>, Option<&Self::GraphLabel>>
+	// ) -> Self::DrainPatternMatching<'_>;
 
 	/// Absorb the given other dataset.
 	///
@@ -471,4 +567,44 @@ pub trait MutableDataset: Dataset {
 		other: D,
 	) where
 		D::Graph: SizedGraph;
+}
+
+pub trait GraphTake<
+	T = <Self as Graph>::Subject,
+	U = <Self as Graph>::Predicate,
+	V = <Self as Graph>::Object,
+>: Graph
+{
+	#[allow(clippy::type_complexity)]
+	fn take(
+		&mut self,
+		triple: Triple<&T, &U, &V>,
+	) -> Option<Triple<Self::Subject, Self::Predicate, Self::Object>>;
+
+	#[allow(clippy::type_complexity)]
+	fn take_match(
+		&mut self,
+		triple: Triple<Option<&T>, Option<&U>, Option<&V>>,
+	) -> Option<Triple<Self::Subject, Self::Predicate, Self::Object>>;
+}
+
+pub trait DatasetTake<
+	T = <Self as Dataset>::Subject,
+	U = <Self as Dataset>::Predicate,
+	V = <Self as Dataset>::Object,
+	W = <Self as Dataset>::GraphLabel,
+>: MutableDataset where
+	Self::Graph: GraphTake,
+{
+	#[allow(clippy::type_complexity)]
+	fn take(
+		&mut self,
+		quad: Quad<&T, &U, &V, &W>,
+	) -> Option<Quad<Self::Subject, Self::Predicate, Self::Object, Self::GraphLabel>>;
+
+	#[allow(clippy::type_complexity)]
+	fn take_match(
+		&mut self,
+		quad: Quad<Option<&T>, Option<&U>, Option<&V>, Option<&W>>,
+	) -> Option<Quad<Self::Subject, Self::Predicate, Self::Object, Self::GraphLabel>>;
 }

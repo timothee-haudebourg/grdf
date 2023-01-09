@@ -2,6 +2,7 @@
 use crate::{utils::HashBijection, Quad, Triple};
 use derivative::Derivative;
 use rdf_types::{AsTerm, IntoTerm};
+use std::borrow::Borrow;
 use std::collections::{HashMap, HashSet};
 use std::fmt;
 use std::hash::Hash;
@@ -13,12 +14,18 @@ use std::hash::Hash;
 #[derivative(Default(bound = ""))]
 pub struct HashGraph<S = rdf_types::Term, P = S, O = S> {
 	table: HashMap<S, HashMap<P, HashSet<O>>>,
+	len: usize,
 }
 
 impl<S, P, O> HashGraph<S, P, O> {
 	/// Create a new empty `HashGraph`.
 	pub fn new() -> Self {
 		Self::default()
+	}
+
+	/// Returns the number of triples in the graph.
+	pub fn len(&self) -> usize {
+		self.len
 	}
 }
 
@@ -27,6 +34,8 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 	pub fn from_graph<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(
 		g: G,
 	) -> HashGraph<S, P, O> {
+		let len = g.len();
+
 		let mut subject_map = HashMap::new();
 		for (subject, predicates) in g.into_subjects() {
 			let mut predicate_map = HashMap::new();
@@ -37,31 +46,28 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 			subject_map.insert(subject, predicate_map);
 		}
 
-		HashGraph { table: subject_map }
+		HashGraph {
+			table: subject_map,
+			len,
+		}
 	}
 
-	pub fn insert(&mut self, triple: Triple<S, P, O>) {
+	pub fn insert(&mut self, triple: Triple<S, P, O>) -> bool {
 		let (subject, predicate, object) = triple.into_parts();
 
-		match self.table.get_mut(&subject) {
-			Some(bindings) => match bindings.get_mut(&predicate) {
-				Some(objects) => {
-					objects.insert(object);
-				}
-				None => {
-					let mut objects = HashSet::new();
-					objects.insert(object);
-					bindings.insert(predicate, objects);
-				}
-			},
-			None => {
-				let mut bindings = HashMap::new();
-				let mut objects = HashSet::new();
-				objects.insert(object);
-				bindings.insert(predicate, objects);
-				self.table.insert(subject, bindings);
-			}
+		let added = self
+			.table
+			.entry(subject)
+			.or_default()
+			.entry(predicate)
+			.or_default()
+			.insert(object);
+
+		if added {
+			self.len += 1;
 		}
+
+		added
 	}
 
 	pub fn absorb<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(
@@ -71,27 +77,163 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		let subjects = other.into_subjects();
 
 		for (subject, predicates) in subjects {
-			match self.table.get_mut(&subject) {
-				Some(bindings) => {
-					for (predicate, objects) in predicates {
-						match bindings.get_mut(&predicate) {
-							Some(other_objects) => {
-								other_objects.extend(objects);
-							}
-							None => {
-								bindings.insert(predicate, objects.collect());
-							}
+			let this_predicates = self.table.entry(subject).or_default();
+			for (predicate, objects) in predicates {
+				let this_objects = this_predicates.entry(predicate).or_default();
+				for object in objects {
+					if this_objects.insert(object) {
+						self.len += 1
+					}
+				}
+			}
+		}
+	}
+
+	fn remove<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash>(
+		&mut self,
+		Triple(s, p, o): Triple<&T, &U, &V>,
+	) where
+		S: Borrow<T>,
+		P: Borrow<U>,
+		O: Borrow<V>,
+	{
+		if let Some(predicates) = self.table.get_mut(s) {
+			if let Some(objects) = predicates.get_mut(p) {
+				if objects.remove(o) {
+					self.len -= 1;
+					if objects.is_empty() {
+						predicates.remove(p).unwrap();
+						if predicates.is_empty() {
+							self.table.remove(s);
 						}
 					}
 				}
+			}
+		}
+	}
+
+	fn take<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash>(
+		&mut self,
+		Triple(s, p, o): Triple<&T, &U, &V>,
+	) -> Option<Triple<S, P, O>>
+	where
+		S: Clone + Borrow<T>,
+		P: Clone + Borrow<U>,
+		O: Borrow<V>,
+	{
+		if let Some(predicates) = self.table.get_mut(s) {
+			if let Some(objects) = predicates.get_mut(p) {
+				if let Some(o) = objects.take(o) {
+					let (s, p) = if objects.is_empty() {
+						let p = predicates.remove_entry(p).unwrap().0;
+						let s = if predicates.is_empty() {
+							self.table.remove_entry(s).unwrap().0
+						} else {
+							self.table.get_key_value(s).unwrap().0.clone()
+						};
+
+						(s, p)
+					} else {
+						let p = predicates.get_key_value(p).unwrap().0.clone();
+						let s = self.table.get_key_value(s).unwrap().0.clone();
+						(s, p)
+					};
+
+					self.len -= 1;
+					return Some(Triple(s, p, o));
+				}
+			}
+		}
+
+		None
+	}
+
+	fn take_match<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash>(
+		&mut self,
+		Triple(s, p, o): Triple<Option<&T>, Option<&U>, Option<&V>>,
+	) -> Option<Triple<S, P, O>>
+	where
+		S: Clone + Borrow<T>,
+		P: Clone + Borrow<U>,
+		O: Clone + Borrow<V>,
+	{
+		fn take_object_match<O: Borrow<V> + Clone + Eq + Hash, V: Eq + Hash>(
+			objects: &mut HashSet<O>,
+			o: Option<&V>,
+		) -> Option<O> {
+			match o {
+				Some(o) => objects.take(o),
+				None => objects.iter().next().cloned().map(|o| {
+					objects.remove::<O>(&o);
+					o
+				}),
+			}
+		}
+
+		fn take_predicate_match<
+			P: Borrow<U> + Clone + Eq + Hash,
+			O: Borrow<V> + Clone + Eq + Hash,
+			U: Eq + Hash,
+			V: Eq + Hash,
+		>(
+			predicates: &mut HashMap<P, HashSet<O>>,
+			p: Option<&U>,
+			o: Option<&V>,
+		) -> Option<(P, O)> {
+			match p {
+				Some(p) => {
+					let objects = predicates.get_mut(p)?;
+					let o = take_object_match(objects, o)?;
+
+					let p = if objects.is_empty() {
+						predicates.remove_entry(p).unwrap().0
+					} else {
+						predicates.get_key_value(p).unwrap().0.clone()
+					};
+
+					Some((p, o))
+				}
 				None => {
-					let mut bindings = HashMap::new();
-					for (predicate, objects) in predicates {
-						bindings.insert(predicate, objects.collect());
+					for (p, objects) in &mut *predicates {
+						if let Some(o) = take_object_match(objects, o) {
+							let p = p.clone();
+							predicates.remove::<P>(&p);
+
+							return Some((p, o));
+						}
 					}
 
-					self.table.insert(subject, bindings);
+					None
 				}
+			}
+		}
+
+		match s {
+			Some(s) => {
+				let predicates = self.table.get_mut(s)?;
+				let (p, o) = take_predicate_match(predicates, p, o)?;
+
+				let s = if predicates.is_empty() {
+					self.table.remove_entry(s).unwrap().0
+				} else {
+					self.table.get_key_value(s).unwrap().0.clone()
+				};
+
+				self.len -= 1;
+				Some(Triple(s, p, o))
+			}
+			None => {
+				for (s, predicates) in &mut self.table {
+					if let Some((p, o)) = take_predicate_match(predicates, p, o) {
+						let s = s.clone();
+						self.table.remove::<S>(&s);
+
+						self.len -= 1;
+						return Some(Triple(s, p, o));
+					}
+				}
+
+				None
 			}
 		}
 	}
@@ -225,42 +367,51 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> crate::Graph for HashGraph<S, P, 
 		P: 'a,
 		O: 'a;
 
-	fn triples<'a>(&'a self) -> Iter<'a, S, P, O>
-	where
-		S: 'a,
-		P: 'a,
-		O: 'a,
-	{
+	type PatternMatching<'a, 'p> = GraphPatternMatching<'a, 'p, S, P, O> where
+		Self: 'a,
+		S: 'p,
+		P: 'p,
+		O: 'p;
+
+	#[inline(always)]
+	fn len(&self) -> usize {
+		self.len()
+	}
+
+	fn triples(&self) -> Iter<S, P, O> {
 		self.triples()
 	}
 
-	fn subjects<'a>(&'a self) -> Subjects<'a, S, P, O>
-	where
-		S: 'a,
-		P: 'a,
-		O: 'a,
-	{
+	fn subjects(&self) -> Subjects<S, P, O> {
 		self.subjects()
 	}
 
-	fn predicates<'a>(&'a self, subject: &S) -> Predicates<'a, P, O>
-	where
-		P: 'a,
-		O: 'a,
-	{
+	fn predicates(&self, subject: &S) -> Predicates<P, O> {
 		self.predicates(subject)
 	}
 
-	fn objects<'a>(&'a self, subject: &S, predicate: &P) -> Objects<'a, O>
-	where
-		O: 'a,
-	{
+	fn objects(&self, subject: &S, predicate: &P) -> Objects<O> {
 		self.objects(subject, predicate)
 	}
 
 	fn contains(&self, triple: Triple<&S, &P, &O>) -> bool {
 		self.contains(triple)
 	}
+
+	fn pattern_matching<'p>(
+		&self,
+		pattern: Triple<
+			Option<&'p Self::Subject>,
+			Option<&'p Self::Predicate>,
+			Option<&'p Self::Object>,
+		>,
+	) -> Self::PatternMatching<'_, 'p> {
+		GraphPatternMatching::new(self, pattern)
+	}
+}
+
+impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
+	crate::macros::reflect_graph_impl!();
 }
 
 impl<'a, S, P, O> std::iter::IntoIterator for &'a HashGraph<S, P, O> {
@@ -297,9 +448,7 @@ impl<S: Clone + Eq + Hash, P: Clone + Eq + Hash, O: Eq + Hash> crate::SizedGraph
 	}
 }
 
-impl<S: Clone + Eq + Hash, P: Clone + Eq + Hash, O: Eq + Hash> std::iter::IntoIterator
-	for HashGraph<S, P, O>
-{
+impl<S: Clone, P: Clone, O> IntoIterator for HashGraph<S, P, O> {
 	type IntoIter = IntoIter<S, P, O>;
 	type Item = Triple<S, P, O>;
 
@@ -309,12 +458,47 @@ impl<S: Clone + Eq + Hash, P: Clone + Eq + Hash, O: Eq + Hash> std::iter::IntoIt
 }
 
 impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> crate::MutableGraph for HashGraph<S, P, O> {
-	fn insert(&mut self, triple: Triple<S, P, O>) {
+	fn insert(&mut self, triple: Triple<S, P, O>) -> bool {
 		self.insert(triple)
+	}
+
+	fn remove(
+		&mut self,
+		triple: Triple<
+			&<Self as crate::Graph>::Subject,
+			&<Self as crate::Graph>::Predicate,
+			&<Self as crate::Graph>::Object,
+		>,
+	) {
+		self.remove(triple)
 	}
 
 	fn absorb<G: crate::SizedGraph<Subject = S, Predicate = P, Object = O>>(&mut self, other: G) {
 		self.absorb(other)
+	}
+}
+
+impl<
+		S: Clone + Borrow<T> + Eq + Hash,
+		P: Clone + Borrow<U> + Eq + Hash,
+		O: Borrow<V> + Clone + Eq + Hash,
+		T: Eq + Hash,
+		U: Eq + Hash,
+		V: Eq + Hash,
+	> crate::GraphTake<T, U, V> for HashGraph<S, P, O>
+{
+	fn take(
+		&mut self,
+		triple: Triple<&T, &U, &V>,
+	) -> Option<Triple<Self::Subject, Self::Predicate, Self::Object>> {
+		self.take(triple)
+	}
+
+	fn take_match(
+		&mut self,
+		triple: Triple<Option<&T>, Option<&U>, Option<&V>>,
+	) -> Option<Triple<Self::Subject, Self::Predicate, Self::Object>> {
+		self.take_match(triple)
 	}
 }
 
@@ -588,13 +772,27 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 		Self::default()
 	}
 
-	pub fn graph(&self, id: Option<&G>) -> Option<&HashGraph<S, P, O>>
+	pub fn graph<W: Eq + Hash>(&self, id: Option<&W>) -> Option<&HashGraph<S, P, O>>
 	where
-		G: Eq + Hash,
+		G: Eq + Hash + Borrow<W>,
 	{
 		match id {
 			Some(id) => self.named.get(id),
 			None => Some(&self.default),
+		}
+	}
+
+	#[allow(clippy::type_complexity)]
+	pub fn graph_entry<W: Eq + Hash>(
+		&self,
+		id: Option<&W>,
+	) -> Option<(Option<&G>, &HashGraph<S, P, O>)>
+	where
+		G: Eq + Hash + Borrow<W>,
+	{
+		match id {
+			Some(id) => self.named.get_key_value(id).map(|(k, v)| (Some(k), v)),
+			None => Some((None, &self.default)),
 		}
 	}
 
@@ -613,9 +811,9 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 		}
 	}
 
-	pub fn graph_mut(&mut self, id: Option<&G>) -> Option<&mut HashGraph<S, P, O>>
+	pub fn graph_mut<W: Eq + Hash>(&mut self, id: Option<&W>) -> Option<&mut HashGraph<S, P, O>>
 	where
-		G: Eq + Hash,
+		G: Eq + Hash + Borrow<W>,
 	{
 		match id {
 			Some(id) => self.named.get_mut(id),
@@ -664,7 +862,7 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 }
 
 impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O, G> {
-	pub fn insert(&mut self, quad: Quad<S, P, O, G>) {
+	pub fn insert(&mut self, quad: Quad<S, P, O, G>) -> bool {
 		let (subject, predicate, object, graph_name) = quad.into_parts();
 		match self.graph_mut(graph_name.as_ref()) {
 			Some(g) => g.insert(Triple(subject, predicate, object)),
@@ -672,6 +870,91 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O
 				let mut g = HashGraph::new();
 				g.insert(Triple(subject, predicate, object));
 				self.insert_graph(graph_name.unwrap(), g);
+				true
+			}
+		}
+	}
+
+	pub fn remove<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash, W: Eq + Hash>(
+		&mut self,
+		Quad(s, p, o, g): Quad<&T, &U, &V, &W>,
+	) where
+		S: Borrow<T>,
+		P: Borrow<U>,
+		O: Borrow<V>,
+		G: Borrow<W>,
+	{
+		if let Some(graph) = self.graph_mut(g) {
+			graph.remove(Triple(s, p, o))
+		}
+	}
+
+	pub fn remove_graph<W: Eq + Hash>(&mut self, g: &W) -> Option<HashGraph<S, P, O>>
+	where
+		G: Borrow<W>,
+	{
+		self.named.remove(g)
+	}
+
+	pub fn take<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash, W: Eq + Hash>(
+		&mut self,
+		Quad(s, p, o, g): Quad<&T, &U, &V, &W>,
+	) -> Option<Quad<S, P, O, G>>
+	where
+		S: Clone + Borrow<T>,
+		P: Clone + Borrow<U>,
+		O: Borrow<V>,
+		G: Clone + Borrow<W>,
+	{
+		let graph = self.graph_mut(g)?;
+		let Triple(s, p, o) = graph.take(Triple(s, p, o))?;
+
+		let is_graph_empty = graph.is_empty();
+		let g = g.map(|g| {
+			if is_graph_empty {
+				self.named.remove_entry(g).unwrap().0
+			} else {
+				self.named.get_key_value(g).unwrap().0.clone()
+			}
+		});
+
+		Some(Quad(s, p, o, g))
+	}
+
+	pub fn take_match<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash, W: Eq + Hash>(
+		&mut self,
+		Quad(s, p, o, g): Quad<Option<&T>, Option<&U>, Option<&V>, Option<&W>>,
+	) -> Option<Quad<S, P, O, G>>
+	where
+		S: Clone + Borrow<T>,
+		P: Clone + Borrow<U>,
+		O: Clone + Borrow<V>,
+		G: Clone + Borrow<W>,
+	{
+		match g {
+			Some(g) => {
+				let graph = self.graph_mut(g)?;
+				let Triple(s, p, o) = graph.take_match(Triple(s, p, o))?;
+
+				let is_graph_empty = graph.is_empty();
+				let g = g.map(|g| {
+					if is_graph_empty {
+						self.named.remove_entry(g).unwrap().0
+					} else {
+						self.named.get_key_value(g).unwrap().0.clone()
+					}
+				});
+
+				Some(Quad(s, p, o, g))
+			}
+			None => {
+				for (g, graph) in self.graphs_mut() {
+					if let Some(Triple(s, p, o)) = graph.take_match(Triple(s, p, o)) {
+						return Some(Quad(s, p, o, g.cloned()));
+					}
+				}
+
+				None
 			}
 		}
 	}
@@ -738,7 +1021,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O
 		}
 
 		for quad in self.into_quads() {
-			result.insert(substitute_quad(quad, f.clone()))
+			result.insert(substitute_quad(quad, f.clone()));
 		}
 
 		result
@@ -820,6 +1103,12 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> crate::Dataset
 		P: 'a,
 		O: 'a;
 
+	type PatternMatching<'a, 'p> = PatternMatching<'a, 'p, S, P, O, G> where Self: 'a,
+		S: 'p,
+		P: 'p,
+		O: 'p,
+		G: 'p;
+
 	fn graph(&self, id: Option<&G>) -> Option<&HashGraph<S, P, O>> {
 		self.graph(id)
 	}
@@ -831,6 +1120,37 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> crate::Dataset
 	fn quads(&self) -> Quads<'_, S, P, O, G> {
 		self.quads()
 	}
+
+	fn pattern_matching<'p>(
+		&mut self,
+		Quad(s, p, o, g): Quad<
+			Option<&'p Self::Subject>,
+			Option<&'p Self::Predicate>,
+			Option<&'p Self::Object>,
+			Option<&'p Self::GraphLabel>,
+		>,
+	) -> Self::PatternMatching<'_, 'p> {
+		let pattern = Triple(s, p, o);
+
+		match g {
+			Some(g) => PatternMatching {
+				pattern,
+				graphs: None,
+				current_graph: self
+					.graph_entry(g)
+					.map(|(g, graph)| (g, GraphPatternMatching::new(graph, pattern))),
+			},
+			None => PatternMatching {
+				pattern,
+				graphs: Some(self.graphs()),
+				current_graph: None,
+			},
+		}
+	}
+}
+
+impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O, G> {
+	crate::macros::reflect_dataset_impl!();
 }
 
 impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug, G: fmt::Debug> fmt::Debug
@@ -851,6 +1171,190 @@ impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug, G: fmt::Debug> fmt::Debug
 		}
 
 		write!(f, "  }}")
+	}
+}
+
+#[allow(clippy::type_complexity)]
+pub struct PatternMatching<'a, 'p, S, P, O, G> {
+	pattern: Triple<Option<&'p S>, Option<&'p P>, Option<&'p O>>,
+	graphs: Option<Graphs<'a, S, P, O, G>>,
+	current_graph: Option<(Option<&'a G>, GraphPatternMatching<'a, 'p, S, P, O>)>,
+}
+
+impl<'a, 'p, S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> Iterator
+	for PatternMatching<'a, 'p, S, P, O, G>
+{
+	type Item = Quad<&'a S, &'a P, &'a O, &'a G>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		loop {
+			match &mut self.current_graph {
+				Some((g, m)) => match m.next() {
+					Some(Triple(s, p, o)) => break Some(Quad(s, p, o, *g)),
+					None => self.current_graph = None,
+				},
+				None => match &mut self.graphs {
+					Some(graphs) => match graphs.next() {
+						Some((g, graph)) => {
+							self.current_graph =
+								Some((g, GraphPatternMatching::new(graph, self.pattern)))
+						}
+						None => break None,
+					},
+					None => break None,
+				},
+			}
+		}
+	}
+}
+
+pub struct GraphPatternMatching<'a, 'p, S, P, O> {
+	predicate_pattern: Option<&'p P>,
+	object_pattern: Option<&'p O>,
+	subjects: Option<std::collections::hash_map::Iter<'a, S, HashMap<P, HashSet<O>>>>,
+	current_subject: Option<(&'a S, SubjectPatternMatching<'a, 'p, P, O>)>,
+}
+
+impl<'a, 'p, S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> GraphPatternMatching<'a, 'p, S, P, O> {
+	fn new(
+		graph: &'a HashGraph<S, P, O>,
+		pattern: Triple<Option<&'p S>, Option<&'p P>, Option<&'p O>>,
+	) -> Self {
+		match pattern.into_subject() {
+			Some(s) => Self {
+				predicate_pattern: pattern.into_predicate(),
+				object_pattern: pattern.into_object(),
+				subjects: None,
+				current_subject: graph.table.get_key_value(s).map(|(s, subject)| {
+					(
+						s,
+						SubjectPatternMatching::new(
+							subject,
+							pattern.into_predicate(),
+							pattern.into_object(),
+						),
+					)
+				}),
+			},
+			None => Self {
+				predicate_pattern: pattern.into_predicate(),
+				object_pattern: pattern.into_object(),
+				subjects: Some(graph.table.iter()),
+				current_subject: None,
+			},
+		}
+	}
+}
+
+impl<'a, 'p, S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> Iterator
+	for GraphPatternMatching<'a, 'p, S, P, O>
+{
+	type Item = Triple<&'a S, &'a P, &'a O>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		loop {
+			match &mut self.current_subject {
+				Some((s, m)) => match m.next() {
+					Some((p, o)) => break Some(Triple(s, p, o)),
+					None => self.current_subject = None,
+				},
+				None => match &mut self.subjects {
+					Some(subjects) => match subjects.next() {
+						Some((s, subject)) => {
+							self.current_subject = Some((
+								s,
+								SubjectPatternMatching::new(
+									subject,
+									self.predicate_pattern,
+									self.object_pattern,
+								),
+							))
+						}
+						None => break None,
+					},
+					None => break None,
+				},
+			}
+		}
+	}
+}
+
+struct SubjectPatternMatching<'a, 'p, P, O> {
+	object_pattern: Option<&'p O>,
+	predicates: Option<std::collections::hash_map::Iter<'a, P, HashSet<O>>>,
+	current_predicate: Option<(&'a P, PredicatePatternMatching<'a, O>)>,
+}
+
+impl<'a, 'p, P: Eq + Hash, O: Eq + Hash> SubjectPatternMatching<'a, 'p, P, O> {
+	fn new(
+		subject: &'a HashMap<P, HashSet<O>>,
+		predicate_pattern: Option<&'p P>,
+		object_pattern: Option<&'p O>,
+	) -> Self {
+		match predicate_pattern {
+			Some(p) => Self {
+				object_pattern,
+				predicates: None,
+				current_predicate: subject
+					.get_key_value(p)
+					.map(|(p, pred)| (p, PredicatePatternMatching::new(pred, object_pattern))),
+			},
+			None => Self {
+				object_pattern,
+				predicates: Some(subject.iter()),
+				current_predicate: None,
+			},
+		}
+	}
+}
+
+impl<'a, 'p, P: Eq + Hash, O: Eq + Hash> Iterator for SubjectPatternMatching<'a, 'p, P, O> {
+	type Item = (&'a P, &'a O);
+
+	fn next(&mut self) -> Option<Self::Item> {
+		loop {
+			match &mut self.current_predicate {
+				Some((p, m)) => match m.next() {
+					Some(o) => break Some((p, o)),
+					None => self.current_predicate = None,
+				},
+				None => match &mut self.predicates {
+					Some(predicates) => match predicates.next() {
+						Some((p, pred)) => {
+							self.current_predicate =
+								Some((p, PredicatePatternMatching::new(pred, self.object_pattern)))
+						}
+						None => break None,
+					},
+					None => break None,
+				},
+			}
+		}
+	}
+}
+
+enum PredicatePatternMatching<'a, O> {
+	One(Option<&'a O>),
+	Any(std::collections::hash_set::Iter<'a, O>),
+}
+
+impl<'a, O: Eq + Hash> PredicatePatternMatching<'a, O> {
+	fn new(predicate: &'a HashSet<O>, object_pattern: Option<&O>) -> Self {
+		match object_pattern {
+			Some(o) => Self::One(predicate.get(o)),
+			None => Self::Any(predicate.iter()),
+		}
+	}
+}
+
+impl<'a, O: Eq + Hash> Iterator for PredicatePatternMatching<'a, O> {
+	type Item = &'a O;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		match self {
+			Self::One(o) => o.take(),
+			Self::Any(iter) => iter.next(),
+		}
 	}
 }
 
@@ -945,6 +1449,12 @@ impl<S: Clone + Eq + Hash, P: Clone + Eq + Hash, O: Eq + Hash, G: Clone + Eq + H
 	}
 }
 
+impl<S: Clone + Eq + Hash, P: Clone + Eq + Hash, O: Eq + Hash, G: Clone + Eq + Hash>
+	HashDataset<S, P, O, G>
+{
+	crate::macros::reflect_sized_dataset_impl!();
+}
+
 pub struct IntoGraphs<S, P, O, G> {
 	default: Option<HashGraph<S, P, O>>,
 	it: std::collections::hash_map::IntoIter<G, HashGraph<S, P, O>>,
@@ -1019,8 +1529,12 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> crate::MutableDatas
 		self.named.insert(id, graph)
 	}
 
-	fn insert(&mut self, quad: Quad<S, P, O, G>) {
+	fn insert(&mut self, quad: Quad<S, P, O, G>) -> bool {
 		self.insert(quad)
+	}
+
+	fn remove(&mut self, quad: Quad<&S, &P, &O, &G>) {
+		self.remove(quad)
 	}
 
 	fn absorb<D: crate::SizedDataset<Subject = S, Predicate = P, Object = O, GraphLabel = G>>(
@@ -1030,6 +1544,28 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> crate::MutableDatas
 		D::Graph: crate::SizedGraph,
 	{
 		self.absorb(other)
+	}
+}
+
+impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O, G> {
+	crate::macros::reflect_mutable_dataset_impl!();
+}
+
+impl<'a, S, P, O, G> IntoIterator for &'a HashDataset<S, P, O, G> {
+	type Item = Quad<&'a S, &'a P, &'a O, &'a G>;
+	type IntoIter = Quads<'a, S, P, O, G>;
+
+	fn into_iter(self) -> Self::IntoIter {
+		self.quads()
+	}
+}
+
+impl<S: Clone, P: Clone, O, G: Clone> IntoIterator for HashDataset<S, P, O, G> {
+	type Item = Quad<S, P, O, G>;
+	type IntoIter = IntoQuads<S, P, O, G>;
+
+	fn into_iter(self) -> Self::IntoIter {
+		self.into_quads()
 	}
 }
 
