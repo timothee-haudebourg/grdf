@@ -98,7 +98,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash, M: Eq + Hash>
 	HashDataset<S, P, O, G, M>
 {
 	/// Inserts a located quad into the dataset.
-	pub fn loc_insert(&mut self, quad: MetaQuad<S, P, O, G, M>) {
+	pub fn loc_insert(&mut self, quad: MetaQuad<S, P, O, G, M>) -> bool {
 		self.insert(Object::new(quad))
 	}
 
@@ -123,7 +123,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash, M: Eq + Hash>
 {
 	fn extend<I: IntoIterator<Item = MetaQuad<S, P, O, G, M>>>(&mut self, iter: I) {
 		for quad in iter {
-			self.loc_insert(quad)
+			self.loc_insert(quad);
 		}
 	}
 }
@@ -143,7 +143,7 @@ pub type BTreeDataset<S, P, O, G, M> = crate::BTreeDataset<S, P, Object<O, M>, G
 
 impl<S: Ord, P: Ord, O: Ord, G: Ord, M: Ord> BTreeDataset<S, P, O, G, M> {
 	/// Inserts a located quad into the dataset.
-	pub fn loc_insert(&mut self, quad: MetaQuad<S, P, O, G, M>) {
+	pub fn loc_insert(&mut self, quad: MetaQuad<S, P, O, G, M>) -> bool {
 		self.insert(Object::new(quad))
 	}
 
@@ -168,7 +168,7 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord, M: Ord> std::iter::Extend<MetaQuad<S, P, O,
 {
 	fn extend<I: IntoIterator<Item = MetaQuad<S, P, O, G, M>>>(&mut self, iter: I) {
 		for quad in iter {
-			self.loc_insert(quad)
+			self.loc_insert(quad);
 		}
 	}
 }
