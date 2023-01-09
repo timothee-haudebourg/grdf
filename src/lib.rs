@@ -570,9 +570,9 @@ pub trait MutableDataset: Dataset {
 }
 
 pub trait GraphTake<
-	T = <Self as Graph>::Subject,
-	U = <Self as Graph>::Predicate,
-	V = <Self as Graph>::Object,
+	T: ?Sized = <Self as Graph>::Subject,
+	U: ?Sized = <Self as Graph>::Predicate,
+	V: ?Sized = <Self as Graph>::Object,
 >: Graph
 {
 	#[allow(clippy::type_complexity)]
@@ -589,10 +589,10 @@ pub trait GraphTake<
 }
 
 pub trait DatasetTake<
-	T = <Self as Dataset>::Subject,
-	U = <Self as Dataset>::Predicate,
-	V = <Self as Dataset>::Object,
-	W = <Self as Dataset>::GraphLabel,
+	T: ?Sized = <Self as Dataset>::Subject,
+	U: ?Sized = <Self as Dataset>::Predicate,
+	V: ?Sized = <Self as Dataset>::Object,
+	W: ?Sized = <Self as Dataset>::GraphLabel,
 >: MutableDataset where
 	Self::Graph: GraphTake,
 {

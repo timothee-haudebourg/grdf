@@ -108,8 +108,10 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 		}
 	}
 
-	fn remove<T: Ord, U: Ord, V: Ord>(&mut self, Triple(s, p, o): Triple<&T, &U, &V>)
-	where
+	fn remove<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord>(
+		&mut self,
+		Triple(s, p, o): Triple<&T, &U, &V>,
+	) where
 		S: Borrow<T>,
 		P: Borrow<U>,
 		O: Borrow<V>,
@@ -129,7 +131,7 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 		}
 	}
 
-	fn take<T: Ord, U: Ord, V: Ord>(
+	fn take<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord>(
 		&mut self,
 		Triple(s, p, o): Triple<&T, &U, &V>,
 	) -> Option<Triple<S, P, O>>
@@ -165,7 +167,7 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 		None
 	}
 
-	fn take_match<T: Ord, U: Ord, V: Ord>(
+	fn take_match<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord>(
 		&mut self,
 		Triple(s, p, o): Triple<Option<&T>, Option<&U>, Option<&V>>,
 	) -> Option<Triple<S, P, O>>
@@ -174,7 +176,7 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 		P: Clone + Borrow<U>,
 		O: Borrow<V>,
 	{
-		fn take_object_match<O: Borrow<V> + Ord, V: Ord>(
+		fn take_object_match<O: Borrow<V> + Ord, V: ?Sized + Ord>(
 			objects: &mut BTreeSet<O>,
 			o: Option<&V>,
 		) -> Option<O> {
@@ -184,7 +186,12 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 			}
 		}
 
-		fn take_predicate_match<P: Borrow<U> + Clone + Ord, O: Borrow<V> + Ord, U: Ord, V: Ord>(
+		fn take_predicate_match<
+			P: Borrow<U> + Clone + Ord,
+			O: Borrow<V> + Ord,
+			U: ?Sized + Ord,
+			V: ?Sized + Ord,
+		>(
 			predicates: &mut BTreeMap<P, BTreeSet<O>>,
 			p: Option<&U>,
 			o: Option<&V>,
@@ -489,9 +496,9 @@ impl<
 		S: Clone + Borrow<T> + Ord,
 		P: Clone + Borrow<U> + Ord,
 		O: Borrow<V> + Ord,
-		T: Ord,
-		U: Ord,
-		V: Ord,
+		T: ?Sized + Ord,
+		U: ?Sized + Ord,
+		V: ?Sized + Ord,
 	> crate::GraphTake<T, U, V> for BTreeGraph<S, P, O>
 {
 	fn take(
@@ -765,7 +772,7 @@ impl<S, P, O, G> BTreeDataset<S, P, O, G> {
 	pub fn graph<W>(&self, id: Option<&W>) -> Option<&BTreeGraph<S, P, O>>
 	where
 		G: Borrow<W> + Ord,
-		W: Ord,
+		W: ?Sized + Ord,
 	{
 		match id {
 			Some(id) => self.named.get(id),
@@ -777,7 +784,7 @@ impl<S, P, O, G> BTreeDataset<S, P, O, G> {
 	pub fn graph_entry<W>(&self, id: Option<&W>) -> Option<(Option<&G>, &BTreeGraph<S, P, O>)>
 	where
 		G: Borrow<W> + Ord,
-		W: Ord,
+		W: ?Sized + Ord,
 	{
 		match id {
 			Some(id) => self.named.get_key_value(id).map(|(k, v)| (Some(k), v)),
@@ -800,7 +807,7 @@ impl<S, P, O, G> BTreeDataset<S, P, O, G> {
 		}
 	}
 
-	pub fn graph_mut<W: Ord>(&mut self, id: Option<&W>) -> Option<&mut BTreeGraph<S, P, O>>
+	pub fn graph_mut<W: ?Sized + Ord>(&mut self, id: Option<&W>) -> Option<&mut BTreeGraph<S, P, O>>
 	where
 		G: Ord + Borrow<W>,
 	{
@@ -864,8 +871,10 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> BTreeDataset<S, P, O, G> {
 		}
 	}
 
-	pub fn remove<T: Ord, U: Ord, V: Ord, W: Ord>(&mut self, Quad(s, p, o, g): Quad<&T, &U, &V, &W>)
-	where
+	pub fn remove<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord, W: ?Sized + Ord>(
+		&mut self,
+		Quad(s, p, o, g): Quad<&T, &U, &V, &W>,
+	) where
 		S: Borrow<T>,
 		P: Borrow<U>,
 		O: Borrow<V>,
@@ -876,14 +885,14 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> BTreeDataset<S, P, O, G> {
 		}
 	}
 
-	pub fn remove_graph<W: Ord>(&mut self, g: &W) -> Option<BTreeGraph<S, P, O>>
+	pub fn remove_graph<W: ?Sized + Ord>(&mut self, g: &W) -> Option<BTreeGraph<S, P, O>>
 	where
 		G: Borrow<W>,
 	{
 		self.named.remove(g)
 	}
 
-	pub fn take<T: Ord, U: Ord, V: Ord, W: Ord>(
+	pub fn take<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord, W: ?Sized + Ord>(
 		&mut self,
 		Quad(s, p, o, g): Quad<&T, &U, &V, &W>,
 	) -> Option<Quad<S, P, O, G>>
@@ -908,7 +917,7 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> BTreeDataset<S, P, O, G> {
 		Some(Quad(s, p, o, g))
 	}
 
-	pub fn take_match<T: Ord, U: Ord, V: Ord, W: Ord>(
+	pub fn take_match<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord, W: ?Sized + Ord>(
 		&mut self,
 		Quad(s, p, o, g): Quad<Option<&T>, Option<&U>, Option<&V>, Option<&W>>,
 	) -> Option<Quad<S, P, O, G>>
@@ -1536,10 +1545,10 @@ impl<
 		P: Clone + Borrow<U> + Ord,
 		O: Borrow<V> + Ord,
 		G: Clone + Borrow<W> + Ord,
-		T: Ord,
-		U: Ord,
-		V: Ord,
-		W: Ord,
+		T: ?Sized + Ord,
+		U: ?Sized + Ord,
+		V: ?Sized + Ord,
+		W: ?Sized + Ord,
 	> crate::DatasetTake<T, U, V, W> for BTreeDataset<S, P, O, G>
 {
 	fn take(

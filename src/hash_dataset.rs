@@ -89,7 +89,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		}
 	}
 
-	fn remove<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash>(
+	fn remove<T: ?Sized + Eq + Hash, U: ?Sized + Eq + Hash, V: ?Sized + Eq + Hash>(
 		&mut self,
 		Triple(s, p, o): Triple<&T, &U, &V>,
 	) where
@@ -112,7 +112,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		}
 	}
 
-	fn take<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash>(
+	fn take<T: ?Sized + Eq + Hash, U: ?Sized + Eq + Hash, V: ?Sized + Eq + Hash>(
 		&mut self,
 		Triple(s, p, o): Triple<&T, &U, &V>,
 	) -> Option<Triple<S, P, O>>
@@ -148,7 +148,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		None
 	}
 
-	fn take_match<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash>(
+	fn take_match<T: ?Sized + Eq + Hash, U: ?Sized + Eq + Hash, V: ?Sized + Eq + Hash>(
 		&mut self,
 		Triple(s, p, o): Triple<Option<&T>, Option<&U>, Option<&V>>,
 	) -> Option<Triple<S, P, O>>
@@ -157,7 +157,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		P: Clone + Borrow<U>,
 		O: Clone + Borrow<V>,
 	{
-		fn take_object_match<O: Borrow<V> + Clone + Eq + Hash, V: Eq + Hash>(
+		fn take_object_match<O: Borrow<V> + Clone + Eq + Hash, V: ?Sized + Eq + Hash>(
 			objects: &mut HashSet<O>,
 			o: Option<&V>,
 		) -> Option<O> {
@@ -173,8 +173,8 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		fn take_predicate_match<
 			P: Borrow<U> + Clone + Eq + Hash,
 			O: Borrow<V> + Clone + Eq + Hash,
-			U: Eq + Hash,
-			V: Eq + Hash,
+			U: ?Sized + Eq + Hash,
+			V: ?Sized + Eq + Hash,
 		>(
 			predicates: &mut HashMap<P, HashSet<O>>,
 			p: Option<&U>,
@@ -482,9 +482,9 @@ impl<
 		S: Clone + Borrow<T> + Eq + Hash,
 		P: Clone + Borrow<U> + Eq + Hash,
 		O: Borrow<V> + Clone + Eq + Hash,
-		T: Eq + Hash,
-		U: Eq + Hash,
-		V: Eq + Hash,
+		T: ?Sized + Eq + Hash,
+		U: ?Sized + Eq + Hash,
+		V: ?Sized + Eq + Hash,
 	> crate::GraphTake<T, U, V> for HashGraph<S, P, O>
 {
 	fn take(
@@ -772,7 +772,7 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 		Self::default()
 	}
 
-	pub fn graph<W: Eq + Hash>(&self, id: Option<&W>) -> Option<&HashGraph<S, P, O>>
+	pub fn graph<W: ?Sized + Eq + Hash>(&self, id: Option<&W>) -> Option<&HashGraph<S, P, O>>
 	where
 		G: Eq + Hash + Borrow<W>,
 	{
@@ -783,7 +783,7 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 	}
 
 	#[allow(clippy::type_complexity)]
-	pub fn graph_entry<W: Eq + Hash>(
+	pub fn graph_entry<W: ?Sized + Eq + Hash>(
 		&self,
 		id: Option<&W>,
 	) -> Option<(Option<&G>, &HashGraph<S, P, O>)>
@@ -811,7 +811,10 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 		}
 	}
 
-	pub fn graph_mut<W: Eq + Hash>(&mut self, id: Option<&W>) -> Option<&mut HashGraph<S, P, O>>
+	pub fn graph_mut<W: ?Sized + Eq + Hash>(
+		&mut self,
+		id: Option<&W>,
+	) -> Option<&mut HashGraph<S, P, O>>
 	where
 		G: Eq + Hash + Borrow<W>,
 	{
@@ -875,7 +878,12 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O
 		}
 	}
 
-	pub fn remove<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash, W: Eq + Hash>(
+	pub fn remove<
+		T: ?Sized + Eq + Hash,
+		U: ?Sized + Eq + Hash,
+		V: ?Sized + Eq + Hash,
+		W: ?Sized + Eq + Hash,
+	>(
 		&mut self,
 		Quad(s, p, o, g): Quad<&T, &U, &V, &W>,
 	) where
@@ -889,14 +897,19 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O
 		}
 	}
 
-	pub fn remove_graph<W: Eq + Hash>(&mut self, g: &W) -> Option<HashGraph<S, P, O>>
+	pub fn remove_graph<W: ?Sized + Eq + Hash>(&mut self, g: &W) -> Option<HashGraph<S, P, O>>
 	where
 		G: Borrow<W>,
 	{
 		self.named.remove(g)
 	}
 
-	pub fn take<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash, W: Eq + Hash>(
+	pub fn take<
+		T: ?Sized + Eq + Hash,
+		U: ?Sized + Eq + Hash,
+		V: ?Sized + Eq + Hash,
+		W: ?Sized + Eq + Hash,
+	>(
 		&mut self,
 		Quad(s, p, o, g): Quad<&T, &U, &V, &W>,
 	) -> Option<Quad<S, P, O, G>>
@@ -921,7 +934,12 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O
 		Some(Quad(s, p, o, g))
 	}
 
-	pub fn take_match<T: Eq + Hash, U: Eq + Hash, V: Eq + Hash, W: Eq + Hash>(
+	pub fn take_match<
+		T: ?Sized + Eq + Hash,
+		U: ?Sized + Eq + Hash,
+		V: ?Sized + Eq + Hash,
+		W: ?Sized + Eq + Hash,
+	>(
 		&mut self,
 		Quad(s, p, o, g): Quad<Option<&T>, Option<&U>, Option<&V>, Option<&W>>,
 	) -> Option<Quad<S, P, O, G>>
