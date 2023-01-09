@@ -8,7 +8,7 @@ use std::fmt;
 use std::hash::Hash;
 
 /// Graph implementation based on `BTreeMap` and `BTreeSet`.
-#[derive(Derivative)]
+#[derive(Derivative, Clone)]
 #[derivative(PartialEq(bound = "S: Ord, P: Ord, O: Ord"))]
 #[derivative(Eq(bound = "S: Ord, P: Ord, O: Ord"))]
 #[derivative(PartialOrd(bound = "S: Ord, P: Ord, O: Ord"))]
@@ -752,7 +752,7 @@ impl<S: Ord, P: Ord, O: Ord> std::iter::Extend<Triple<S, P, O>> for BTreeGraph<S
 	}
 }
 
-#[derive(Derivative)]
+#[derive(Derivative, Clone)]
 #[derivative(PartialEq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
 #[derivative(Eq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
 #[derivative(PartialOrd(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]

@@ -8,7 +8,7 @@ use std::fmt;
 use std::hash::Hash;
 
 /// Graph implementation based on `HashMap` and `HashSet`.
-#[derive(Derivative)]
+#[derive(Derivative, Clone)]
 #[derivative(PartialEq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash"))]
 #[derivative(Eq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash"))]
 #[derivative(Default(bound = ""))]
@@ -758,7 +758,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> std::iter::Extend<Triple<S, P, O>
 	}
 }
 
-#[derive(Derivative)]
+#[derive(Derivative, Clone)]
 #[derivative(PartialEq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash"))]
 #[derivative(Eq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash"))]
 #[derivative(Default(bound = ""))]
