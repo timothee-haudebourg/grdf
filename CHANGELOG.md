@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.1] - 2023-01-11
+
+### Added
+
+- [1320a5c] Add `BTreeGraph::remove` method (now public).
+- [1320a5c] Add `BTreeGraph::take` method (now public).
+- [1320a5c] Add `BTreeGraph::take_match` method (now public).
+- [1320a5c] Add `HashGraph::remove` method (now public).
+- [1320a5c] Add `HashGraph::take` method (now public).
+- [1320a5c] Add `HashGraph::take_match` method (now public).
+
+### Fixed
+
+- [1320a5c] Fix methods visibility.
+
 ## [0.16.0] - 2023-01-11
 
 ### Changed
