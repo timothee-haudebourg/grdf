@@ -34,7 +34,7 @@
 //! # use rdf_types::{Term, Triple};
 //! # use grdf::HashDataset;
 //! # let dataset: HashDataset<Term> = HashDataset::new();
-//! # let id = None;
+//! # let id: Option<&Term> = None;
 //! let graph = dataset.graph(id).unwrap();
 //!
 //! for Triple(subject, predicate, object) in graph {
@@ -82,7 +82,7 @@
 //! ```rust
 //! # use rdf_types::{Term, Triple, BlankIdBuf};
 //! # use grdf::{MutableDataset, MutableGraph, HashDataset};
-//! # let id = None;
+//! # let id: Option<&Term> = None;
 //! # let subject = Term::Blank(BlankIdBuf::from_u8(0));
 //! # let predicate = Term::Blank(BlankIdBuf::from_u8(1));
 //! # let object = Term::Blank(BlankIdBuf::from_u8(2));

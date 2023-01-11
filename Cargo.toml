@@ -19,6 +19,7 @@ meta = [ "locspan", "rdf-types/meta" ]
 iref = "2.1.1"
 rdf-types = "0.12"
 derivative = "2.2.0"
+hashbrown = "0.13.1"
 locspan = { version = "0.7.9", optional = true }
 
 [dev-dependencies]

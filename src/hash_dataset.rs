@@ -1,9 +1,8 @@
 //! Dataset implementation based on `HashMap` and `HashSet`.
 use crate::{utils::HashBijection, Quad, Triple};
 use derivative::Derivative;
+use hashbrown::{Equivalent, HashMap, HashSet};
 use rdf_types::{AsTerm, IntoTerm};
-use std::borrow::Borrow;
-use std::collections::{HashMap, HashSet};
 use std::fmt;
 use std::hash::Hash;
 
@@ -89,14 +88,14 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		}
 	}
 
-	fn remove<T: ?Sized + Eq + Hash, U: ?Sized + Eq + Hash, V: ?Sized + Eq + Hash>(
+	fn remove<
+		T: ?Sized + Equivalent<S> + Hash,
+		U: ?Sized + Equivalent<P> + Hash,
+		V: ?Sized + Equivalent<O> + Hash,
+	>(
 		&mut self,
 		Triple(s, p, o): Triple<&T, &U, &V>,
-	) where
-		S: Borrow<T>,
-		P: Borrow<U>,
-		O: Borrow<V>,
-	{
+	) {
 		if let Some(predicates) = self.table.get_mut(s) {
 			if let Some(objects) = predicates.get_mut(p) {
 				if objects.remove(o) {
@@ -112,14 +111,17 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		}
 	}
 
-	fn take<T: ?Sized + Eq + Hash, U: ?Sized + Eq + Hash, V: ?Sized + Eq + Hash>(
+	fn take<
+		T: ?Sized + Equivalent<S> + Hash,
+		U: ?Sized + Equivalent<P> + Hash,
+		V: ?Sized + Equivalent<O> + Hash,
+	>(
 		&mut self,
 		Triple(s, p, o): Triple<&T, &U, &V>,
 	) -> Option<Triple<S, P, O>>
 	where
-		S: Clone + Borrow<T>,
-		P: Clone + Borrow<U>,
-		O: Borrow<V>,
+		S: Clone,
+		P: Clone,
 	{
 		if let Some(predicates) = self.table.get_mut(s) {
 			if let Some(objects) = predicates.get_mut(p) {
@@ -148,16 +150,20 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		None
 	}
 
-	fn take_match<T: ?Sized + Eq + Hash, U: ?Sized + Eq + Hash, V: ?Sized + Eq + Hash>(
+	fn take_match<
+		T: ?Sized + Equivalent<S> + Hash,
+		U: ?Sized + Equivalent<P> + Hash,
+		V: ?Sized + Equivalent<O> + Hash,
+	>(
 		&mut self,
 		Triple(s, p, o): Triple<Option<&T>, Option<&U>, Option<&V>>,
 	) -> Option<Triple<S, P, O>>
 	where
-		S: Clone + Borrow<T>,
-		P: Clone + Borrow<U>,
-		O: Clone + Borrow<V>,
+		S: Clone,
+		P: Clone,
+		O: Clone,
 	{
-		fn take_object_match<O: Borrow<V> + Clone + Eq + Hash, V: ?Sized + Eq + Hash>(
+		fn take_object_match<O: Clone + Eq + Hash, V: ?Sized + Equivalent<O> + Hash>(
 			objects: &mut HashSet<O>,
 			o: Option<&V>,
 		) -> Option<O> {
@@ -171,10 +177,10 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		}
 
 		fn take_predicate_match<
-			P: Borrow<U> + Clone + Eq + Hash,
-			O: Borrow<V> + Clone + Eq + Hash,
-			U: ?Sized + Eq + Hash,
-			V: ?Sized + Eq + Hash,
+			P: Clone + Eq + Hash,
+			O: Clone + Eq + Hash,
+			U: ?Sized + Equivalent<P> + Hash,
+			V: ?Sized + Equivalent<O> + Hash,
 		>(
 			predicates: &mut HashMap<P, HashSet<O>>,
 			p: Option<&U>,
@@ -479,12 +485,12 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> crate::MutableGraph for HashGraph
 }
 
 impl<
-		S: Clone + Borrow<T> + Eq + Hash,
-		P: Clone + Borrow<U> + Eq + Hash,
-		O: Borrow<V> + Clone + Eq + Hash,
-		T: ?Sized + Eq + Hash,
-		U: ?Sized + Eq + Hash,
-		V: ?Sized + Eq + Hash,
+		S: Clone + Eq + Hash,
+		P: Clone + Eq + Hash,
+		O: Clone + Eq + Hash,
+		T: ?Sized + Equivalent<S> + Hash,
+		U: ?Sized + Equivalent<P> + Hash,
+		V: ?Sized + Equivalent<O> + Hash,
 	> crate::GraphTake<T, U, V> for HashGraph<S, P, O>
 {
 	fn take(
@@ -521,7 +527,7 @@ impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug> fmt::Debug for HashGraph<S, P,
 #[derive(Derivative)]
 #[derivative(Clone(bound = ""))]
 pub struct Subjects<'a, S, P, O> {
-	it: std::collections::hash_map::Iter<'a, S, HashMap<P, HashSet<O>>>,
+	it: hashbrown::hash_map::Iter<'a, S, HashMap<P, HashSet<O>>>,
 }
 
 impl<'a, S, P, O> Iterator for Subjects<'a, S, P, O> {
@@ -540,7 +546,7 @@ impl<'a, S, P, O> Iterator for Subjects<'a, S, P, O> {
 }
 
 pub struct IntoSubjects<S, P, O> {
-	it: std::collections::hash_map::IntoIter<S, HashMap<P, HashSet<O>>>,
+	it: hashbrown::hash_map::IntoIter<S, HashMap<P, HashSet<O>>>,
 }
 
 impl<S, P, O> Iterator for IntoSubjects<S, P, O> {
@@ -561,7 +567,7 @@ impl<S, P, O> Iterator for IntoSubjects<S, P, O> {
 #[derive(Derivative)]
 #[derivative(Clone(bound = ""))]
 pub struct Predicates<'a, P, O> {
-	it: Option<std::collections::hash_map::Iter<'a, P, HashSet<O>>>,
+	it: Option<hashbrown::hash_map::Iter<'a, P, HashSet<O>>>,
 }
 
 impl<'a, P, O> Iterator for Predicates<'a, P, O> {
@@ -583,7 +589,7 @@ impl<'a, P, O> Iterator for Predicates<'a, P, O> {
 }
 
 pub struct IntoPredicates<P, O> {
-	it: Option<std::collections::hash_map::IntoIter<P, HashSet<O>>>,
+	it: Option<hashbrown::hash_map::IntoIter<P, HashSet<O>>>,
 }
 
 impl<P, O> Iterator for IntoPredicates<P, O> {
@@ -607,7 +613,7 @@ impl<P, O> Iterator for IntoPredicates<P, O> {
 #[derive(Derivative)]
 #[derivative(Clone(bound = ""))]
 pub struct Objects<'a, O> {
-	it: Option<std::collections::hash_set::Iter<'a, O>>,
+	it: Option<hashbrown::hash_set::Iter<'a, O>>,
 }
 
 impl<'a, O> Iterator for Objects<'a, O> {
@@ -622,7 +628,7 @@ impl<'a, O> Iterator for Objects<'a, O> {
 }
 
 pub struct IntoObjects<O> {
-	it: Option<std::collections::hash_set::IntoIter<O>>,
+	it: Option<hashbrown::hash_set::IntoIter<O>>,
 }
 
 impl<O> Iterator for IntoObjects<O> {
@@ -772,9 +778,12 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 		Self::default()
 	}
 
-	pub fn graph<W: ?Sized + Eq + Hash>(&self, id: Option<&W>) -> Option<&HashGraph<S, P, O>>
+	pub fn graph<W: ?Sized + Equivalent<G> + Hash>(
+		&self,
+		id: Option<&W>,
+	) -> Option<&HashGraph<S, P, O>>
 	where
-		G: Eq + Hash + Borrow<W>,
+		G: Eq + Hash,
 	{
 		match id {
 			Some(id) => self.named.get(id),
@@ -783,12 +792,12 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 	}
 
 	#[allow(clippy::type_complexity)]
-	pub fn graph_entry<W: ?Sized + Eq + Hash>(
+	pub fn graph_entry<W: ?Sized + Equivalent<G> + Hash>(
 		&self,
 		id: Option<&W>,
 	) -> Option<(Option<&G>, &HashGraph<S, P, O>)>
 	where
-		G: Eq + Hash + Borrow<W>,
+		G: Eq + Hash,
 	{
 		match id {
 			Some(id) => self.named.get_key_value(id).map(|(k, v)| (Some(k), v)),
@@ -811,12 +820,12 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 		}
 	}
 
-	pub fn graph_mut<W: ?Sized + Eq + Hash>(
+	pub fn graph_mut<W: ?Sized + Equivalent<G> + Hash>(
 		&mut self,
 		id: Option<&W>,
 	) -> Option<&mut HashGraph<S, P, O>>
 	where
-		G: Eq + Hash + Borrow<W>,
+		G: Eq + Hash,
 	{
 		match id {
 			Some(id) => self.named.get_mut(id),
@@ -879,45 +888,39 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O
 	}
 
 	pub fn remove<
-		T: ?Sized + Eq + Hash,
-		U: ?Sized + Eq + Hash,
-		V: ?Sized + Eq + Hash,
-		W: ?Sized + Eq + Hash,
+		T: ?Sized + Equivalent<S> + Hash,
+		U: ?Sized + Equivalent<P> + Hash,
+		V: ?Sized + Equivalent<O> + Hash,
+		W: ?Sized + Equivalent<G> + Hash,
 	>(
 		&mut self,
 		Quad(s, p, o, g): Quad<&T, &U, &V, &W>,
-	) where
-		S: Borrow<T>,
-		P: Borrow<U>,
-		O: Borrow<V>,
-		G: Borrow<W>,
-	{
+	) {
 		if let Some(graph) = self.graph_mut(g) {
 			graph.remove(Triple(s, p, o))
 		}
 	}
 
-	pub fn remove_graph<W: ?Sized + Eq + Hash>(&mut self, g: &W) -> Option<HashGraph<S, P, O>>
-	where
-		G: Borrow<W>,
-	{
+	pub fn remove_graph<W: ?Sized + Equivalent<G> + Hash>(
+		&mut self,
+		g: &W,
+	) -> Option<HashGraph<S, P, O>> {
 		self.named.remove(g)
 	}
 
 	pub fn take<
-		T: ?Sized + Eq + Hash,
-		U: ?Sized + Eq + Hash,
-		V: ?Sized + Eq + Hash,
-		W: ?Sized + Eq + Hash,
+		T: ?Sized + Equivalent<S> + Hash,
+		U: ?Sized + Equivalent<P> + Hash,
+		V: ?Sized + Equivalent<O> + Hash,
+		W: ?Sized + Equivalent<G> + Hash,
 	>(
 		&mut self,
 		Quad(s, p, o, g): Quad<&T, &U, &V, &W>,
 	) -> Option<Quad<S, P, O, G>>
 	where
-		S: Clone + Borrow<T>,
-		P: Clone + Borrow<U>,
-		O: Borrow<V>,
-		G: Clone + Borrow<W>,
+		S: Clone,
+		P: Clone,
+		G: Clone,
 	{
 		let graph = self.graph_mut(g)?;
 		let Triple(s, p, o) = graph.take(Triple(s, p, o))?;
@@ -935,19 +938,19 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O
 	}
 
 	pub fn take_match<
-		T: ?Sized + Eq + Hash,
-		U: ?Sized + Eq + Hash,
-		V: ?Sized + Eq + Hash,
-		W: ?Sized + Eq + Hash,
+		T: ?Sized + Equivalent<S> + Hash,
+		U: ?Sized + Equivalent<P> + Hash,
+		V: ?Sized + Equivalent<O> + Hash,
+		W: ?Sized + Equivalent<G> + Hash,
 	>(
 		&mut self,
 		Quad(s, p, o, g): Quad<Option<&T>, Option<&U>, Option<&V>, Option<&W>>,
 	) -> Option<Quad<S, P, O, G>>
 	where
-		S: Clone + Borrow<T>,
-		P: Clone + Borrow<U>,
-		O: Clone + Borrow<V>,
-		G: Clone + Borrow<W>,
+		S: Clone,
+		P: Clone,
+		O: Clone,
+		G: Clone,
 	{
 		match g {
 			Some(g) => {
@@ -1229,7 +1232,7 @@ impl<'a, 'p, S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> Iterator
 pub struct GraphPatternMatching<'a, 'p, S, P, O> {
 	predicate_pattern: Option<&'p P>,
 	object_pattern: Option<&'p O>,
-	subjects: Option<std::collections::hash_map::Iter<'a, S, HashMap<P, HashSet<O>>>>,
+	subjects: Option<hashbrown::hash_map::Iter<'a, S, HashMap<P, HashSet<O>>>>,
 	current_subject: Option<(&'a S, SubjectPatternMatching<'a, 'p, P, O>)>,
 }
 
@@ -1299,7 +1302,7 @@ impl<'a, 'p, S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> Iterator
 
 struct SubjectPatternMatching<'a, 'p, P, O> {
 	object_pattern: Option<&'p O>,
-	predicates: Option<std::collections::hash_map::Iter<'a, P, HashSet<O>>>,
+	predicates: Option<hashbrown::hash_map::Iter<'a, P, HashSet<O>>>,
 	current_predicate: Option<(&'a P, PredicatePatternMatching<'a, O>)>,
 }
 
@@ -1353,7 +1356,7 @@ impl<'a, 'p, P: Eq + Hash, O: Eq + Hash> Iterator for SubjectPatternMatching<'a,
 
 enum PredicatePatternMatching<'a, O> {
 	One(Option<&'a O>),
-	Any(std::collections::hash_set::Iter<'a, O>),
+	Any(hashbrown::hash_set::Iter<'a, O>),
 }
 
 impl<'a, O: Eq + Hash> PredicatePatternMatching<'a, O> {
@@ -1380,7 +1383,7 @@ impl<'a, O: Eq + Hash> Iterator for PredicatePatternMatching<'a, O> {
 #[derivative(Clone(bound = ""))]
 pub struct Graphs<'a, S, P, O, G> {
 	default: Option<&'a HashGraph<S, P, O>>,
-	it: std::collections::hash_map::Iter<'a, G, HashGraph<S, P, O>>,
+	it: hashbrown::hash_map::Iter<'a, G, HashGraph<S, P, O>>,
 }
 
 impl<'a, S, P, O, G> Iterator for Graphs<'a, S, P, O, G> {
@@ -1398,7 +1401,7 @@ impl<'a, S, P, O, G> Iterator for Graphs<'a, S, P, O, G> {
 
 pub struct GraphsMut<'a, S, P, O, G> {
 	default: Option<&'a mut HashGraph<S, P, O>>,
-	it: std::collections::hash_map::IterMut<'a, G, HashGraph<S, P, O>>,
+	it: hashbrown::hash_map::IterMut<'a, G, HashGraph<S, P, O>>,
 }
 
 impl<'a, S, P, O, G> Iterator for GraphsMut<'a, S, P, O, G> {
@@ -1475,7 +1478,7 @@ impl<S: Clone + Eq + Hash, P: Clone + Eq + Hash, O: Eq + Hash, G: Clone + Eq + H
 
 pub struct IntoGraphs<S, P, O, G> {
 	default: Option<HashGraph<S, P, O>>,
-	it: std::collections::hash_map::IntoIter<G, HashGraph<S, P, O>>,
+	it: hashbrown::hash_map::IntoIter<G, HashGraph<S, P, O>>,
 }
 
 impl<S, P, O, G> Iterator for IntoGraphs<S, P, O, G> {
