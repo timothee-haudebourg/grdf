@@ -213,7 +213,10 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 					for (p, objects) in &mut *predicates {
 						if let Some(o) = take_object_match(objects, o) {
 							let p = p.clone();
-							predicates.remove::<P>(&p);
+
+							if objects.is_empty() {
+								predicates.remove::<P>(&p);
+							}
 
 							return Some((p, o));
 						}
@@ -242,7 +245,10 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 				for (s, predicates) in &mut self.table {
 					if let Some((p, o)) = take_predicate_match(predicates, p, o) {
 						let s = s.clone();
-						self.table.remove::<S>(&s);
+
+						if predicates.is_empty() {
+							self.table.remove::<S>(&s);
+						}
 
 						self.len -= 1;
 						return Some(Triple(s, p, o));
