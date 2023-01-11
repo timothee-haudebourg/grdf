@@ -88,7 +88,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		}
 	}
 
-	fn remove<
+	pub fn remove<
 		T: ?Sized + Equivalent<S> + Hash,
 		U: ?Sized + Equivalent<P> + Hash,
 		V: ?Sized + Equivalent<O> + Hash,
@@ -111,7 +111,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		}
 	}
 
-	fn take<
+	pub fn take<
 		T: ?Sized + Equivalent<S> + Hash,
 		U: ?Sized + Equivalent<P> + Hash,
 		V: ?Sized + Equivalent<O> + Hash,
@@ -150,7 +150,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {
 		None
 	}
 
-	fn take_match<
+	pub fn take_match<
 		T: ?Sized + Equivalent<S> + Hash,
 		U: ?Sized + Equivalent<P> + Hash,
 		V: ?Sized + Equivalent<O> + Hash,

@@ -108,7 +108,7 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 		}
 	}
 
-	fn remove<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord>(
+	pub fn remove<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord>(
 		&mut self,
 		Triple(s, p, o): Triple<&T, &U, &V>,
 	) where
@@ -131,7 +131,7 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 		}
 	}
 
-	fn take<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord>(
+	pub fn take<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord>(
 		&mut self,
 		Triple(s, p, o): Triple<&T, &U, &V>,
 	) -> Option<Triple<S, P, O>>
@@ -167,7 +167,7 @@ impl<S: Ord, P: Ord, O: Ord> BTreeGraph<S, P, O> {
 		None
 	}
 
-	fn take_match<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord>(
+	pub fn take_match<T: ?Sized + Ord, U: ?Sized + Ord, V: ?Sized + Ord>(
 		&mut self,
 		Triple(s, p, o): Triple<Option<&T>, Option<&U>, Option<&V>>,
 	) -> Option<Triple<S, P, O>>
