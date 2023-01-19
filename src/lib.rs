@@ -412,7 +412,7 @@ pub trait Dataset {
 
 	#[allow(clippy::type_complexity)]
 	fn pattern_matching<'p>(
-		&mut self,
+		&self,
 		pattern: Quad<
 			Option<&'p Self::Subject>,
 			Option<&'p Self::Predicate>,
@@ -422,8 +422,8 @@ pub trait Dataset {
 	) -> Self::PatternMatching<'_, 'p>;
 
 	#[allow(clippy::type_complexity)]
-	fn first_match(
-		&mut self,
+	fn any_match(
+		&self,
 		pattern: Quad<
 			Option<&Self::Subject>,
 			Option<&Self::Predicate>,
@@ -432,6 +432,20 @@ pub trait Dataset {
 		>,
 	) -> Option<Quad<&Self::Subject, &Self::Predicate, &Self::Object, &Self::GraphLabel>> {
 		self.pattern_matching(pattern).next()
+	}
+
+	#[allow(clippy::type_complexity)]
+	#[deprecated = "use `any_match` instead"]
+	fn first_match(
+		&self,
+		pattern: Quad<
+			Option<&Self::Subject>,
+			Option<&Self::Predicate>,
+			Option<&Self::Object>,
+			Option<&Self::GraphLabel>,
+		>,
+	) -> Option<Quad<&Self::Subject, &Self::Predicate, &Self::Object, &Self::GraphLabel>> {
+		self.any_match(pattern)
 	}
 }
 

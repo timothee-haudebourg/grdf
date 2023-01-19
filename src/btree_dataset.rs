@@ -1124,7 +1124,7 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> crate::Dataset for BTreeDataset<S, P, O, G>
 	}
 
 	fn pattern_matching<'p>(
-		&mut self,
+		&self,
 		Quad(s, p, o, g): Quad<
 			Option<&'p Self::Subject>,
 			Option<&'p Self::Predicate>,

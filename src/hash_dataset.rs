@@ -1149,7 +1149,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> crate::Dataset
 	}
 
 	fn pattern_matching<'p>(
-		&mut self,
+		&self,
 		Quad(s, p, o, g): Quad<
 			Option<&'p Self::Subject>,
 			Option<&'p Self::Predicate>,
