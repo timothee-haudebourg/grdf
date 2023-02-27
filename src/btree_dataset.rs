@@ -1,7 +1,7 @@
 //! Dataset implementation based on `BTreeMap` and `BTreeSet`.
 use crate::{utils::BTreeBijection, Quad, Triple};
 use derivative::Derivative;
-use rdf_types::{AsTerm, IntoTerm};
+use rdf_types::{AsTerm, Id, IntoTerm};
 use std::borrow::Borrow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
@@ -41,7 +41,7 @@ impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug> fmt::Debug for BTreeGraph<S, P
 				write!(f, ",")?;
 			}
 
-			write!(f, " {:?} {:?} {:?}", s, p, o)?;
+			write!(f, " {s:?} {p:?} {o:?}")?;
 		}
 
 		write!(f, "  }}")
@@ -996,7 +996,7 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> BTreeDataset<S, P, O, G> {
 			f: impl Clone + Fn(T::BlankId) -> T::BlankId,
 		) -> T {
 			match term.into_term() {
-				rdf_types::Term::Blank(id) => rdf_types::Term::Blank(f(id)).into(),
+				rdf_types::Term::Id(Id::Blank(id)) => rdf_types::Term::Id(Id::Blank(f(id))).into(),
 				other => other.into(),
 			}
 		}
@@ -1167,8 +1167,8 @@ impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug, G: fmt::Debug> fmt::Debug
 			}
 
 			match g {
-				Some(g) => write!(f, " {:?} {:?} {:?} {:?}", s, p, o, g)?,
-				None => write!(f, " {:?} {:?} {:?}", s, p, o)?,
+				Some(g) => write!(f, " {s:?} {p:?} {o:?} {g:?}")?,
+				None => write!(f, " {s:?} {p:?} {o:?}")?,
 			}
 		}
 

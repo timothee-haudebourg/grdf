@@ -1,7 +1,7 @@
 use super::blank_term_matches;
 use crate::{Dataset, Quad};
 use derivative::Derivative;
-use rdf_types::{AsTerm, BlankIdBuf};
+use rdf_types::{AsTerm, BlankIdBuf, Id};
 use std::collections::hash_map::Entry;
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
@@ -366,7 +366,7 @@ impl<'a, A: Dataset> BlankSignature<'a, A> {
 		self.0.len()
 	}
 
-	pub fn matches<'b, B: Dataset>(&self, other: &BlankSignature<'b, B>) -> bool
+	pub fn matches<B: Dataset>(&self, other: &BlankSignature<B>) -> bool
 	where
 		A::Subject: AsTerm,
 		B::Subject: AsTerm,
@@ -444,14 +444,16 @@ where
 	BB: Eq + Hash,
 {
 	let r = match (a, b) {
-		(rdf_types::Term::Blank(a), rdf_types::Term::Blank(b)) => match sigma.forward.get(a) {
-			Some(&c) => c == b,
-			None => match sigma.backward.get(b) {
-				Some(&c) => a == c,
-				None => true,
-			},
-		},
-		(rdf_types::Term::Iri(a), rdf_types::Term::Iri(b)) => a == b,
+		(rdf_types::Term::Id(Id::Blank(a)), rdf_types::Term::Id(Id::Blank(b))) => {
+			match sigma.forward.get(a) {
+				Some(&c) => c == b,
+				None => match sigma.backward.get(b) {
+					Some(&c) => a == c,
+					None => true,
+				},
+			}
+		}
+		(rdf_types::Term::Id(Id::Iri(a)), rdf_types::Term::Id(Id::Iri(b))) => a == b,
 		(rdf_types::Term::Literal(a), rdf_types::Term::Literal(b)) => a == b,
 		_ => false,
 	};

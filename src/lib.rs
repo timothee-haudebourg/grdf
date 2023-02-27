@@ -67,12 +67,12 @@
 //! `MutableDataset::insert`:
 //!
 //! ```rust
-//! # use rdf_types::{Term, Quad, BlankIdBuf};
+//! # use rdf_types::{Id, Term, Quad, BlankIdBuf};
 //! # use grdf::HashDataset;
 //! # let graph = None;
-//! # let subject = Term::Blank(BlankIdBuf::from_u8(0));
-//! # let predicate = Term::Blank(BlankIdBuf::from_u8(1));
-//! # let object = Term::Blank(BlankIdBuf::from_u8(2));
+//! # let subject = Term::Id(Id::Blank(BlankIdBuf::from_u8(0)));
+//! # let predicate = Term::Id(Id::Blank(BlankIdBuf::from_u8(1)));
+//! # let object = Term::Id(Id::Blank(BlankIdBuf::from_u8(2)));
 //! let mut dataset: HashDataset<Term> = HashDataset::new();
 //! dataset.insert(Quad(subject, predicate, object, graph));
 //! ```
@@ -80,12 +80,12 @@
 //! Again it is possible to access each graph of the dataset mutably:
 //!
 //! ```rust
-//! # use rdf_types::{Term, Triple, BlankIdBuf};
+//! # use rdf_types::{Id, Term, Triple, BlankIdBuf};
 //! # use grdf::{MutableDataset, MutableGraph, HashDataset};
 //! # let id: Option<&Term> = None;
-//! # let subject = Term::Blank(BlankIdBuf::from_u8(0));
-//! # let predicate = Term::Blank(BlankIdBuf::from_u8(1));
-//! # let object = Term::Blank(BlankIdBuf::from_u8(2));
+//! # let subject = Term::Id(Id::Blank(BlankIdBuf::from_u8(0)));
+//! # let predicate = Term::Id(Id::Blank(BlankIdBuf::from_u8(1)));
+//! # let object = Term::Id(Id::Blank(BlankIdBuf::from_u8(2)));
 //! # let mut dataset: HashDataset<Term> = HashDataset::new();
 //! let mut graph = dataset.graph_mut(id).unwrap();
 //! graph.insert(Triple(subject, predicate, object));

@@ -2,7 +2,7 @@
 use crate::{utils::HashBijection, Quad, Triple};
 use derivative::Derivative;
 use hashbrown::{Equivalent, HashMap, HashSet};
-use rdf_types::{AsTerm, IntoTerm};
+use rdf_types::{AsTerm, Id, IntoTerm};
 use std::fmt;
 use std::hash::Hash;
 
@@ -523,7 +523,7 @@ impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug> fmt::Debug for HashGraph<S, P,
 				write!(f, ",")?;
 			}
 
-			write!(f, " {:?} {:?} {:?}", s, p, o)?;
+			write!(f, " {s:?} {p:?} {o:?}")?;
 		}
 
 		write!(f, "  }}")
@@ -1021,7 +1021,7 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> HashDataset<S, P, O
 			f: impl Clone + Fn(T::BlankId) -> T::BlankId,
 		) -> T {
 			match term.into_term() {
-				rdf_types::Term::Blank(id) => rdf_types::Term::Blank(f(id)).into(),
+				rdf_types::Term::Id(Id::Blank(id)) => rdf_types::Term::Id(Id::Blank(f(id))).into(),
 				other => other.into(),
 			}
 		}
@@ -1192,8 +1192,8 @@ impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug, G: fmt::Debug> fmt::Debug
 			}
 
 			match g {
-				Some(g) => write!(f, " {:?} {:?} {:?} {:?}", s, p, o, g)?,
-				None => write!(f, " {:?} {:?} {:?}", s, p, o)?,
+				Some(g) => write!(f, " {s:?} {p:?} {o:?} {g:?}")?,
+				None => write!(f, " {s:?} {p:?} {o:?}")?,
 			}
 		}
 
