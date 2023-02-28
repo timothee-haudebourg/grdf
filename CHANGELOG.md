@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.0] - 2023-02-28
+
+### Build
+
+- [ecc88ae] Upgrade `rdf-types` from `0.13` to `0.14.2`.
+
 ## [0.17.0] - 2023-02-27
 
 ### Build
@@ -13,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- [75807d5] Remove note about nightly compilers
 - [1443af5] Remove `cliff` config from `Cargo.toml`.
 
 ## [0.16.3] - 2023-01-19
