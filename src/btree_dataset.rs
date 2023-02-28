@@ -1,7 +1,8 @@
 //! Dataset implementation based on `BTreeMap` and `BTreeSet`.
-use crate::{utils::BTreeBijection, Quad, Triple};
+use crate::utils::BTreeBijection;
+use crate::{Quad, Triple};
 use derivative::Derivative;
-use rdf_types::{AsTerm, Id, IntoTerm};
+use rdf_types::{AsRdfTerm, FromBlankId, IntoBlankId, MaybeBlankId};
 use std::borrow::Borrow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
@@ -978,99 +979,99 @@ impl<S: Ord, P: Ord, O: Ord, G: Ord> BTreeDataset<S, P, O, G> {
 	}
 
 	/// Substitutes the blank node identifiers in the dataset.
-	pub fn substitute_blank_ids(self, f: impl Clone + Fn(S::BlankId) -> S::BlankId) -> Self
+	pub fn substitute_blank_ids<B>(self, f: impl Fn(B) -> B) -> Self
 	where
-		S: Clone + IntoTerm + From<rdf_types::Term<S::Iri, S::BlankId, S::Literal>>,
-		P: Clone
-			+ IntoTerm<BlankId = S::BlankId>
-			+ From<rdf_types::Term<P::Iri, P::BlankId, P::Literal>>,
-		O: IntoTerm<BlankId = S::BlankId> + From<rdf_types::Term<O::Iri, O::BlankId, O::Literal>>,
-		G: Clone
-			+ IntoTerm<BlankId = S::BlankId>
-			+ From<rdf_types::Term<G::Iri, G::BlankId, G::Literal>>,
+		S: Clone + MaybeBlankId<BlankId = B> + IntoBlankId + FromBlankId,
+		P: Clone + MaybeBlankId<BlankId = B> + IntoBlankId + FromBlankId,
+		O: MaybeBlankId<BlankId = B> + IntoBlankId + FromBlankId,
+		G: Clone + MaybeBlankId<BlankId = B> + IntoBlankId + FromBlankId,
 	{
 		let mut result = Self::new();
 
-		fn substitute_term<T: IntoTerm + From<rdf_types::Term<T::Iri, T::BlankId, T::Literal>>>(
+		fn substitute_term<T: IntoBlankId + FromBlankId>(
 			term: T,
-			f: impl Clone + Fn(T::BlankId) -> T::BlankId,
+			f: impl Fn(T::BlankId) -> T::BlankId,
 		) -> T {
-			match term.into_term() {
-				rdf_types::Term::Id(Id::Blank(id)) => rdf_types::Term::Id(Id::Blank(f(id))).into(),
-				other => other.into(),
+			match term.try_into_blank() {
+				Ok(b) => T::from_blank(f(b)),
+				Err(term) => term,
 			}
 		}
 
-		fn substitute_quad<S, P, O, G>(
+		fn substitute_quad<B, S, P, O, G>(
 			Quad(s, p, o, g): Quad<S, P, O, G>,
-			f: impl Clone + Fn(S::BlankId) -> S::BlankId,
+			f: impl Fn(B) -> B,
 		) -> Quad<S, P, O, G>
 		where
-			S: IntoTerm + From<rdf_types::Term<S::Iri, S::BlankId, S::Literal>>,
-			P: IntoTerm<BlankId = S::BlankId>
-				+ From<rdf_types::Term<P::Iri, P::BlankId, P::Literal>>,
-			O: IntoTerm<BlankId = S::BlankId>
-				+ From<rdf_types::Term<O::Iri, O::BlankId, O::Literal>>,
-			G: IntoTerm<BlankId = S::BlankId>
-				+ From<rdf_types::Term<G::Iri, G::BlankId, G::Literal>>,
+			S: MaybeBlankId<BlankId = B> + IntoBlankId + FromBlankId,
+			P: MaybeBlankId<BlankId = B> + IntoBlankId + FromBlankId,
+			O: MaybeBlankId<BlankId = B> + IntoBlankId + FromBlankId,
+			G: MaybeBlankId<BlankId = B> + IntoBlankId + FromBlankId,
 		{
 			Quad(
-				substitute_term(s, f.clone()),
-				substitute_term(p, f.clone()),
-				substitute_term(o, f.clone()),
+				substitute_term(s, &f),
+				substitute_term(p, &f),
+				substitute_term(o, &f),
 				g.map(|g| substitute_term(g, f)),
 			)
 		}
 
 		for quad in self.into_quads() {
-			result.insert(substitute_quad(quad, f.clone()));
+			result.insert(substitute_quad(quad, &f));
 		}
 
 		result
 	}
 }
 
-impl<S: Ord, P: Ord, O: Ord, G: Ord> BTreeDataset<S, P, O, G>
-where
-	S: AsTerm,
-	<S as AsTerm>::Iri: PartialEq,
-	<S as AsTerm>::Literal: PartialEq,
-	<S as AsTerm>::BlankId: Ord,
-	P: AsTerm<BlankId = <S as AsTerm>::BlankId>,
-	<P as AsTerm>::Iri: PartialEq,
-	<P as AsTerm>::Literal: PartialEq,
-	O: AsTerm<BlankId = <S as AsTerm>::BlankId>,
-	<O as AsTerm>::Iri: PartialEq,
-	<O as AsTerm>::Literal: PartialEq,
-	G: AsTerm<BlankId = <S as AsTerm>::BlankId>,
-	<G as AsTerm>::Iri: PartialEq,
-	<G as AsTerm>::Literal: PartialEq,
-{
+impl<S: Ord, P: Ord, O: Ord, G: Ord> BTreeDataset<S, P, O, G> {
 	/// Checks that there is an isomorphism between this dataset and `other`.
 	///
 	/// There is an isomorphism if there exists a blank node identifier bijection
 	/// between `self` and `other`.
 	/// This is equivalent to `self.find_blank_id_bijection(other).is_some()`.
-	pub fn is_isomorphic_to(&self, other: &Self) -> bool {
+	pub fn is_isomorphic_to<I, B, L>(&self, other: &Self) -> bool
+	where
+		S: AsRdfTerm<I, B, L>,
+		P: AsRdfTerm<I, B, L>,
+		O: AsRdfTerm<I, B, L>,
+		G: AsRdfTerm<I, B, L>,
+		I: PartialEq,
+		L: PartialEq,
+		B: Ord,
+	{
 		self.find_blank_id_bijection(other).is_some()
 	}
 
 	/// Finds a blank node identifier bijection between from `self` to `other`.
 	/// If such bijection exists,
 	/// there is an isomorphism between `self` and `other`.
-	pub fn find_blank_id_bijection<'a, 'b>(
-		&'a self,
-		other: &'b Self,
-	) -> Option<BTreeBijection<'a, 'b, <S as AsTerm>::BlankId, <S as AsTerm>::BlankId>> {
+	pub fn find_blank_id_bijection<'u, 'v, I: 'u + 'v, B, L: 'u + 'v>(
+		&'u self,
+		other: &'v Self,
+	) -> Option<BTreeBijection<'u, 'v, B, B>>
+	where
+		S: AsRdfTerm<I, B, L>,
+		P: AsRdfTerm<I, B, L>,
+		O: AsRdfTerm<I, B, L>,
+		G: AsRdfTerm<I, B, L>,
+		I: PartialEq,
+		L: PartialEq,
+		B: Ord,
+	{
 		use crate::utils::isomorphism::btree::FindBTreeBlankIdBijection;
 
-		fn has_no_blank<S: AsTerm, P: AsTerm, O: AsTerm, G: AsTerm>(
-			Quad(s, p, o, g): &Quad<&S, &P, &O, &G>,
-		) -> bool {
-			!s.as_term().is_blank()
-				&& !p.as_term().is_blank()
-				&& !o.as_term().is_blank()
-				&& !g.map(|g| g.as_term().is_blank()).unwrap_or(false)
+		fn has_no_blank<I, B, L, S, P, O, G>(Quad(s, p, o, g): &Quad<&S, &P, &O, &G>) -> bool
+		where
+			S: AsRdfTerm<I, B, L>,
+			P: AsRdfTerm<I, B, L>,
+			O: AsRdfTerm<I, B, L>,
+			G: AsRdfTerm<I, B, L>,
+		{
+			!s.as_rdf_term().is_blank()
+				&& !p.as_rdf_term().is_blank()
+				&& !o.as_rdf_term().is_blank()
+				&& !g.map(|g| g.as_rdf_term().is_blank()).unwrap_or(false)
 		}
 
 		let a_non_blank: BTreeSet<_> = self.quads().filter(has_no_blank).collect();

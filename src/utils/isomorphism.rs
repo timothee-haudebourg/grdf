@@ -5,13 +5,13 @@ pub use btree::BTreeBijection;
 pub use hash::HashBijection;
 use rdf_types::Id;
 
-fn blank_term_matches<'a, 'b, AI, AB, AL, BI, BB, BL>(
-	a: rdf_types::Term<&'a AI, &'a AB, &'a AL>,
-	b: rdf_types::Term<&'b BI, &'b BB, &'b BL>,
+fn blank_term_matches<'u, 'v, UI, UB, UL, VI, VB, VL>(
+	a: rdf_types::Term<Id<&'u UI, &'u UB>, &'u UL>,
+	b: rdf_types::Term<Id<&'v VI, &'v VB>, &'v VL>,
 ) -> bool
 where
-	AI: PartialEq<BI>,
-	AL: PartialEq<BL>,
+	UI: PartialEq<VI>,
+	UL: PartialEq<VL>,
 {
 	match (a, b) {
 		(rdf_types::Term::Id(Id::Blank(_)), rdf_types::Term::Id(Id::Blank(_))) => true,
