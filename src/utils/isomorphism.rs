@@ -34,15 +34,15 @@ mod tests {
 
 		a.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(0))),
-			Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 			None,
 		));
 
 		b.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(1))),
-			Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 			None,
 		));
 
@@ -61,15 +61,15 @@ mod tests {
 
 		a.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(0))),
-			Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 			None,
 		));
 
 		b.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(1))),
-			Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-			Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+			Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 			None,
 		));
 
@@ -88,15 +88,15 @@ mod tests {
 
 		a.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(0))),
-			Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 			None,
 		));
 
 		b.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(1))),
-			Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 			None,
 		));
 
@@ -115,16 +115,16 @@ mod tests {
 
 		a.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(0))),
-			Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 			None,
 		));
 
 		b.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(1))),
-			Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-			Some(Term::Id(Id::Iri(iri!("http://example.com/2").into()))),
+			Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+			Some(Term::Id(Id::Iri(iri!("http://example.com/2").to_owned()))),
 		));
 
 		let sigma = a.find_blank_id_bijection(&b).unwrap();
@@ -141,39 +141,39 @@ mod tests {
 
 		a.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(0))),
-			Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 			None,
 		));
 		a.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(1))),
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(0))),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 			None,
 		));
 		a.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(2))),
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(0))),
-			Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 			None,
 		));
 
 		b.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(10))),
-			Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 			None,
 		));
 		b.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(11))),
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(10))),
-			Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 			None,
 		));
 		b.insert(Quad(
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(12))),
 			Term::Id(Id::Blank(BlankIdBuf::from_u8(10))),
-			Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+			Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 			None,
 		));
 

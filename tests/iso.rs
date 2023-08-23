@@ -23,64 +23,64 @@ fn test(a: HashDataset, b: HashDataset) {
 fn iso_001() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		None,
-	));
-	a.insert(Quad(
-		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		None,
-	));
-	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
+		None,
+	));
+	a.insert(Quad(
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
+		None,
+	));
+	a.insert(Quad(
+		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		None,
-	));
-	b.insert(Quad(
-		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		None,
-	));
-	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
+		None,
+	));
+	b.insert(Quad(
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
+		None,
+	));
+	b.insert(Quad(
+		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -89,64 +89,64 @@ fn iso_001() {
 fn iso_002() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -156,63 +156,63 @@ fn iso_003() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -222,62 +222,62 @@ fn iso_004() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
@@ -287,64 +287,64 @@ fn iso_004() {
 fn iso_005() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -354,30 +354,30 @@ fn iso_006() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
@@ -385,30 +385,30 @@ fn iso_006() {
 	let mut b = HashDataset::new();
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
@@ -419,63 +419,63 @@ fn iso_006() {
 fn iso_007() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
@@ -485,64 +485,64 @@ fn iso_007() {
 fn iso_008() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -552,26 +552,26 @@ fn iso_009() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
@@ -583,26 +583,26 @@ fn iso_009() {
 	let mut b = HashDataset::new();
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
@@ -618,7 +618,7 @@ fn iso_010() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
@@ -629,27 +629,27 @@ fn iso_010() {
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
@@ -660,21 +660,21 @@ fn iso_010() {
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -685,122 +685,122 @@ fn iso_011() {
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -811,122 +811,122 @@ fn iso_012() {
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -935,122 +935,122 @@ fn iso_012() {
 fn iso_013() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		None,
@@ -1063,122 +1063,122 @@ fn iso_014() {
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -1187,123 +1187,123 @@ fn iso_014() {
 fn iso_015() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
@@ -1313,21 +1313,21 @@ fn iso_015() {
 fn iso_016() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	a.insert(Quad(
@@ -1338,66 +1338,66 @@ fn iso_016() {
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:7".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:3".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:8".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:8".to_string()).unwrap())),
 		None,
@@ -1405,13 +1405,13 @@ fn iso_016() {
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:3".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:3".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
@@ -1422,33 +1422,33 @@ fn iso_016() {
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	b.insert(Quad(
@@ -1459,66 +1459,66 @@ fn iso_016() {
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s7".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s3".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s8".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s8".to_string()).unwrap())),
 		None,
@@ -1526,13 +1526,13 @@ fn iso_016() {
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s3".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s3".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
@@ -1543,13 +1543,13 @@ fn iso_016() {
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
 		None,
 	));
@@ -1559,31 +1559,31 @@ fn iso_016() {
 fn iso_017() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:8".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:7".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		None,
@@ -1601,110 +1601,110 @@ fn iso_017() {
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:8".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:8".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s8".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s7".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		None,
@@ -1722,81 +1722,81 @@ fn iso_017() {
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s8".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s8".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -1805,45 +1805,45 @@ fn iso_017() {
 fn iso_018() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:7".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:8".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
@@ -1855,35 +1855,35 @@ fn iso_018() {
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:7".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:3".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
 		None,
@@ -1895,8 +1895,8 @@ fn iso_018() {
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
 		None,
 	));
@@ -1913,58 +1913,58 @@ fn iso_018() {
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s7".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s8".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
@@ -1976,35 +1976,35 @@ fn iso_018() {
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s7".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s3".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
 		None,
@@ -2016,8 +2016,8 @@ fn iso_018() {
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
 		None,
 	));
@@ -2034,15 +2034,15 @@ fn iso_018() {
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -2052,19 +2052,19 @@ fn iso_019() {
 	let mut a = HashDataset::new();
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
 		None,
 	));
@@ -2076,8 +2076,8 @@ fn iso_019() {
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		None,
 	));
 	a.insert(Quad(
@@ -2088,44 +2088,44 @@ fn iso_019() {
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:7".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:8".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	a.insert(Quad(
@@ -2136,7 +2136,7 @@ fn iso_019() {
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:3".to_string()).unwrap())),
 		None,
 	));
@@ -2149,43 +2149,43 @@ fn iso_019() {
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:7".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
 		None,
 	));
@@ -2197,8 +2197,8 @@ fn iso_019() {
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		None,
 	));
 	b.insert(Quad(
@@ -2209,44 +2209,44 @@ fn iso_019() {
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s7".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s8".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	b.insert(Quad(
@@ -2257,7 +2257,7 @@ fn iso_019() {
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s3".to_string()).unwrap())),
 		None,
 	));
@@ -2270,25 +2270,25 @@ fn iso_019() {
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s7".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	test(a, b)
@@ -2304,86 +2304,86 @@ fn iso_020() {
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:24".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/35").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/35").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:37".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:3".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/13").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/13").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:44".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:32".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:28".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/23").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/23").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/32").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/32").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:44".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/13").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/13").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:22".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/37").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/37").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/47").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/47").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:34".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:38".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/36").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/28").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/36").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/28").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:44".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:11".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/16").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/16").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/21").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/21").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:29".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:42".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/46").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/46").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:38".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/17").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/17").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:44".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/10").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/48").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/10").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/48").to_owned())),
 		None,
 	));
 	a.insert(Quad(
@@ -2399,8 +2399,8 @@ fn iso_020() {
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/29").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/32").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/29").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/32").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:44".to_string()).unwrap())),
 		None,
 	));
@@ -2413,90 +2413,90 @@ fn iso_020() {
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:33".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:22".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:8".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/28").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/28").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/39").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/39").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:30".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/45").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/23").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/45").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/23").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:35".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/42").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/42").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:15".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:14".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:49".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/33").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/16").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/33").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/16").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:31".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/21").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/21").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/27").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/27").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:39".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/19").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/19").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/10").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/10").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:19".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:25".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:46".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:12".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/18").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/18").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:26".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:46".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/30").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/30").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:11".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:49".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/46").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/46").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/46").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/46").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
 		None,
 	));
@@ -2508,44 +2508,44 @@ fn iso_020() {
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:37".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/12").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/12").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/14").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/14").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:15".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:28".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/31").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/31").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:35".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:36".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/24").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/24").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/24").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/15").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/24").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/15").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/47").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/29").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/47").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/29").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:38".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:18".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/16").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/16").to_owned())),
 		None,
 	));
 	a.insert(Quad(
@@ -2556,126 +2556,126 @@ fn iso_020() {
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:38".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/10").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/35").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/10").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/35").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:42".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/48").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/48").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/45").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/45").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:10".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:19".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/33").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/33").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:28".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:13".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/16").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/28").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/16").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/28").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:30".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:10".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:11".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:4".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/44").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/44").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:38".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:8".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/27").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/27").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/41").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/47").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/41").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/47").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/22").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/22").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:46".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/22").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/22").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/28").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/28").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:36".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/12").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/12").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:19".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/34").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/34").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/41").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/41").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:24".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/26").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/26").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:22".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/37").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/37").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:7".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/42").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/42").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:27".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/24").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/35").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/24").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/35").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/37").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/27").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/37").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/27").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/10").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/10").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:26".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/11").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/11").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/19").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/19").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:21".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/29").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/29").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/18").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/18").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:26".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:40".to_string()).unwrap())),
 		None,
@@ -2688,7 +2688,7 @@ fn iso_020() {
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:34".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/41").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/41").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		None,
 	));
@@ -2701,30 +2701,30 @@ fn iso_020() {
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:43".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:12".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/34").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/34").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/19").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/19").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:37".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:45".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:21".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:41".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:16".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:33".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/33").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/33").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:18".to_string()).unwrap())),
 		None,
 	));
@@ -2735,9 +2735,9 @@ fn iso_020() {
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/38").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/14").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/38").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/14").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	a.insert(Quad(
@@ -2748,80 +2748,80 @@ fn iso_020() {
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:22".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/24").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/24").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/28").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/28").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:31".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/31").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/31").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:30".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:19".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/44").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/44").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:14".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:28".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/30").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/30").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/24").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/38").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/24").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/38").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:45".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/30").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/19").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/30").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/19").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/19").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/19").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:13".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:31".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/15").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/14").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/15").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/14").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/43").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/43").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:25".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:21".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/23").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/14").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/23").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/14").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	a.insert(Quad(
@@ -2831,69 +2831,69 @@ fn iso_020() {
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/32").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/32").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:12".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:9".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/33").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/33").to_owned())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:44".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/43").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/43").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:2".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:31".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/32").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/32").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:0".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:12".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/26").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/26").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:28".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/42").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/15").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/42").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/15").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:5".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:11".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:27".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:19".to_string()).unwrap())),
 		None,
 	));
 	a.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/36").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/36").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:13".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/29").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/29").to_owned())),
 		None,
 	));
 	a.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/15").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/15").to_owned())),
 		None,
 	));
 	let mut b = HashDataset::new();
@@ -2905,86 +2905,86 @@ fn iso_020() {
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s24".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/35").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/35").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s37".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s3".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/13").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/13").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s44".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s32".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s28".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/23").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/23").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/32").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/32").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s44".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/13").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/13").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s22".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/37").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/37").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/47").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/47").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s34".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s38".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/36").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/28").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/36").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/28").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s44".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s11".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/16").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/16").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/21").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/21").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s29".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s42".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/46").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/46").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s38".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/17").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/17").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s44".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/10").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/48").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/10").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/48").to_owned())),
 		None,
 	));
 	b.insert(Quad(
@@ -3000,8 +3000,8 @@ fn iso_020() {
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/29").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/32").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/29").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/32").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s44".to_string()).unwrap())),
 		None,
 	));
@@ -3014,90 +3014,90 @@ fn iso_020() {
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s33".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s22".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s8".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/28").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/28").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/39").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/39").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s30".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/45").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/23").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/45").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/23").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s35".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/42").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/42").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s15".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s14".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/9").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/9").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s49".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/33").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/16").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/33").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/16").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s31".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/21").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/21").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/27").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/27").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s39".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/19").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/19").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/10").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/10").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s19".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s25".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s46".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s12".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/18").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/18").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s26".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s46".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/30").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/30").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s11".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/8").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/8").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s49".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/46").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/46").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/46").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/46").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
 		None,
 	));
@@ -3109,44 +3109,44 @@ fn iso_020() {
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s37".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/12").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/12").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/14").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/14").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s15".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s28".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/31").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/31").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s35".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s36".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/24").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/24").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/24").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/15").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/24").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/15").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/47").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/29").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/47").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/29").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s38".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s18".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/16").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/16").to_owned())),
 		None,
 	));
 	b.insert(Quad(
@@ -3157,126 +3157,126 @@ fn iso_020() {
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s38".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/10").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/35").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/10").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/35").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s42".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/48").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/48").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/45").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/45").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s10".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s19".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/33").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/33").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s28".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s13".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/16").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/28").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/16").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/28").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s30".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s10".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/4").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/4").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s11".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s4".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/44").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/44").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s38".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s8".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/27").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/27").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/41").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/47").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/41").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/47").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/22").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/22").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s46".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/22").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/22").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/28").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/28").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s36".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/12").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/12").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s19".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/34").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/34").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/41").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/41").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s24".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/26").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/26").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s22".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/37").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/37").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s7".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/42").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/42").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s27".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/24").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/35").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/24").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/35").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/37").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/27").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/37").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/27").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/10").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/10").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s26".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/11").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/11").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/19").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/19").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s21".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/29").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/29").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/18").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/18").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s26".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s40".to_string()).unwrap())),
 		None,
@@ -3289,7 +3289,7 @@ fn iso_020() {
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s34".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/41").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/41").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		None,
 	));
@@ -3302,30 +3302,30 @@ fn iso_020() {
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s43".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s12".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/34").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/34").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/19").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/19").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s37".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s45".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/0").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/0").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s21".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s41".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s16".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/2").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/2").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s33".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/33").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/33").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s18".to_string()).unwrap())),
 		None,
 	));
@@ -3336,9 +3336,9 @@ fn iso_020() {
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/38").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/14").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/38").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/14").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		None,
 	));
 	b.insert(Quad(
@@ -3349,80 +3349,80 @@ fn iso_020() {
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s22".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/24").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/24").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/28").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/28").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s31".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/31").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/31").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s30".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s19".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/44").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/44").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s14".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s28".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/30").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/30").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/24").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/38").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/24").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/38").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s45".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/30").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/19").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/30").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/19").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/19").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/49").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/19").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/49").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s13".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s31".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/15").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/14").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/15").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/14").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/43").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/43").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s25".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/3").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/3").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s21".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/23").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/14").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/5").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/23").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/14").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/5").to_owned())),
 		None,
 	));
 	b.insert(Quad(
@@ -3432,69 +3432,69 @@ fn iso_020() {
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/40").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/32").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/40").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/32").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s12".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s9".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s1".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/33").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/33").to_owned())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s44".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/43").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/43").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s2".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s31".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/32").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/32").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s0".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s12".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/26").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/26").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s28".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/42").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/15").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/42").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/15").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s5".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s11".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s27".to_string()).unwrap())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s19".to_string()).unwrap())),
 		None,
 	));
 	b.insert(Quad(
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s6".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/6").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/7").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/6").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/7").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/36").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/36").to_owned())),
 		Term::Id(Id::Blank(BlankIdBuf::new("_:s13".to_string()).unwrap())),
-		Term::Id(Id::Iri(iri!("http://example.com/29").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/29").to_owned())),
 		None,
 	));
 	b.insert(Quad(
-		Term::Id(Id::Iri(iri!("http://example.com/25").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/1").into())),
-		Term::Id(Id::Iri(iri!("http://example.com/15").into())),
+		Term::Id(Id::Iri(iri!("http://example.com/25").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/1").to_owned())),
+		Term::Id(Id::Iri(iri!("http://example.com/15").to_owned())),
 		None,
 	));
 	test(a, b)
