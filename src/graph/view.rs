@@ -22,6 +22,14 @@ impl<G: ?Sized + Graph> GraphAccess<G> for () {
 	}
 }
 
+pub struct IdentityAccess;
+
+impl<G: ?Sized + Graph<Subject = <G as Graph>::Object>> GraphAccess<G> for IdentityAccess {
+	fn object_as_subject<'a>(&self, _graph: &'a G, object: &'a <G as Graph>::Object) -> Option<&'a <G as Graph>::Subject> {
+		Some(object)
+	}
+}
+
 pub struct GraphView<'a, G: ?Sized + Graph, A> {
 	graph: &'a G,
 	subject: &'a G::Subject,

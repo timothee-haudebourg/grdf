@@ -6,7 +6,7 @@ use linked_data::{
 };
 use rdf_types::{Interpretation, Vocabulary};
 
-use crate::{Dataset, Graph, GraphAccess};
+use crate::{Dataset, Graph, GraphAccess, IdentityAccess};
 
 pub trait DatasetAccess<D: ?Sized + Dataset>: GraphAccess<D::Graph> {
 	fn subject_as_graph<'a>(
@@ -23,6 +23,16 @@ impl<D: ?Sized + Dataset> DatasetAccess<D> for () {
 		_subject: &'a <D as Dataset>::Subject,
 	) -> Option<&'a <D as Dataset>::GraphLabel> {
 		None
+	}
+}
+
+impl<D: ?Sized + Dataset<Subject = <D as Dataset>::Object, GraphLabel = <D as Dataset>::Subject>> DatasetAccess<D> for IdentityAccess {
+	fn subject_as_graph<'a>(
+		&self,
+		_dataset: &'a D,
+		subject: &'a <D as Dataset>::Subject,
+	) -> Option<&'a <D as Dataset>::GraphLabel> {
+		Some(subject)
 	}
 }
 
