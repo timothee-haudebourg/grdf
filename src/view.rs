@@ -1,7 +1,7 @@
 use std::hash::Hash;
 
 use linked_data::{
-	GraphVisitor, Interpret, LinkedDataGraph, LinkedDataPredicateObjects, LinkedDataSubject,
+	GraphVisitor, LinkedDataResource, LinkedDataGraph, LinkedDataPredicateObjects, LinkedDataSubject,
 	PredicateObjectsVisitor, ResourceInterpretation, SubjectVisitor,
 };
 use rdf_types::{Interpretation, Vocabulary};
@@ -65,10 +65,10 @@ impl<'a, D: ?Sized + Dataset, A> View<'a, D, A> {
 impl<'a, D: ?Sized + Dataset, A: DatasetAccess<D>, V: Vocabulary, I: Interpretation>
 	LinkedDataSubject<V, I> for View<'a, D, A>
 where
-	D::Subject: Eq + Hash + Interpret<V, I>,
-	D::Predicate: Interpret<V, I>,
-	D::Object: Interpret<V, I>,
-	D::GraphLabel: Eq + Hash + Interpret<V, I>,
+	D::Subject: Eq + Hash + LinkedDataResource<V, I>,
+	D::Predicate: LinkedDataResource<V, I>,
+	D::Object: LinkedDataResource<V, I>,
+	D::GraphLabel: Eq + Hash + LinkedDataResource<V, I>,
 {
 	fn visit_subject<S>(&self, mut serializer: S) -> Result<S::Ok, S::Error>
 	where
@@ -112,10 +112,10 @@ struct PredicateObjects<'d, 'v, D: ?Sized + Dataset, A> {
 impl<'d, 'v, D: ?Sized + Dataset, A: DatasetAccess<D>, V: Vocabulary, I: Interpretation>
 	LinkedDataPredicateObjects<V, I> for PredicateObjects<'d, 'v, D, A>
 where
-	D::Subject: Eq + Hash + Interpret<V, I>,
-	D::Predicate: Interpret<V, I>,
-	D::Object: Interpret<V, I>,
-	D::GraphLabel: Eq + Hash + Interpret<V, I>,
+	D::Subject: Eq + Hash + LinkedDataResource<V, I>,
+	D::Predicate: LinkedDataResource<V, I>,
+	D::Object: LinkedDataResource<V, I>,
+	D::GraphLabel: Eq + Hash + LinkedDataResource<V, I>,
 {
 	fn visit_objects<S>(&self, mut visitor: S) -> Result<S::Ok, S::Error>
 	where
@@ -136,17 +136,17 @@ where
 	}
 }
 
-impl<'a, 'v, D: ?Sized + Dataset, A, V: Vocabulary, I: Interpretation> Interpret<V, I>
+impl<'a, 'v, D: ?Sized + Dataset, A, V: Vocabulary, I: Interpretation> LinkedDataResource<V, I>
 	for Object<'a, 'v, D, A>
 where
-	D::Object: Interpret<V, I>,
+	D::Object: LinkedDataResource<V, I>,
 {
-	fn interpret(
+	fn interpretation(
 		&self,
 		vocabulary: &mut V,
 		interpretation: &mut I,
 	) -> ResourceInterpretation<V, I> {
-		self.object.interpret(vocabulary, interpretation)
+		self.object.interpretation(vocabulary, interpretation)
 	}
 }
 
@@ -162,10 +162,10 @@ struct Object<'a, 'v, D: ?Sized + Dataset, A> {
 impl<'a, 'v, D: ?Sized + Dataset, A: DatasetAccess<D>, V: Vocabulary, I: Interpretation>
 	LinkedDataSubject<V, I> for Object<'a, 'v, D, A>
 where
-	D::Subject: Eq + Hash + Interpret<V, I>,
-	D::Predicate: Interpret<V, I>,
-	D::Object: Interpret<V, I>,
-	D::GraphLabel: Eq + Hash + Interpret<V, I>,
+	D::Subject: Eq + Hash + LinkedDataResource<V, I>,
+	D::Predicate: LinkedDataResource<V, I>,
+	D::Object: LinkedDataResource<V, I>,
+	D::GraphLabel: Eq + Hash + LinkedDataResource<V, I>,
 {
 	fn visit_subject<S>(&self, mut visitor: S) -> Result<S::Ok, S::Error>
 	where
@@ -230,10 +230,10 @@ where
 	where
 		A: DatasetAccess<D>,
 		S: SubjectVisitor<V, I>,
-		D::Subject: Interpret<V, I>,
-		D::Predicate: Interpret<V, I>,
-		D::Object: Interpret<V, I>,
-		D::GraphLabel: Interpret<V, I>,
+		D::Subject: LinkedDataResource<V, I>,
+		D::Predicate: LinkedDataResource<V, I>,
+		D::Object: LinkedDataResource<V, I>,
+		D::GraphLabel: LinkedDataResource<V, I>,
 	{
 		if self.visit_predicates {
 			for (predicate, _) in self.graph.predicates(self.subject) {
@@ -271,27 +271,27 @@ where
 	}
 }
 
-impl<'a, 'v, D: ?Sized + Dataset, A, V: Vocabulary, I: Interpretation> Interpret<V, I>
+impl<'a, 'v, D: ?Sized + Dataset, A, V: Vocabulary, I: Interpretation> LinkedDataResource<V, I>
 	for Subject<'a, 'v, D, A>
 where
-	D::Subject: Interpret<V, I>,
+	D::Subject: LinkedDataResource<V, I>,
 {
-	fn interpret(
+	fn interpretation(
 		&self,
 		vocabulary: &mut V,
 		interpretation: &mut I,
 	) -> ResourceInterpretation<V, I> {
-		self.subject.interpret(vocabulary, interpretation)
+		self.subject.interpretation(vocabulary, interpretation)
 	}
 }
 
 impl<'a, 'v, D: ?Sized + Dataset, A: DatasetAccess<D>, V: Vocabulary, I: Interpretation>
 	LinkedDataSubject<V, I> for Subject<'a, 'v, D, A>
 where
-	D::Subject: Eq + Hash + Interpret<V, I>,
-	D::Predicate: Interpret<V, I>,
-	D::Object: Interpret<V, I>,
-	D::GraphLabel: Eq + Hash + Interpret<V, I>,
+	D::Subject: Eq + Hash + LinkedDataResource<V, I>,
+	D::Predicate: LinkedDataResource<V, I>,
+	D::Object: LinkedDataResource<V, I>,
+	D::GraphLabel: Eq + Hash + LinkedDataResource<V, I>,
 {
 	fn visit_subject<S>(&self, mut visitor: S) -> Result<S::Ok, S::Error>
 	where
@@ -324,27 +324,27 @@ struct GraphView<'a, 'v, D: ?Sized + Dataset, A> {
 	visited_graphs: &'v im::HashSet<&'a D::GraphLabel>,
 }
 
-impl<'a, 'v, D: ?Sized + Dataset, A, V: Vocabulary, I: Interpretation> Interpret<V, I>
+impl<'a, 'v, D: ?Sized + Dataset, A, V: Vocabulary, I: Interpretation> LinkedDataResource<V, I>
 	for GraphView<'a, 'v, D, A>
 where
-	D::GraphLabel: Interpret<V, I>,
+	D::GraphLabel: LinkedDataResource<V, I>,
 {
-	fn interpret(
+	fn interpretation(
 		&self,
 		vocabulary: &mut V,
 		interpretation: &mut I,
 	) -> ResourceInterpretation<V, I> {
-		self.label.interpret(vocabulary, interpretation)
+		self.label.interpretation(vocabulary, interpretation)
 	}
 }
 
 impl<'a, 'v, D: ?Sized + Dataset, A: DatasetAccess<D>, V: Vocabulary, I: Interpretation>
 	LinkedDataGraph<V, I> for GraphView<'a, 'v, D, A>
 where
-	D::Subject: Eq + Hash + Interpret<V, I>,
-	D::Predicate: Interpret<V, I>,
-	D::Object: Interpret<V, I>,
-	D::GraphLabel: Eq + Hash + Interpret<V, I>,
+	D::Subject: Eq + Hash + LinkedDataResource<V, I>,
+	D::Predicate: LinkedDataResource<V, I>,
+	D::Object: LinkedDataResource<V, I>,
+	D::GraphLabel: Eq + Hash + LinkedDataResource<V, I>,
 {
 	fn visit_graph<S>(&self, mut visitor: S) -> Result<S::Ok, S::Error>
 	where
