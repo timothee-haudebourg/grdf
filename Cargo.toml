@@ -22,7 +22,7 @@ derivative = "2.2.0"
 hashbrown = "0.13.1"
 im = "15.1.0"
 locspan = { version = "0.7.9", optional = true }
-linked-data = { path = "/home/work/Documents/Spruce/linked-data/linked-data" }
+linked-data = { git = "https://github.com/spruceid/linked-data-rs.git" }
 
 [dev-dependencies]
 static-iref = "3.0.0"
