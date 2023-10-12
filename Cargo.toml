@@ -20,7 +20,6 @@ iref = "3.0"
 rdf-types = "0.16"
 derivative = "2.2.0"
 hashbrown = "0.13.1"
-im = "15.1.0"
 locspan = { version = "0.7.9", optional = true }
 
 [dev-dependencies]
