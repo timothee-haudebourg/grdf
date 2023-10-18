@@ -1,6 +1,9 @@
 use crate::{Dataset, GraphAccess, IdentityAccess};
 
+/// Specifies how to access a dataset and reinterpret triples subjects as
+/// graph labels.
 pub trait DatasetAccess<D: ?Sized + Dataset>: GraphAccess<D::Graph> {
+	/// Returns the given triple subject as a graph label, if possible.
 	fn subject_as_graph<'a>(
 		&self,
 		dataset: &'a D,
@@ -31,6 +34,7 @@ impl<
 	}
 }
 
+/// View a dateset from the perspective of a single graph subject resource.
 pub struct View<'a, D: ?Sized + Dataset, A> {
 	pub dataset: &'a D,
 	pub graph_label: Option<&'a D::GraphLabel>,

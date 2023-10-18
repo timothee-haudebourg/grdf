@@ -1,6 +1,8 @@
 use crate::Graph;
 
+/// Specifies how to access a graph and reinterpret triples objects as subjects.
 pub trait GraphAccess<G: ?Sized + Graph> {
+	/// Returns the given graph triple object as a subject, if possible.
 	fn object_as_subject<'a>(&self, graph: &'a G, object: &'a G::Object) -> Option<&'a G::Subject>;
 }
 
@@ -14,6 +16,7 @@ impl<G: ?Sized + Graph> GraphAccess<G> for () {
 	}
 }
 
+/// Simple `GraphAccess` implementation for graphs such that `Subject = Object`.
 pub struct IdentityAccess;
 
 impl<G: ?Sized + Graph<Subject = <G as Graph>::Object>> GraphAccess<G> for IdentityAccess {
@@ -26,6 +29,7 @@ impl<G: ?Sized + Graph<Subject = <G as Graph>::Object>> GraphAccess<G> for Ident
 	}
 }
 
+/// View a graph from the perspective of a single subject resource.
 pub struct GraphView<'a, G: ?Sized + Graph, A> {
 	pub graph: &'a G,
 	pub subject: &'a G::Subject,
