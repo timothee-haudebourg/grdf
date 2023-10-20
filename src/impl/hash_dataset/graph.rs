@@ -1,5 +1,5 @@
 use core::{fmt, hash::Hash};
-use derivative::Derivative;
+use educe::Educe;
 use hashbrown::{Equivalent, HashMap, HashSet};
 use rdf_types::Triple;
 
@@ -8,10 +8,10 @@ use crate::GraphView;
 use super::GraphPatternMatching;
 
 /// Graph implementation based on `HashMap` and `HashSet`.
-#[derive(Derivative, Clone)]
-#[derivative(PartialEq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash"))]
-#[derivative(Eq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash"))]
-#[derivative(Default(bound = ""))]
+#[derive(Educe, Clone)]
+#[educe(PartialEq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash"))]
+#[educe(Eq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash"))]
+#[educe(Default)]
 pub struct HashGraph<S = rdf_types::Term, P = S, O = S> {
 	pub(crate) table: HashMap<S, HashMap<P, HashSet<O>>>,
 	len: usize,
@@ -535,8 +535,8 @@ impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug> fmt::Debug for HashGraph<S, P,
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Subjects<'a, S, P, O> {
 	it: hashbrown::hash_map::Iter<'a, S, HashMap<P, HashSet<O>>>,
 }
@@ -575,8 +575,8 @@ impl<S, P, O> Iterator for IntoSubjects<S, P, O> {
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Predicates<'a, P, O> {
 	it: Option<hashbrown::hash_map::Iter<'a, P, HashSet<O>>>,
 }
@@ -621,8 +621,8 @@ impl<P, O> Iterator for IntoPredicates<P, O> {
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Objects<'a, O> {
 	it: Option<hashbrown::hash_set::Iter<'a, O>>,
 }
@@ -653,8 +653,8 @@ impl<O> Iterator for IntoObjects<O> {
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Iter<'a, S, P, O> {
 	subjects: Subjects<'a, S, P, O>,
 	subject: Option<&'a S>,

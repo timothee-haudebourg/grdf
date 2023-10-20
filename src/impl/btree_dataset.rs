@@ -1,7 +1,7 @@
 //! Dataset implementation based on `BTreeMap` and `BTreeSet`.
 use crate::utils::BTreeBijection;
 use crate::{Quad, Triple, View};
-use derivative::Derivative;
+use educe::Educe;
 use rdf_types::{AsRdfTerm, FromBlankId, IntoBlankId, MaybeBlankId};
 use std::borrow::Borrow;
 use std::collections::{BTreeMap, BTreeSet};
@@ -12,16 +12,21 @@ mod graph;
 
 pub use graph::*;
 
-#[derive(Derivative, Clone)]
-#[derivative(PartialEq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
-#[derivative(Eq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
-#[derivative(PartialOrd(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
-#[derivative(Ord(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
-#[derivative(Hash(bound = "S: Ord + Hash, P: Ord + Hash, O: Ord + Hash, G: Ord + Hash"))]
-#[derivative(Default(bound = ""))]
+#[derive(Educe, Clone)]
+#[educe(PartialEq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
+#[educe(Eq(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
+#[educe(Ord(bound = "S: Ord, P: Ord, O: Ord, G: Ord"))]
+#[educe(Hash(bound = "S: Ord + Hash, P: Ord + Hash, O: Ord + Hash, G: Ord + Hash"))]
+#[educe(Default)]
 pub struct BTreeDataset<S = rdf_types::Term, P = S, O = S, G = S> {
 	default: BTreeGraph<S, P, O>,
 	named: BTreeMap<G, BTreeGraph<S, P, O>>,
+}
+
+impl<S: Ord, P: Ord, O: Ord, G: Ord> PartialOrd for BTreeDataset<S, P, O, G> {
+	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		Some(self.cmp(other))
+	}
 }
 
 impl<S, P, O, G> BTreeDataset<S, P, O, G> {
@@ -619,8 +624,8 @@ impl<'a, O: Ord> Iterator for PredicatePatternMatching<'a, O> {
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Graphs<'a, S, P, O, G> {
 	default: Option<&'a BTreeGraph<S, P, O>>,
 	it: std::collections::btree_map::Iter<'a, G, BTreeGraph<S, P, O>>,
@@ -659,8 +664,8 @@ impl<'a, S, P, O, G> Iterator for GraphsMut<'a, S, P, O, G> {
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Quads<'a, S, P, O, G> {
 	graphs: Graphs<'a, S, P, O, G>,
 	graph: Option<&'a G>,

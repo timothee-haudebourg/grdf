@@ -4,7 +4,7 @@ use std::{
 	collections::{BTreeMap, BTreeSet},
 };
 
-use derivative::Derivative;
+use educe::Educe;
 use rdf_types::Triple;
 
 use crate::GraphView;
@@ -12,16 +12,21 @@ use crate::GraphView;
 use super::GraphPatternMatching;
 
 /// Graph implementation based on `BTreeMap` and `BTreeSet`.
-#[derive(Derivative, Clone)]
-#[derivative(PartialEq(bound = "S: Ord, P: Ord, O: Ord"))]
-#[derivative(Eq(bound = "S: Ord, P: Ord, O: Ord"))]
-#[derivative(PartialOrd(bound = "S: Ord, P: Ord, O: Ord"))]
-#[derivative(Ord(bound = "S: Ord, P: Ord, O: Ord"))]
-#[derivative(Hash(bound = "S: Ord + Hash, P: Ord + Hash, O: Ord + Hash"))]
-#[derivative(Default(bound = ""))]
+#[derive(Educe, Clone)]
+#[educe(PartialEq(bound = "S: Ord, P: Ord, O: Ord"))]
+#[educe(Eq(bound = "S: Ord, P: Ord, O: Ord"))]
+#[educe(Ord(bound = "S: Ord, P: Ord, O: Ord"))]
+#[educe(Hash(bound = "S: Ord + Hash, P: Ord + Hash, O: Ord + Hash"))]
+#[educe(Default)]
 pub struct BTreeGraph<S = rdf_types::Term, P = S, O = S> {
 	pub(crate) table: BTreeMap<S, BTreeMap<P, BTreeSet<O>>>,
 	len: usize,
+}
+
+impl<S: Ord, P: Ord, O: Ord> PartialOrd for BTreeGraph<S, P, O> {
+	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		Some(self.cmp(other))
+	}
 }
 
 impl<S, P, O> BTreeGraph<S, P, O> {
@@ -530,8 +535,8 @@ impl<
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Subjects<'a, S, P, O> {
 	it: std::collections::btree_map::Iter<'a, S, BTreeMap<P, BTreeSet<O>>>,
 }
@@ -570,8 +575,8 @@ impl<S, P, O> Iterator for IntoSubjects<S, P, O> {
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Predicates<'a, P, O> {
 	it: Option<std::collections::btree_map::Iter<'a, P, BTreeSet<O>>>,
 }
@@ -616,8 +621,8 @@ impl<P, O> Iterator for IntoPredicates<P, O> {
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Objects<'a, O> {
 	it: Option<std::collections::btree_set::Iter<'a, O>>,
 }
@@ -648,8 +653,8 @@ impl<O> Iterator for IntoObjects<O> {
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Iter<'a, S, P, O> {
 	subjects: Subjects<'a, S, P, O>,
 	subject: Option<&'a S>,

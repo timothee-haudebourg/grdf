@@ -1,6 +1,6 @@
 use super::blank_term_matches;
 use crate::{Dataset, Quad};
-use derivative::Derivative;
+use educe::Educe;
 use rdf_types::{AsRdfTerm, BlankIdBuf, Id};
 use std::collections::btree_map::Entry;
 use std::collections::{BTreeMap, BTreeSet};
@@ -350,8 +350,8 @@ impl<U: Dataset, V: Dataset> FindBTreeBlankIdBijection<V> for U {
 
 /// Blank node identifier bijection
 /// between two (isomorphic) datasets.
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct BTreeBijection<'a, 'b, A: ?Sized = BlankIdBuf, B: ?Sized = BlankIdBuf> {
 	pub forward: BTreeMap<&'a A, &'b B>,
 	pub backward: BTreeMap<&'b B, &'a A>,

@@ -1,6 +1,6 @@
 use super::blank_term_matches;
 use crate::{Dataset, Quad};
-use derivative::Derivative;
+use educe::Educe;
 use rdf_types::{AsRdfTerm, BlankIdBuf, Id};
 use std::collections::hash_map::Entry;
 use std::collections::{HashMap, HashSet};
@@ -351,8 +351,8 @@ impl<U: Dataset, V: Dataset> FindHashBlankIdBijection<V> for U {
 
 /// Blank node identifier bijection
 /// between two (isomorphic) datasets.
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct HashBijection<'a, 'b, A: ?Sized = BlankIdBuf, B: ?Sized = BlankIdBuf> {
 	pub forward: HashMap<&'a A, &'b B>,
 	pub backward: HashMap<&'b B, &'a A>,

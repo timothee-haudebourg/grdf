@@ -1,7 +1,7 @@
 //! Dataset implementation based on `HashMap` and `HashSet`.
 use crate::View;
 use crate::{utils::HashBijection, Quad, Triple};
-use derivative::Derivative;
+use educe::Educe;
 use hashbrown::{Equivalent, HashMap, HashSet};
 use rdf_types::{AsRdfTerm, FromBlankId, IntoBlankId, MaybeBlankId};
 use std::fmt;
@@ -11,10 +11,10 @@ mod graph;
 
 pub use graph::*;
 
-#[derive(Derivative, Clone)]
-#[derivative(PartialEq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash"))]
-#[derivative(Eq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash"))]
-#[derivative(Default(bound = ""))]
+#[derive(Educe, Clone)]
+#[educe(PartialEq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash"))]
+#[educe(Eq(bound = "S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash"))]
+#[educe(Default)]
 pub struct HashDataset<S = rdf_types::Term, P = S, O = S, G = S> {
 	default: HashGraph<S, P, O>,
 	named: HashMap<G, HashGraph<S, P, O>>,
@@ -635,8 +635,8 @@ impl<'a, O: Eq + Hash> Iterator for PredicatePatternMatching<'a, O> {
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Graphs<'a, S, P, O, G> {
 	default: Option<&'a HashGraph<S, P, O>>,
 	it: hashbrown::hash_map::Iter<'a, G, HashGraph<S, P, O>>,
@@ -675,8 +675,8 @@ impl<'a, S, P, O, G> Iterator for GraphsMut<'a, S, P, O, G> {
 	}
 }
 
-#[derive(Derivative)]
-#[derivative(Clone(bound = ""))]
+#[derive(Educe)]
+#[educe(Clone)]
 pub struct Quads<'a, S, P, O, G> {
 	graphs: Graphs<'a, S, P, O, G>,
 	graph: Option<&'a G>,
