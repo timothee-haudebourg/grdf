@@ -17,10 +17,10 @@ meta = [ "locspan", "rdf-types/meta" ]
 
 [dependencies]
 iref = "3.0"
-rdf-types = "0.17"
+rdf-types = "0.18"
 derivative = "2.2.0"
 hashbrown = "0.13.1"
-locspan = { version = "0.7.9", optional = true }
+locspan = { version = "0.8", optional = true }
 
 [dev-dependencies]
 static-iref = "3.0.0"
