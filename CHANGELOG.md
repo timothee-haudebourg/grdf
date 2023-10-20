@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.0] - 2023-10-20
+
+### Build
+
+- [1b91c39] Upgrade `rdf-types` to version 0.18
+- [1b91c39] Upgrade `locspan` to version 0.8
+- [5f94c3f] Drop `derivative`, use `educe`.
+
 ## [0.21.0] - 2023-10-18
 
 ### Added
@@ -14,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Build
 
-- [b13db12] Upgrade `rdf-types` to version 0.17.0
+- [03078fd] Upgrade `rdf-types` to version 0.17.0
 
 ### Removed
 
@@ -22,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [231aca4] Remove `linked-data` dependency.
 - [00c3e5a] Remove `im` dependency.
 
-## [0.20.0] - 2023-08-23
+## [0.19.0] - 2023-06-06
 
 ### Build
 
