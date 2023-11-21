@@ -1,11 +1,6 @@
 #[macro_export]
 macro_rules! reflect_graph_impl {
 	() => {
-		/// Checks if the graph is empty.
-		pub fn is_empty(&self) -> bool {
-			$crate::Graph::is_empty(self)
-		}
-
 		/// Returns any triple matching the given pattern.
 		pub fn any_match(
 			&self,
@@ -35,18 +30,6 @@ macro_rules! reflect_dataset_impl {
 		#[inline(always)]
 		pub fn default_graph(&self) -> &<Self as $crate::Dataset>::Graph {
 			$crate::Dataset::default_graph(self)
-		}
-
-		/// Returns the number of quads in the dataset.
-		#[inline(always)]
-		pub fn len(&self) -> usize {
-			$crate::Dataset::len(self)
-		}
-
-		/// Returns the number of quads in the dataset.
-		#[inline(always)]
-		pub fn is_empty(&self) -> bool {
-			$crate::Dataset::is_empty(self)
 		}
 
 		/// Iterate through all the subjects of the given graph.

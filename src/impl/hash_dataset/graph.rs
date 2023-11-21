@@ -27,6 +27,11 @@ impl<S, P, O> HashGraph<S, P, O> {
 	pub fn len(&self) -> usize {
 		self.len
 	}
+
+	/// Checks if the graph is empty.
+	pub fn is_empty(&self) -> bool {
+		self.len == 0
+	}
 }
 
 impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash> HashGraph<S, P, O> {

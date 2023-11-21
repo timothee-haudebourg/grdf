@@ -39,6 +39,11 @@ impl<S, P, O> BTreeGraph<S, P, O> {
 	pub fn len(&self) -> usize {
 		self.len
 	}
+
+	/// Checks if the graph is empty.
+	pub fn is_empty(&self) -> bool {
+		self.len == 0
+	}
 }
 
 impl<S: fmt::Debug, P: fmt::Debug, O: fmt::Debug> fmt::Debug for BTreeGraph<S, P, O> {

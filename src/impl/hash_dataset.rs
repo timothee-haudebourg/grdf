@@ -25,6 +25,20 @@ impl<S, P, O, G> HashDataset<S, P, O, G> {
 		Self::default()
 	}
 
+	/// Returns the number of quads in the dataset.
+	#[inline(always)]
+	pub fn is_empty(&self) -> bool {
+		self.default.is_empty() && self.named.iter().all(|(_, g)| g.is_empty())
+	}
+
+	/// Returns the number of quads in the dataset.
+	#[inline(always)]
+	pub fn len(&self) -> usize {
+		self.named
+			.iter()
+			.fold(self.default.len(), |x, (_, g)| g.len() + x)
+	}
+
 	pub fn graph<W: ?Sized + Equivalent<G> + Hash>(
 		&self,
 		id: Option<&W>,
@@ -863,5 +877,73 @@ impl<S: Eq + Hash, P: Eq + Hash, O: Eq + Hash, G: Eq + Hash> std::iter::Extend<Q
 		for quad in iter {
 			self.insert(quad);
 		}
+	}
+}
+
+#[cfg(feature = "serde")]
+impl<S, P, O, G> serde::Serialize for HashDataset<S, P, O, G>
+where
+	S: serde::Serialize,
+	P: serde::Serialize,
+	O: serde::Serialize,
+	G: serde::Serialize,
+{
+	fn serialize<E>(&self, serializer: E) -> Result<E::Ok, E::Error>
+	where
+		E: serde::Serializer,
+	{
+		use serde::ser::SerializeSeq;
+		let mut seq = serializer.serialize_seq(Some(self.len()))?;
+
+		for quad in self.quads() {
+			seq.serialize_element(&quad)?
+		}
+
+		seq.end()
+	}
+}
+
+#[cfg(feature = "serde")]
+impl<'de, S, P, O, G> serde::Deserialize<'de> for HashDataset<S, P, O, G>
+where
+	S: Eq + Hash + serde::Deserialize<'de>,
+	P: Eq + Hash + serde::Deserialize<'de>,
+	O: Eq + Hash + serde::Deserialize<'de>,
+	G: Eq + Hash + serde::Deserialize<'de>,
+{
+	fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+	where
+		D: serde::Deserializer<'de>,
+	{
+		pub struct Visitor<S, P, O, G>(std::marker::PhantomData<(S, P, O, G)>);
+
+		impl<'de, S, P, O, G> serde::de::Visitor<'de> for Visitor<S, P, O, G>
+		where
+			S: Eq + Hash + serde::Deserialize<'de>,
+			P: Eq + Hash + serde::Deserialize<'de>,
+			O: Eq + Hash + serde::Deserialize<'de>,
+			G: Eq + Hash + serde::Deserialize<'de>,
+		{
+			type Value = HashDataset<S, P, O, G>;
+
+			fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+				write!(formatter, "an RDF dataset")
+			}
+
+			fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+			where
+				A: serde::de::SeqAccess<'de>,
+			{
+				let mut result = HashDataset::new();
+
+				while let Some(quad) = seq.next_element()? {
+					result.insert(quad);
+				}
+
+				Ok(result)
+			}
+		}
+
+		deserializer.deserialize_seq(Visitor(std::marker::PhantomData))
 	}
 }
